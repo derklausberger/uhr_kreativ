@@ -12,7 +12,6 @@ public class Game {
     private Bar bar;
     private List<Block> blocks;
     private Scene scene;
-    private boolean stillPlaying = true;
 
     public Game() {
         ball = null;
@@ -47,7 +46,7 @@ public class Game {
     public void moveBall() {
         List<Double> momentum = ball.getmomentum();
         List<Double> position = ball.getpositionalinfo();
-        checkMomentum();
+        checkBall();
         ball.moveTo(position.get(0) + momentum.get(0),
                 position.get(1) + momentum.get(1));
     }
@@ -56,7 +55,9 @@ public class Game {
         bar.moveTo(x);
     }
 
-    public void checkMomentum() {
+    // return true: not lost
+    // return false: player lost game (ball touched bottom side)
+    public boolean checkBall() {
         List<Double> position = ball.getpositionalinfo();
         List<Double> momentum = ball.getmomentum();
 
@@ -81,13 +82,35 @@ public class Game {
         if (position.get(1) - position.get(2) == 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
         } else if (position.get(1) + position.get(2) == scene.getHeight()) {
-            youLost();
+            return false;
         }
+
+        return true;
     }
 
-    public void playGame(String filepath, Scene scene) {
+    public void playGame(Scene scene) {
         this.scene = scene;
-        Thread barFred = new Thread(new Runnable() {
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.RIGHT) {
+                moveBar(bar.getX() + 1); //  1 is dummy value
+                // moveBall() ???
+            } // else if?? if right and left arrow get pressed
+            // simultaneously
+            if (event.getCode() == KeyCode.LEFT) {
+                moveBar(bar.getX() - 1); //  1 is dummy value
+            }
+        });
+
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                while (checkBall()) {
+                    moveBall();
+                }
+                youLost();
+            }
+        });
+
+        /*Thread barFred = new Thread(new Runnable() {
             @Override
             public void run() {
                 scene.setOnKeyPressed(event -> {
@@ -101,7 +124,7 @@ public class Game {
                     }
                 });
 
-                while (run) {
+                while (stillPlaying) {
 
                 }
             }
@@ -129,19 +152,18 @@ public class Game {
             }
 
             public void start() {
-                while (stillPlaying) {
-                    checkMomentum();
+                while (checkBall()) {
                     moveBall();
                 }
+                youLost();
             }
         });
 
         //barFred.start();
-        ballFred.start();
+        ballFred.start();*/
     }
 
     public void youLost() {
-        stillPlaying = false;
         System.out.println("you lost boy");
     }
 }
