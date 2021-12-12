@@ -31,6 +31,18 @@ public class Game {
         this(loadGameFromFile(filepath));
     }
 
+    public void setBall(Ball ball) {
+        this.ball = ball;
+    }
+
+    public void setBar(Bar bar) {
+        this.bar = bar;
+    }
+
+    public void setBlocks(List<Block> blocks) {
+        this.blocks = blocks;
+    }
+
     public static Game loadGameFromFile(String filepath) {
         try {
             FileInputStream fis = new FileInputStream(filepath);
