@@ -2,10 +2,12 @@ package com.example.breakout.Classes;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Circle;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Game {
     private Ball ball;
@@ -13,11 +15,11 @@ public class Game {
     private List<Block> blocks;
     private Scene scene;
 
-    public Game() {
+    public Game(Scene scene) {
         ball = null;
         bar = null;
         blocks = null;
-        scene = null;
+        this.scene = scene;
     }
 
     public Game(Game game) {
@@ -43,6 +45,10 @@ public class Game {
         this.blocks = blocks;
     }
 
+    public Ball getBall(){
+        return ball;
+    }
+
     public static Game loadGameFromFile(String filepath) {
         try {
             FileInputStream fis = new FileInputStream(filepath);
@@ -58,7 +64,6 @@ public class Game {
     public void moveBall() {
         List<Double> momentum = ball.getmomentum();
         List<Double> position = ball.getpositionalinfo();
-        checkBall();
         ball.moveTo(position.get(0) + momentum.get(0),
                 position.get(1) + momentum.get(1));
     }
@@ -87,12 +92,13 @@ public class Game {
         if (position.get(0) - position.get(2) == 0) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
         } else if (position.get(0) + position.get(2) == scene.getWidth()) {
-
+            ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
         }
 
         // ball touches top or bottom side of the window
         if (position.get(1) - position.get(2) == 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+            //moveBall();
         } else if (position.get(1) + position.get(2) == scene.getHeight()) {
             return false;
         }
@@ -100,7 +106,7 @@ public class Game {
         return true;
     }
 
-    public void playGame(Scene scene) {
+    public void playGame(Scene scene) throws InterruptedException {
         this.scene = scene;
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.RIGHT) {
@@ -113,14 +119,31 @@ public class Game {
             }
         });
 
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Circle circle = (Circle) scene.lookup("#circle");
                 while (checkBall()) {
                     moveBall();
+                    circle.setCenterX(ball.getpositionalinfo().get(0));
+                    circle.setCenterY(ball.getpositionalinfo().get(1));
+                    //((Circle) scene.lookup("#circle")).setCenterY(game.getBall().getpositionalinfo().get(1));
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 youLost();
             }
         });
+
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                t.start();
+            }
+        });
+        t.join();
 
         /*Thread barFred = new Thread(new Runnable() {
             @Override

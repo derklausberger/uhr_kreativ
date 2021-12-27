@@ -14,7 +14,7 @@ public class Block {
     private Powerup/String powerup;
     */
 
-    private Block(double x, double y, double width, double height, int strength) {
+    public Block(double x, double y, double width, double height, int strength) {
         this.x = x;
         this.y = y;
         this.width = width;

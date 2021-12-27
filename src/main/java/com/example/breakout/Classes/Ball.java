@@ -15,6 +15,8 @@ public class Ball {
         this.x = x;
         this.y = y;
         this.radius = radius;
+        xmomentum = 5;
+        ymomentum = -5;
     }
 
     public void moveTo(double x, double y) {
