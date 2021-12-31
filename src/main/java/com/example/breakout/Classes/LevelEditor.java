@@ -36,5 +36,4 @@ public class LevelEditor {
     public void importLevel(String filepath) {
         game = Game.loadGameFromFile(filepath);
     }
-
 }

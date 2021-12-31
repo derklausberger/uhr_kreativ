@@ -200,6 +200,5 @@ public class Game {
 
     public void youLost() {
         System.out.println("you lost boy");
-
     }
 }

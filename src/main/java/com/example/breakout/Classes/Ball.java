@@ -47,6 +47,5 @@ public class Ball {
         returnme.add(y);
         returnme.add(radius);
         return returnme;
-
     }
 }

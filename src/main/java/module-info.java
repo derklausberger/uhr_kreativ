@@ -6,5 +6,4 @@ module com.example.breakout {
 
     opens com.example.breakout to javafx.fxml;
     exports com.example.breakout;
-
 }
