@@ -14,7 +14,7 @@ public class Block {
     private Powerup/String powerup;
     */
 
-    private Block(double x, double y, double width, double height, int strength) {
+    public Block(double x, double y, double width, double height, int strength) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -60,7 +60,7 @@ public class Block {
         return 0;
     }
 
-    //true means the block still exists, false means its gone, only do this after 
+    //true means the block still exists, false means its gone, only do this after
     //using checkBlock to see if the block gets touched
     public boolean lowerHP(int damage) {
         strength -= damage;
