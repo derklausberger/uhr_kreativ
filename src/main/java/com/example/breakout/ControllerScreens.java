@@ -59,6 +59,7 @@ public class ControllerScreens {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+
     }
 
     public void SwitchToLeveleditor(ActionEvent event) throws IOException {

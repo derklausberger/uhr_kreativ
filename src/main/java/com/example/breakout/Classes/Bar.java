@@ -46,5 +46,6 @@ public class Bar {
         double Dx = Xn - ballinfo.get(0);
         double Dy = Yn - ballinfo.get(1);
         return (Dx * Dx + Dy * Dy) <= ballinfo.get(2) * ballinfo.get(2);
+
     }
 }
