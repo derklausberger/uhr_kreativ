@@ -80,8 +80,8 @@ public class ControllerScreens {
 
 
 
-    /*
-
+    
+    // nur testen von hier nach unten
     public void Changetimerboolean(){if(timerBoolean = false){timerBoolean = true;}else{timerBoolean = true;}}
 
 
@@ -106,9 +106,7 @@ public class ControllerScreens {
     private Label time;
     boolean timerBoolean = true;
 
-     */
-
-    /*
+    
     @FXML
     private void Timer() {
         Thread thread = new Thread(() -> {
@@ -127,7 +125,4 @@ public class ControllerScreens {
         });
         thread.start();
     }
-        Nur zum testen
-     */
-
 }
