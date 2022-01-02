@@ -9,9 +9,10 @@
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button mnemonicParsing="false" onAction="#SwitchToLevels" prefHeight="20.0" prefWidth="150.0" text="Start" />
-            <Button layoutX="34.0" layoutY="98.0" mnemonicParsing="false" onAction="#SwitchToLeveleditor" prefWidth="150.0" text="Level Editor" />
+            <Button fx:id="lvlEditBtn" layoutX="34.0" layoutY="98.0" mnemonicParsing="false" onAction="#SwitchToLeveleditor" prefWidth="150.0" text="Level Editor" />
             <Button layoutX="34.0" layoutY="110.0" mnemonicParsing="false" onAction="#SwitchToSettings" prefWidth="150.0" text="Einstellungen" />
          </children>
       </VBox>
    </children>
+
 </AnchorPane>
