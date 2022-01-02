@@ -119,14 +119,14 @@ public class ControllerScreens implements Initializable {
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
     @FXML
-    private AnchorPane scene;
+    private AnchorPane scene = new AnchorPane();
 
 
     @FXML
-    private Circle circle; // circle == ball
+    private Circle circle = new Circle(); // circle == ball
 
     @FXML
-    private Rectangle rectangle;
+    private Rectangle rectangle = new Rectangle();
 
 
     @FXML
