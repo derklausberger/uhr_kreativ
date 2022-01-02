@@ -135,13 +135,6 @@ public class ControllerScreens implements Initializable {
     }
 
 
-    public void BarMovement(KeyEvent event){
-        double BarDirectX = 10;
-        if(event.getCode() == KeyCode.LEFT){ rectangle.setLayoutX(rectangle.getLayoutX() - BarDirectX);}
-        if(event.getCode() == KeyCode.RIGHT){ rectangle.setLayoutX(rectangle.getLayoutX() + BarDirectX);}
-
-    }
-
     //1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
 
