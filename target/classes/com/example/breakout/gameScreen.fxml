@@ -48,7 +48,7 @@
                            </stops>
                         </LinearGradient>
                      </fill></Circle>
-                  <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="10.0" layoutX="450.0" layoutY="700.0" onKeyPressed="#BarMovement" onKeyReleased="#BarMovement" onKeyTyped="#BarMovement" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+                  <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="10.0" layoutX="450.0" layoutY="700.0" stroke="BLACK" strokeType="INSIDE" width="100" />
                </children></AnchorPane>
           <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0">
                <children>
@@ -63,11 +63,13 @@
                                  <children>
                                     <Label text="Highscore/ time needed:" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="time" text="Highscore" />
+                                    <Label fx:id="highscore" />
+                                    <Label text="sec" />
                                  </children>
                               </HBox>
+                              <Button mnemonicParsing="false" onAction="#getAgeInSeconds" text="Button" />
                               <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                              <Button fx:id="gameTOlevels" mnemonicParsing="false" onAction="#SwitchToLevels" text="Back to previous" />
+                              <Button fx:id="gametolevels" mnemonicParsing="false" onAction="#SwitchToLevels" text="Back to previous" />
                            </children>
                         </VBox>
                      </children>

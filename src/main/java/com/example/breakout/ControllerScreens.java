@@ -3,6 +3,7 @@ package com.example.breakout;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -153,7 +155,7 @@ public class ControllerScreens implements Initializable {
 
             Bounds bounds = scene.getBoundsInLocal();
             boolean rightBorder = rectangle.getLayoutX() >= (bounds.getMaxX() - rectangle.getWidth());
-            boolean leftBorder = rectangle.getLayoutX() <= (bounds.getMinX() + rectangle.getWidth());
+            boolean leftBorder = rectangle.getLayoutX() <= (bounds.getMinX());
 
 
             if (rightBorder || leftBorder) { deltaX *= -1; }
@@ -182,7 +184,14 @@ public class ControllerScreens implements Initializable {
 
             if (rightBorder || leftBorder) { deltaX *= -1; }
             if (topBorder) { deltaY *= -1; }
-            if (bottomBorder) {timeline.stop();}
+
+
+            boolean CollisionY = circle.getLayoutY() + circle.getRadius() == 700;
+            boolean CollisionX = (rectangle.getLayoutX()+rectangle.getWidth()/2) >= circle.getCenterX() && circle.getCenterX() >= (rectangle.getLayoutX()-rectangle.getWidth()/2);
+
+            if(CollisionX && CollisionY){ deltaY *= -1; }
+
+            if(bottomBorder) {timeline.stop(); timeline2.stop();}
         }
 
     }));
@@ -195,6 +204,26 @@ public class ControllerScreens implements Initializable {
         timeline.play();
         timeline2.setCycleCount(Animation.INDEFINITE);
         timeline2.play();
+    }
+
+
+
+
+
+
+
+
+
+
+    @FXML
+    private Label highscore;
+
+    private final long createdMillis = System.currentTimeMillis();
+
+    public void getAgeInSeconds() {
+        long nowMillis = System.currentTimeMillis();
+        int zw = (int)((nowMillis - this.createdMillis) / 1000);
+        highscore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
     }
 
 }
