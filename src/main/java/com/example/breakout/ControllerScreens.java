@@ -167,7 +167,7 @@ public class ControllerScreens implements Initializable {
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
 
         double deltaX = 1;
-        double deltaY = 1;
+        double deltaY = -1;
 
         @Override
         public void handle(ActionEvent actionEvent) {
