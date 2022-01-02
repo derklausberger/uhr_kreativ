@@ -69,8 +69,6 @@ public class ControllerScreens implements Initializable {
                 Node n = (Node) event.getSource();
                 Stage previous = (Stage) n.getScene().getWindow();
                 previous.close();
-
-
             }
 
     public void SwitchToSettings(ActionEvent event) throws IOException {

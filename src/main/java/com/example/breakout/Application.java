@@ -9,19 +9,17 @@ import java.io.IOException;
 
 
 public class Application extends javafx.application.Application {
-    public static Stage stage;
-
     @Override
     public void start(Stage stage) throws IOException {
-        this.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-        this.stage.setTitle("Breakout -> mainScreen");
-        this.stage.setScene(scene);
-        this.stage.setResizable(false);
-        this.stage.show();
+        stage.setTitle("Breakout -> mainScreen");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
 
-        //((Button)scene.lookup("#lvlEditBtn")).fire();
+        // das braucht nur klausberger, bitte nicht löschen
+        // ((Button)scene.lookup("#lvlEditBtn")).fire();
     }
 
 
