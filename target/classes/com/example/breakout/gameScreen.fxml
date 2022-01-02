@@ -8,18 +8,48 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
 
 <!-- Comments  -->
 <!-- Comments  -->
 <!-- Comments  -->
 <!-- Comments  -->
 <!-- Comments  -->
+<!-- Comments  -->
+<!-- Comments  -->
+<!-- Comments  -->
+<!-- Comments  -->
+<!-- Comments  -->
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.ControllerScreens">
+<AnchorPane maxHeight="720.0" maxWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.ControllerScreens">
    <children>
       <SplitPane dividerPositions="0.7" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane />
+          <AnchorPane fx:id="scene" maxHeight="720.0" maxWidth="1000.0" minHeight="720.0" minWidth="1000.0">
+               <children>
+                   <Circle fx:id="circle" layoutX="500.0" layoutY="690.0" radius="10.0" stroke="BLACK" strokeType="INSIDE">
+                     <fill>
+                        <LinearGradient endX="1.0" endY="1.0" startX="0.6136363993088405" startY="0.4583333477829442">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color red="0.7699999809265137" green="0.477400004863739" blue="0.7384698390960693" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="1.0" green="1.0" blue="1.0" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </LinearGradient>
+                     </fill></Circle>
+                  <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="10.0" layoutX="450.0" layoutY="700.0" onKeyPressed="#BarMovement" onKeyReleased="#BarMovement" onKeyTyped="#BarMovement" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+               </children></AnchorPane>
           <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0">
                <children>
                   <HBox prefHeight="719.0" prefWidth="280.0">
@@ -36,7 +66,8 @@
                                     <Label fx:id="time" text="Highscore" />
                                  </children>
                               </HBox>
-                              <Button fx:id="Time" mnemonicParsing="false" onAction="#Timer" prefHeight="30.0" text="Button" />
+                              <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="gameTOlevels" mnemonicParsing="false" onAction="#SwitchToLevels" text="Back to previous" />
                            </children>
                         </VBox>
                      </children>
@@ -47,9 +78,3 @@
       </SplitPane>
    </children>
 </AnchorPane>
-
-        <!-- Comments  -->
-        <!-- Comments  -->
-        <!-- Comments  -->
-        <!-- Comments  -->
-        <!-- Comments  -->
