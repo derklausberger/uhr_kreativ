@@ -1,7 +1,11 @@
 package com.example.breakout.Classes;
 
+import javafx.scene.shape.Circle;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.shape.Circle;
 
 public class Ball {
     //momentum means how fast it moves in a certain direction and if its - or +
@@ -10,22 +14,31 @@ public class Ball {
     private double x;
     private double y;
     private double radius;
+    private Circle circle= new Circle();
 
-    public Ball(double x, double y, double radius) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        xmomentum = 5;
-        ymomentum = -5;
+
+    public Ball(Circle circle, double dx, double dy) {
+        this.circle=circle;
+        this.x = circle.getCenterX();
+        this.y = circle.getCenterY();
+        this.radius = circle.getRadius();
+        xmomentum = dx;
+        ymomentum = dy;
+    }
+
+    public Ball() {
     }
 
     public void moveTo(double x, double y) {
         this.x = x;
         this.y = y;
+        circle.setCenterX(x);
+        circle.setCenterY(y);
     }
 
     public void resize(double radius) {
         this.radius = radius;
+        circle.setRadius(radius);
     }
 
     public void changemomentum(double xmomentum, double ymomentum) {

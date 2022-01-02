@@ -1,5 +1,8 @@
 package com.example.breakout;
 
+import com.example.breakout.Classes.Game;
+import com.example.breakout.Classes.Ball;
+import com.example.breakout.Classes.Bar;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -28,10 +31,11 @@ import java.util.ResourceBundle;
 
 public class ControllerScreens implements Initializable {
 
-    /**________________________________________________________________________________________________________________
+    /**
+     * ________________________________________________________________________________________________________________
      * Scene switching
      * -> needs closing from window before !!! (isn't done yet)
-     *    if anyone wants to do it np, go right ahead :)
+     * if anyone wants to do it np, go right ahead :)
      */
 
     public void SwitchToLevels(ActionEvent event) throws IOException {
@@ -52,24 +56,6 @@ public class ControllerScreens implements Initializable {
         previous.close();
 
     }
-
-            public void SwitchToGame(ActionEvent event) throws IOException {
-
-                // called by button "Level Editor"
-
-                FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-                Stage stage = new Stage();
-                stage.setTitle("Breakout -> mainScreen -> levelsScreen -> gameScreen");
-                stage.setScene(scene);
-                stage.setResizable(false);
-                stage.show();
-
-                // close previous window
-                Node n = (Node) event.getSource();
-                Stage previous = (Stage) n.getScene().getWindow();
-                previous.close();
-            }
 
     public void SwitchToSettings(ActionEvent event) throws IOException {
 
@@ -111,16 +97,48 @@ public class ControllerScreens implements Initializable {
      *_________________________________________________________________________________________________________________
      */
 
-
     /**
      * Das darunter ist daweil nur ein Bouncing Ball und ne Bar die hin und her geht
      * halt nicht auf input reagiert
      */
+    private Game game= new Game();
+
+    public void SwitchToGame(ActionEvent event) throws IOException {
+
+        // called by button "Level Editor"
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        Stage stage = new Stage();
+        stage.setTitle("Breakout -> mainScreen -> levelsScreen -> gameScreen");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+
+        // close previous window
+        Node n = (Node) event.getSource();
+        Stage previous = (Stage) n.getScene().getWindow();
+        previous.close();
+
+        game = new Game(scene, this.scene);
+        game.setBall(new Ball(circle, 1, -1));
+        game.setBar(new Bar(rectangle));
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            //BarDirectX can be moved or changed depending on how if feels
+            double BarDirectX = 10;
+            if (key.getCode() == KeyCode.LEFT) {
+                game.moveBar(-BarDirectX);
+            }
+            if (key.getCode() == KeyCode.RIGHT) {
+                game.moveBar(BarDirectX);
+            }
+        });
+        //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we we change scenes
+    }
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
     @FXML
     private AnchorPane scene = new AnchorPane();
-
 
     @FXML
     private Circle circle = new Circle(); // circle == ball
@@ -129,20 +147,13 @@ public class ControllerScreens implements Initializable {
     private Rectangle rectangle = new Rectangle();
 
 
+    // unnötig
     @FXML
-    public void Start(){
+    public void Start() {
 
     }
 
-
-    public void BarMovement(KeyEvent event){
-        double BarDirectX = 10;
-        if(event.getCode() == KeyCode.LEFT){ rectangle.setLayoutX(rectangle.getLayoutX() - BarDirectX);}
-        if(event.getCode() == KeyCode.RIGHT){ rectangle.setLayoutX(rectangle.getLayoutX() + BarDirectX);}
-
-    }
-
-    //1 Frame evey 10 millis, which means 100 FPS
+  /*  //1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
 
         double deltaX = 1;
@@ -156,22 +167,26 @@ public class ControllerScreens implements Initializable {
             boolean leftBorder = rectangle.getLayoutX() <= (bounds.getMinX());
 
 
-            if (rightBorder || leftBorder) { deltaX *= -1; }
+            if (rightBorder || leftBorder) {
+                deltaX *= -1;
+            }
 
         }
 
-    }));
+    }));*/
 
 
     //1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
 
-        double deltaX = 1;
-        double deltaY = -1;
-
         @Override
         public void handle(ActionEvent actionEvent) {
-            circle.setLayoutX(circle.getLayoutX() + deltaX);
+            game.moveBall();
+            game.checkBall();
+
+            getAgeInSeconds(); // timer for highscore
+
+           /* circle.setLayoutX(circle.getLayoutX() + deltaX);
             circle.setLayoutY(circle.getLayoutY() + deltaY);
 
             Bounds bounds = scene.getBoundsInLocal();
@@ -180,33 +195,35 @@ public class ControllerScreens implements Initializable {
             boolean bottomBorder = circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius());
             boolean topBorder = circle.getLayoutY() <= (bounds.getMinY() + circle.getRadius());
 
-            if (rightBorder || leftBorder) { deltaX *= -1; }
-            if (topBorder) { deltaY *= -1; }
+
+            if (rightBorder || leftBorder) {
+                deltaX *= -1;
+            }
+            if (topBorder) {
+                deltaY *= -1;
+            }
 
 
             boolean CollisionY = circle.getLayoutY() + circle.getRadius() == 700;
-            boolean CollisionX = (rectangle.getLayoutX()+rectangle.getWidth()/2) >= circle.getCenterX() && circle.getCenterX() >= (rectangle.getLayoutX()-rectangle.getWidth()/2);
+            boolean CollisionX = (rectangle.getLayoutX() + rectangle.getWidth() / 2) >= circle.getCenterX() && circle.getCenterX() >= (rectangle.getLayoutX() - rectangle.getWidth() / 2);
 
-            if(CollisionX && CollisionY){ deltaY *= -1; }
+            if (CollisionX && CollisionY) {
+                deltaY *= -1;
+            }
 
-            if(bottomBorder) {timeline.stop(); timeline2.stop();}
+            if (bottomBorder) {
+                timeline.stop();
+            }*/
         }
 
     }));
-
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-        timeline2.setCycleCount(Animation.INDEFINITE);
-        timeline2.play();
     }
-
-
-
-
 
 
 
@@ -214,14 +231,15 @@ public class ControllerScreens implements Initializable {
 
 
     @FXML
-    private Label highscore;
+    private Label highscore = new Label() ;
 
     private final long createdMillis = System.currentTimeMillis();
 
     public void getAgeInSeconds() {
         long nowMillis = System.currentTimeMillis();
-        int zw = (int)((nowMillis - this.createdMillis) / 1000);
+        int zw = (int) ((nowMillis - this.createdMillis) / 1000);
         highscore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
     }
 
 }
+

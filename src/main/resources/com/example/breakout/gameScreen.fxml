@@ -67,7 +67,6 @@
                                     <Label text="sec" />
                                  </children>
                               </HBox>
-                              <Button mnemonicParsing="false" onAction="#getAgeInSeconds" text="Button" />
                               <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                               <Button fx:id="gametolevels" mnemonicParsing="false" onAction="#SwitchToLevels" text="Back to previous" />
                            </children>

@@ -1,5 +1,7 @@
 package com.example.breakout.Classes;
 
+import javafx.scene.shape.Rectangle;
+
 import java.util.List;
 
 public class Bar {
@@ -7,6 +9,7 @@ public class Bar {
     private double y;
     private double width;
     private double height;
+    private Rectangle rectangle;
 
     public double getX() {
         return x;
@@ -16,15 +19,30 @@ public class Bar {
         return y;
     }
 
-    public Bar(double x, double y, double width, double length) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = length;
+    public Bar(Rectangle rectangle) {
+        this.rectangle = rectangle;
+        this.x = rectangle.getLayoutX();
+        this.y = rectangle.getLayoutY();
+        this.width = rectangle.getWidth();
+        this.height = rectangle.getHeight();
     }
 
-    public void moveTo(double x) {
-        this.x = x;
+    public Bar() {
+    }
+
+    public void move(double x) {
+        this.x += x;
+        rectangle.setLayoutX(this.x);
+    }
+
+    public void movelimit(double x, double gamesidemaxwidth, double gamesideminwidth) {
+        this.x += x;
+        if ((this.x + this.width / 2) > gamesidemaxwidth) {
+            this.x = gamesidemaxwidth - this.width / 2;
+        } else if (this.x - this.width / 2 < gamesideminwidth) {
+            this.x = gamesidemaxwidth + this.width / 2;
+        }
+        rectangle.setLayoutX(this.x);
     }
 
     public void resize(double width, double length) {
@@ -46,6 +64,5 @@ public class Bar {
         double Dx = Xn - ballinfo.get(0);
         double Dy = Yn - ballinfo.get(1);
         return (Dx * Dx + Dy * Dy) <= ballinfo.get(2) * ballinfo.get(2);
-
     }
 }

@@ -1,25 +1,26 @@
 package com.example.breakout.Classes;
 
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.shape.Circle;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Game {
-    private Ball ball;
-    private Bar bar;
-    private List<Block> blocks;
+    private Ball ball = new Ball();
+    private Bar bar = new Bar();
+    private List<Block> blocks = new ArrayList<Block>();
     private Scene scene;
+    private AnchorPane leftside = new AnchorPane();
 
-    public Game(Scene scene) {
+    public Game(Scene scene, AnchorPane pane) {
         ball = null;
         bar = null;
-        blocks = null;
+        //blocks = null;
         this.scene = scene;
+        leftside = pane;
     }
 
     public Game(Game game) {
@@ -27,6 +28,9 @@ public class Game {
         bar = game.bar;
         blocks = game.blocks;
         scene = null;
+    }
+
+    public Game() {
     }
 
     public Game(String filepath) {
@@ -45,7 +49,7 @@ public class Game {
         this.blocks = blocks;
     }
 
-    public Ball getBall(){
+    public Ball getBall() {
         return ball;
     }
 
@@ -68,8 +72,8 @@ public class Game {
                 position.get(1) + momentum.get(1));
     }
 
-    public void moveBar(double x) {
-        bar.moveTo(x);
+    public void moveBar(double xchange) {
+        bar.movelimit(xchange, leftside.getMaxWidth(), leftside.getMinWidth());
     }
 
     // return true: not lost
@@ -91,7 +95,7 @@ public class Game {
         // ball touches left or right side of the window
         if (position.get(0) - position.get(2) == 0) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
-        } else if (position.get(0) + position.get(2) == scene.getWidth()) {
+        } else if (position.get(0) + position.get(2) == leftside.getWidth()) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
         }
 
@@ -99,13 +103,24 @@ public class Game {
         if (position.get(1) - position.get(2) == 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             //moveBall();
-        } else if (position.get(1) + position.get(2) == scene.getHeight()) {
+        } else if (position.get(1) + position.get(2) == leftside.getHeight()) {
             return false;
+        }
+        //ball touches Bar
+        if (bar.checkbar(position)) {
+            ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
         }
 
         return true;
     }
 
+
+    public void youLost() {
+        System.out.println("you lost boy");
+
+    }
+
+    /*
     public void playGame(Scene scene) throws InterruptedException {
         this.scene = scene;
         scene.setOnKeyPressed(event -> {
@@ -196,10 +211,4 @@ public class Game {
 
         //barFred.start();
         ballFred.start();*/
-    }
-
-    public void youLost() {
-        System.out.println("you lost boy");
-
-    }
 }
