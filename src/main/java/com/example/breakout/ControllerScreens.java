@@ -1,19 +1,32 @@
 package com.example.breakout;
 
-import javafx.application.Platform;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class ControllerScreens {
+public class ControllerScreens implements Initializable {
 
     /**________________________________________________________________________________________________________________
      * Scene switching
@@ -33,6 +46,11 @@ public class ControllerScreens {
         stage.setResizable(false);
         stage.show();
 
+        // close previous window
+        Node n = (Node) event.getSource();
+        Stage previous = (Stage) n.getScene().getWindow();
+        previous.close();
+
     }
 
             public void SwitchToGame(ActionEvent event) throws IOException {
@@ -46,6 +64,13 @@ public class ControllerScreens {
                 stage.setScene(scene);
                 stage.setResizable(false);
                 stage.show();
+
+                // close previous window
+                Node n = (Node) event.getSource();
+                Stage previous = (Stage) n.getScene().getWindow();
+                previous.close();
+
+
             }
 
     public void SwitchToSettings(ActionEvent event) throws IOException {
@@ -59,6 +84,11 @@ public class ControllerScreens {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+
+        // close previous window
+        Node n = (Node) event.getSource();
+        Stage previous = (Stage) n.getScene().getWindow();
+        previous.close();
     }
 
     public void SwitchToLeveleditor(ActionEvent event) throws IOException {
@@ -67,11 +97,16 @@ public class ControllerScreens {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-        //Application.stage = new Stage();
-        Application.stage.setTitle("Leveleditor");
-        Application.stage.setScene(scene);
-        Application.stage.setResizable(false);
-        //Application.stage.();
+        Stage stage = new Stage();
+        stage.setTitle("Breakout -> mainScreen -> leveleditorScreen");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+
+        // close previous window
+        Node n = (Node) event.getSource();
+        Stage previous = (Stage) n.getScene().getWindow();
+        previous.close();
     }
 
     /**
@@ -79,47 +114,116 @@ public class ControllerScreens {
      */
 
 
+    /**
+     * Das darunter ist daweil nur ein Bouncing Ball und ne Bar die hin und her geht
+     * halt nicht auf input reagiert
+     */
 
-    
-    // nur testen von hier nach unten
-    public void Changetimerboolean(){if(timerBoolean = false){timerBoolean = true;}else{timerBoolean = true;}}
-
+    // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
+    @FXML
+    private AnchorPane scene = new AnchorPane();
 
 
     @FXML
-    protected void Start() {
-        Changetimerboolean();
+    private Circle circle = new Circle(); // circle == ball
+
+    @FXML
+    private Rectangle rectangle = new Rectangle();
+
+
+    @FXML
+    public void Start(){
+
     }
 
-    @FXML
-    protected void LevelEditor() {
+
+    public void BarMovement(KeyEvent event){
+        double BarDirectX = 10;
+        if(event.getCode() == KeyCode.LEFT){ rectangle.setLayoutX(rectangle.getLayoutX() - BarDirectX);}
+        if(event.getCode() == KeyCode.RIGHT){ rectangle.setLayoutX(rectangle.getLayoutX() + BarDirectX);}
+
     }
 
-    @FXML
-    protected void Einstellungen() {
+    //1 Frame evey 10 millis, which means 100 FPS
+    Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
+
+        double deltaX = 1;
+
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            rectangle.setLayoutX(rectangle.getLayoutX() + deltaX);
+
+            Bounds bounds = scene.getBoundsInLocal();
+            boolean rightBorder = rectangle.getLayoutX() >= (bounds.getMaxX() - rectangle.getWidth());
+            boolean leftBorder = rectangle.getLayoutX() <= (bounds.getMinX());
+
+
+            if (rightBorder || leftBorder) { deltaX *= -1; }
+
+        }
+
+    }));
+
+
+    //1 Frame evey 10 millis, which means 100 FPS
+    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
+
+        double deltaX = 1;
+        double deltaY = -1;
+
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            circle.setLayoutX(circle.getLayoutX() + deltaX);
+            circle.setLayoutY(circle.getLayoutY() + deltaY);
+
+            Bounds bounds = scene.getBoundsInLocal();
+            boolean rightBorder = circle.getLayoutX() >= (bounds.getMaxX() - circle.getRadius());
+            boolean leftBorder = circle.getLayoutX() <= (bounds.getMinX() + circle.getRadius());
+            boolean bottomBorder = circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius());
+            boolean topBorder = circle.getLayoutY() <= (bounds.getMinY() + circle.getRadius());
+
+            if (rightBorder || leftBorder) { deltaX *= -1; }
+            if (topBorder) { deltaY *= -1; }
+
+
+            boolean CollisionY = circle.getLayoutY() + circle.getRadius() == 700;
+            boolean CollisionX = (rectangle.getLayoutX()+rectangle.getWidth()/2) >= circle.getCenterX() && circle.getCenterX() >= (rectangle.getLayoutX()-rectangle.getWidth()/2);
+
+            if(CollisionX && CollisionY){ deltaY *= -1; }
+
+            if(bottomBorder) {timeline.stop(); timeline2.stop();}
+        }
+
+    }));
+
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+        timeline2.setCycleCount(Animation.INDEFINITE);
+        timeline2.play();
     }
 
-    @FXML
-    private Label time;
-    boolean timerBoolean = true;
 
-    
+
+
+
+
+
+
+
+
     @FXML
-    private void Timer() {
-        Thread thread = new Thread(() -> {
-            SimpleDateFormat stf = new SimpleDateFormat("hh:mm:ss a");
-            while (!timerBoolean) {
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-                final String timer = stf.format(new Date());
-                Platform.runLater(() -> {
-                    time.setText(timer);
-                });
-            }
-        });
-        thread.start();
+    private Label highscore;
+
+    private final long createdMillis = System.currentTimeMillis();
+
+    public void getAgeInSeconds() {
+        long nowMillis = System.currentTimeMillis();
+        int zw = (int)((nowMillis - this.createdMillis) / 1000);
+        highscore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
     }
+
 }
