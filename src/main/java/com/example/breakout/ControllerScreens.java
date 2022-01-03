@@ -121,23 +121,45 @@ public class ControllerScreens implements Initializable {
         Stage previous = (Stage) n.getScene().getWindow();
         previous.close();
         this.scene = (AnchorPane) scene.lookup("#scene");
+
+
+        Bounds bounds = scene.lookup("#scene").getBoundsInLocal();////////////////////////////////////
+
+
         this.circle = (Circle) scene.lookup("#circle");
         this.rectangle = (Rectangle) scene.lookup("#rectangle");
+        Ball ball = new Ball();///////////////////////////////////////////////////////////////////////////
         game = new Game(scene, this.scene);
         game.setBall(new Ball(circle, 1, -1));
         game.setBar(new Bar(rectangle));
+        game.checkBall();
       scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             //BarDirectX can be moved or changed depending on how if feels
-            double BarDirectX = 10;
-            System.out.println("here");
-            System.out.println(key.getCode());
-            if (key.getCode() == KeyCode.A) {
-                System.out.println("here");
-                game.moveBar(-BarDirectX);
-            }
-            if (key.getCode() == KeyCode.D) {
-                game.moveBar(BarDirectX);
-            }
+            double BarDirectX = 5;
+          /** ///////////////////////////////////////
+           * moving left
+           */
+          if (key.getCode() == KeyCode.A) { System.out.println("left"); if(this.rectangle.getLayoutX()<= 0) { this.rectangle.setLayoutX(0);} else { game.moveBar(-BarDirectX);}}
+
+          /** ///////////////////////////////////////
+           * moving right
+           */
+          if (key.getCode() == KeyCode.D) { System.out.println("right"); if(this.rectangle.getLayoutX() + this.rectangle.getWidth()  >= 1000) { this.rectangle.setLayoutX(1000-rectangle.getWidth());} else { game.moveBar(+BarDirectX);}}
+
+          /*
+          boolean    rightBorder     = ball.getpositionalinfo().get(0) >= (bounds.getMaxX() - ball.getpositionalinfo().get(2));
+          boolean    leftBorder      = ball.getpositionalinfo().get(0) <= (bounds.getMinX() + ball.getpositionalinfo().get(2));
+          boolean    topBorder       = ball.getpositionalinfo().get(1) <= (bounds.getMinY() + ball.getpositionalinfo().get(2));
+          boolean    bottomBorder    = ball.getpositionalinfo().get(1) >= (bounds.getMaxY() - ball.getpositionalinfo().get(2));
+
+          if(rightBorder || leftBorder) { System.out.println("changeleftright"); ball.changemomentum(-1,1);}
+
+          if(topBorder){ System.out.println("changetop"); ball.changemomentum(1,-1);}
+
+          if(bottomBorder){timeline.stop();}
+
+ */
+
         });
         //have the timeline stop when you exit out
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -146,20 +168,13 @@ public class ControllerScreens implements Initializable {
     }
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
-    @FXML
-    private AnchorPane scene;
-    @FXML
-    private Circle circle;// circle == ball
 
-    @FXML
-    private Rectangle rectangle;
+    @FXML private AnchorPane scene;
 
+    @FXML private Circle circle;// circle == ball
 
-    // unnötig
-    @FXML
-    public void Start() {
+    @FXML private Rectangle rectangle;
 
-    }
 
   /*  //1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {

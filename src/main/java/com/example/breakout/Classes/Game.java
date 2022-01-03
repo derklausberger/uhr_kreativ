@@ -84,7 +84,7 @@ public class Game {
     public boolean checkBall() {
         List<Double> position = ball.getpositionalinfo();
         List<Double> momentum = ball.getmomentum();
-
+/*
         for (Block block : blocks) {
             int touches = block.checkblock(position);
             // ball touches block on left or right side
@@ -94,6 +94,8 @@ public class Game {
                 ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             }
         }
+
+ */
 
         // ball touches left or right side of the window
         if (position.get(0) - position.get(2) == 0) {
@@ -105,13 +107,16 @@ public class Game {
         // ball touches top or bottom side of the window
         if (position.get(1) - position.get(2) == 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+            System.out.println("change");///////////////////////////////////////////////////////////////
             //moveBall();
         } else if (position.get(1) + position.get(2) == leftside.getHeight()) {
+            System.out.println("change");///////////////////////////////////////////////////////////////
             return false;
         }
         //ball touches Bar
         if (bar.checkbar(position)) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+            System.out.println("change");//////////////////////////////////////////////////////////////////
         }
 
         return true;
