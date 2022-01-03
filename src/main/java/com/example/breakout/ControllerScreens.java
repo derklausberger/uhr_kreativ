@@ -26,6 +26,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 
@@ -101,7 +102,7 @@ public class ControllerScreens implements Initializable {
      * Das darunter ist daweil nur ein Bouncing Ball und ne Bar die hin und her geht
      * halt nicht auf input reagiert
      */
-    private Game game= new Game();
+    private Game game = new Game();
 
     public void SwitchToGame(ActionEvent event) throws IOException {
 
@@ -119,32 +120,39 @@ public class ControllerScreens implements Initializable {
         Node n = (Node) event.getSource();
         Stage previous = (Stage) n.getScene().getWindow();
         previous.close();
-
+        this.scene = (AnchorPane) scene.lookup("#scene");
+        this.circle = (Circle) scene.lookup("#circle");
+        this.rectangle = (Rectangle) scene.lookup("#rectangle");
         game = new Game(scene, this.scene);
         game.setBall(new Ball(circle, 1, -1));
         game.setBar(new Bar(rectangle));
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+      scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             //BarDirectX can be moved or changed depending on how if feels
             double BarDirectX = 10;
-            if (key.getCode() == KeyCode.LEFT) {
+            System.out.println("here");
+            System.out.println(key.getCode());
+            if (key.getCode() == KeyCode.A) {
+                System.out.println("here");
                 game.moveBar(-BarDirectX);
             }
-            if (key.getCode() == KeyCode.RIGHT) {
+            if (key.getCode() == KeyCode.D) {
                 game.moveBar(BarDirectX);
             }
         });
+        //have the timeline stop when you exit out
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
         //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we we change scenes
     }
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
     @FXML
-    private AnchorPane scene = new AnchorPane();
+    private AnchorPane scene;
+    @FXML
+    private Circle circle;// circle == ball
 
     @FXML
-    private Circle circle = new Circle(); // circle == ball
-
-    @FXML
-    private Rectangle rectangle = new Rectangle();
+    private Rectangle rectangle;
 
 
     // unnötig
@@ -181,9 +189,9 @@ public class ControllerScreens implements Initializable {
 
         @Override
         public void handle(ActionEvent actionEvent) {
+
             game.moveBall();
             game.checkBall();
-
             getAgeInSeconds(); // timer for highscore
 
            /* circle.setLayoutX(circle.getLayoutX() + deltaX);
@@ -221,17 +229,12 @@ public class ControllerScreens implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
+
     }
 
 
-
-
-
-
     @FXML
-    private Label highscore = new Label() ;
+    private Label highscore = new Label();
 
     private final long createdMillis = System.currentTimeMillis();
 

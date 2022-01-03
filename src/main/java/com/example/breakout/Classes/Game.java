@@ -68,12 +68,15 @@ public class Game {
     public void moveBall() {
         List<Double> momentum = ball.getmomentum();
         List<Double> position = ball.getpositionalinfo();
+
         ball.moveTo(position.get(0) + momentum.get(0),
                 position.get(1) + momentum.get(1));
     }
 
     public void moveBar(double xchange) {
-        bar.movelimit(xchange, leftside.getMaxWidth(), leftside.getMinWidth());
+
+        bar.move(xchange);
+        //bar.movelimit(xchange, leftside.getMaxWidth(), leftside.getMinWidth());
     }
 
     // return true: not lost

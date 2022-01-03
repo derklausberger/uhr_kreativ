@@ -4,6 +4,7 @@ import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javafx.scene.shape.Circle;
 
@@ -14,7 +15,7 @@ public class Ball {
     private double x;
     private double y;
     private double radius;
-    private Circle circle= new Circle();
+    private Circle circle;
 
 
     public Ball(Circle circle, double dx, double dy) {
@@ -32,7 +33,9 @@ public class Ball {
     public void moveTo(double x, double y) {
         this.x = x;
         this.y = y;
+       // System.out.println(x+" this."+this.x);
         circle.setCenterX(x);
+       // System.out.println(y+" this."+this.y);
         circle.setCenterY(y);
     }
 
