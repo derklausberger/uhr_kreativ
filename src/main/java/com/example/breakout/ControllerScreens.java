@@ -25,8 +25,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -183,6 +189,17 @@ public class ControllerScreens implements Initializable {
                 getAgeInSeconds();
             } else {
                 timeline.stop();
+                File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"),"src","resources", staticclass.theme, "lose.wav")));
+              System.out.println(path);
+                try {
+                    AudioInputStream  audioinput2 = AudioSystem.getAudioInputStream(path);
+                    Clip clip= AudioSystem.getClip();
+                    clip.open(audioinput2);
+                    clip.start();
+                }  catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         }
 
