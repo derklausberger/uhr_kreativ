@@ -132,7 +132,7 @@ public class ControllerScreens implements Initializable {
         game.checkBall();
 
         //testin purposes
-        Level lvl = Level.loadLevel("UHR");
+        Level lvl = Level.loadLevel("name");
         loadBlocks(lvl);
         game.setLevel(lvl);
 
