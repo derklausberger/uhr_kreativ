@@ -19,7 +19,7 @@ public class Application extends javafx.application.Application {
         stage.show();
 
         // das braucht nur klausberger, bitte nicht löschen
-        // ((Button)scene.lookup("#lvlEditBtn")).fire();
+        ((Button)scene.lookup("#lvlEditBtn")).fire();
     }
 
 

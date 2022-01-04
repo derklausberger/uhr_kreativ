@@ -83,7 +83,7 @@ public class ControllerScreens implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         Stage stage = new Stage();
-        stage.setTitle("Breakout -> mainScreen -> leveleditorScreen");
+        stage.setTitle("Leveleditor");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

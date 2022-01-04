@@ -3,38 +3,31 @@ package com.example.breakout.Classes;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private Ball ball = new Ball();
     private Bar bar = new Bar();
-    private List<Block> blocks = new ArrayList<Block>();
+    private Level level = new Level();
     private Scene scene;
     private AnchorPane leftside = new AnchorPane();
 
     public Game(Scene scene, AnchorPane pane) {
         ball = null;
         bar = null;
-        //blocks = null;
         this.scene = scene;
         leftside = pane;
     }
 
-    public Game(Game game) {
-        ball = game.ball;
-        bar = game.bar;
-        blocks = game.blocks;
-        scene = null;
+    public Game(Level level) {
+        this.level = level;
     }
 
     public Game() {
     }
 
     public Game(String filepath) {
-        this(loadGameFromFile(filepath));
+        loadLevelFromFile(filepath);
     }
 
     public void setBall(Ball ball) {
@@ -46,23 +39,15 @@ public class Game {
     }
 
     public void setBlocks(List<Block> blocks) {
-        this.blocks = blocks;
+        this.level.setBlocks(blocks);
     }
 
     public Ball getBall() {
         return ball;
     }
 
-    public static Game loadGameFromFile(String filepath) {
-        try {
-            FileInputStream fis = new FileInputStream(filepath);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            return (Game) ois.readObject();
-            // as this was below the return i commented it out as it would throw an error ==> ois.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void loadLevelFromFile(String filepath) {
+        level = Level.loadLevel(filepath);
     }
 
     public void moveBall() {

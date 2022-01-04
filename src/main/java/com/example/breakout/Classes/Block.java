@@ -8,13 +8,43 @@ public class Block {
     private double width;
     private double height;
     private int strength;
+    private int ID;
     /*
     One thing I am unsure of is if we should make this into its own class or just have a String which gets
     used in a method in game.
     private Powerup/String powerup;
     */
 
-    public Block(double x, double y, double width, double height, int strength) {
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public Block(int ID, double x, double y, double width, double height, int strength) {
+        this.ID = ID;
         this.x = x;
         this.y = y;
         this.width = width;
