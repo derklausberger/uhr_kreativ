@@ -47,21 +47,25 @@ public class levelEditorController {
 
         if (strength == 1) {
             rect = new Rectangle(1090, 50, 100, 30);
-            block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
+              block = new Block(level.getCount(), rect, strength);
+           // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
             rect.setFill(Color.DARKRED);
         } else if (strength == 2) {
             rect = new Rectangle(1090, 130, 100, 30);
-            block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
+               block = new Block(level.getCount(), rect, strength);
+            //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
             rect.setFill(Color.DARKBLUE);
         } else {
             rect = new Rectangle(1090, 210, 100, 30);
-            block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
+            block = new Block(level.getCount(),rect, strength);
+            //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
             rect.setFill(Color.DARKGREEN);
         }
 
         EventHandler handler = (EventHandler<MouseEvent>) e -> {
             if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
                     !level.replaceBlock(block)) {
+                System.out.println("test");
                 mainPane.getChildren().remove(rect);
             }
         };

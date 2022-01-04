@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Block {
     private Rectangle rectangle;
+    private int ID;
     private double x;
     private double y;
     private double width;
@@ -17,7 +18,8 @@ public class Block {
     private Powerup/String powerup;
     */
 
-    public Block(Rectangle rectangle, int strength) {
+    public Block(int ID, Rectangle rectangle, int strength) {
+        this.ID = ID;
         this.rectangle = rectangle;
         this.x = rectangle.getLayoutX();
         this.y = rectangle.getLayoutY();
@@ -25,6 +27,57 @@ public class Block {
         this.height = rectangle.getHeight();
         this.strength = strength;
     }
+
+    public Block(int ID, double x, double y, double width, double height, int strength) {
+        this.ID = ID;
+        this.rectangle = null;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.strength = strength;
+    }
+
+    public void setX_(double x) {
+        this.x = x;
+        rectangle.setLayoutX(x);
+    }
+
+    public void setY_(double y) {
+        this.y = y;
+        rectangle.setLayoutY(y);
+    }
+
+    public void setX(double x) {
+        this.x = x;
+        //rectangle.setLayoutX(x);
+    }
+
+    public void setY(double y) {
+        this.y = y;
+        //rectangle.setLayoutY(y);
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
 
     //checks if a ball intersects a block, if strength is below 1 it is always false, uses the list created from getpositionalinfo in the ball class
     //these would be x,y and radius

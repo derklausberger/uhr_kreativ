@@ -1,18 +1,16 @@
 package com.example.breakout.Classes;
 
-import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private Ball ball = new Ball();
     private Bar bar = new Bar();
-    private List<Block> blocks = new ArrayList<Block>();
+    private Level level = new Level();
     private Scene scene;
     private AnchorPane leftside = new AnchorPane();
 
@@ -28,15 +26,20 @@ public class Game {
     public Game(Game game) {
         ball = game.ball;
         bar = game.bar;
-        blocks = game.blocks;
+        level = game.level;
         scene = null;
+    }
+
+    public Game(Level level) {
+        this.level = level;
     }
 
     public Game() {
     }
 
     public Game(String filepath) {
-        this(loadGameFromFile(filepath));
+        loadLevelFromFile(filepath);
+        // was this but it caused an error so I changed it to this ^ above  this(loadLevelFromFile(filepath));
     }
 
     public void setBall(Ball ball) {
@@ -48,23 +51,15 @@ public class Game {
     }
 
     public void setBlocks(List<Block> blocks) {
-        this.blocks = blocks;
+        level.setBlocks(blocks);
     }
 
     public Ball getBall() {
         return ball;
     }
 
-    public static Game loadGameFromFile(String filepath) {
-        try {
-            FileInputStream fis = new FileInputStream(filepath);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            return (Game) ois.readObject();
-            // as this was below the return i commented it out as it would throw an error ==> ois.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void loadLevelFromFile(String filepath) {
+        level = Level.loadLevel(filepath);
     }
 
     public void moveBall() {
@@ -72,7 +67,7 @@ public class Game {
         List<Double> position = ball.getpositionalinfo();
 
         ball.moveTo(position.get(0) + momentum.get(0),
-                    position.get(1) + momentum.get(1));
+                position.get(1) + momentum.get(1));
     }
 
     public void moveBar(double xchange) {
@@ -86,8 +81,8 @@ public class Game {
     public boolean checkBall() {
         List<Double> position = ball.getpositionalinfo();
         List<Double> momentum = ball.getmomentum();
-        
-        for (Block block : blocks) {
+
+        for (Block block : level.getBlocks()) {
             int touches = block.checkblock(position);
             // ball touches block on left or right side
             if (touches == 1 || touches == 2) {
@@ -109,9 +104,10 @@ public class Game {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             //moveBall();
         } else if (position.get(1) + position.get(2) == leftside.getHeight()) {
+            bar.stop();
             return false;
         }
-     // ball touches bar
+        // ball touches bar
         if (bar.checkbar(position)) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
         }

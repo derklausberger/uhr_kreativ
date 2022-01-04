@@ -88,6 +88,7 @@ public class ControllerScreens implements Initializable {
 
 
     private Game game = new Game();
+    private EventHandler handler;
 
     public void SwitchToGame(ActionEvent event) throws IOException { // called by button "level [id]"
 
@@ -108,7 +109,7 @@ public class ControllerScreens implements Initializable {
         this.scene = (AnchorPane) scene.lookup("#scene");
         this.circle = (Circle) scene.lookup("#circle");
         this.rectangle = (Rectangle) scene.lookup("#rectangle");
-
+        this.highscore = (Label) scene.lookup("#highscore");
 
         game = new Game(scene, this.scene);
         game.setBall(new Ball(circle, 5, -5, 500, 600));
@@ -116,11 +117,12 @@ public class ControllerScreens implements Initializable {
         game.checkBall();
 
         //testin purposes
-     List<Block>blocks=createBlocks(10, 5, 2);
-     game.setBlocks(blocks);
+        List<Block> blocks = createBlocks(10, 5, 2);
+        game.setBlocks(blocks);
+
 
         // listening to certain KeyEvent's
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+        handler = (EventHandler<KeyEvent>) (key) -> {
             double BarDirectX = 15; //BarDirectX can be moved or changed depending on how it feels
 
             if (key.getCode() == KeyCode.A) {
@@ -140,12 +142,16 @@ public class ControllerScreens implements Initializable {
                 }
             }
             // this.rectangle.getLayoutX --> most left point
-
-        });
+        };
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);
+        if (game.checkBall()) {
+            timeline.stop();
+        }
 
         //have the timeline stop when you exit out
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+
 
         //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we change scenes
     }
@@ -153,38 +159,12 @@ public class ControllerScreens implements Initializable {
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
 
-    @FXML
-    private AnchorPane scene;
+    @FXML private AnchorPane scene;
 
-    @FXML
-    private Circle circle;// circle == ball
+    @FXML private Circle circle;// circle == ball
 
-    @FXML
-    private Rectangle rectangle;
-
-
-  /*  //1 Frame evey 10 millis, which means 100 FPS
-    Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
-
-        double deltaX = 1;
-
-        @Override
-        public void handle(ActionEvent actionEvent) {
-            rectangle.setLayoutX(rectangle.getLayoutX() + deltaX);
-
-            Bounds bounds = scene.getBoundsInLocal();
-            boolean rightBorder = rectangle.getLayoutX() >= (bounds.getMaxX() - rectangle.getWidth());
-            boolean leftBorder = rectangle.getLayoutX() <= (bounds.getMinX());
-
-
-            if (rightBorder || leftBorder) {
-                deltaX *= -1;
-            }
-
-        }
-
-    }));*/
-
+    @FXML private Rectangle rectangle;
+    
 
     //1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
@@ -196,43 +176,11 @@ public class ControllerScreens implements Initializable {
             // methods used while timeline is ongoing
 
             game.moveBall();
-            game.checkBall();
-
-
-
-/*
-            circle.setLayoutX(circle.getLayoutX() + ball.getmomentum().get(0));
-            circle.setLayoutY(circle.getLayoutY() + ball.getmomentum().get(1));
-
-            Bounds bounds = scene.getBoundsInLocal();
-            boolean rightBorder = circle.getLayoutX() >= (bounds.getMaxX() - circle.getRadius());
-            boolean leftBorder = circle.getLayoutX() <= (bounds.getMinX() + circle.getRadius());
-            boolean bottomBorder = circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius());
-            boolean topBorder = circle.getLayoutY() <= (bounds.getMinY() + circle.getRadius());
-
-
-            if (rightBorder || leftBorder) {
-                 ball.changemomentum(ball.getmomentum().get(0)*(-1),ball.getmomentum().get(1)); // früher das mit deltay *=-1
-            }
-            if (topBorder) {
-                ball.changemomentum(ball.getmomentum().get(0),ball.getmomentum().get(1)*(-1)); // selbe wie oben
-            }
-
-
-            boolean CollisionY = circle.getLayoutY() + circle.getRadius() == 700;
-            boolean CollisionX = (rectangle.getLayoutX() + rectangle.getWidth() / 2) >= circle.getCenterX() && circle.getCenterX() >= (rectangle.getLayoutX() - rectangle.getWidth() / 2);
-
-            if (CollisionX && CollisionY) {
-                ball.changemomentum(ball.getmomentum().get(0),ball.getmomentum().get(1)*(-1));
-            }
-
-            if (bottomBorder) {
+            if (game.checkBall()) {
+                getAgeInSeconds();
+            } else {
                 timeline.stop();
             }
-
- */
-
-
         }
 
     }));
@@ -249,7 +197,7 @@ public class ControllerScreens implements Initializable {
                 xWert = 50;
                 for (int i = 0; i < coloums; i++) {
                     Rectangle block = new Rectangle(xWert, yWert, 100, 30);
-                    blocklist.add(new Block(block,1));
+                    blocklist.add(new Block(i + k * coloums, block, 1));
                     block.setFill(Color.RED);
                     scene.getChildren().add(block);
 

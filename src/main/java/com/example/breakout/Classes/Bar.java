@@ -10,6 +10,7 @@ public class Bar {
     private double width;
     private double height;
     private Rectangle rectangle;
+    private boolean moveable = true;
 
     public double getX() {
         return x;
@@ -31,8 +32,14 @@ public class Bar {
     }
 
     public void move(double x) {
-        this.x += x;
-        rectangle.setLayoutX(this.x);
+        if (moveable) {
+            this.x += x;
+            rectangle.setLayoutX(this.x);
+        }
+    }
+
+    public void stop() {
+        moveable = false;
     }
 
     public void movelimit(double x, double gamesidemaxwidth, double gamesideminwidth) {
