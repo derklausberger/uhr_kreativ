@@ -1,5 +1,6 @@
 package com.example.breakout;
 
+import com.example.breakout.Classes.Block;
 import com.example.breakout.Classes.Game;
 import com.example.breakout.Classes.Ball;
 import com.example.breakout.Classes.Bar;
@@ -19,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -26,22 +28,16 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
 public class ControllerScreens implements Initializable {
 
-    /**
-     * ________________________________________________________________________________________________________________
-     * Scene switching
-     * -> needs closing from window before !!! (isn't done yet)
-     * if anyone wants to do it np, go right ahead :)
-     */
 
-    public void SwitchToLevels(ActionEvent event) throws IOException {
-
-        // called by button "Start"
+    public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
@@ -58,9 +54,7 @@ public class ControllerScreens implements Initializable {
 
     }
 
-    public void SwitchToSettings(ActionEvent event) throws IOException {
-
-        // called by button "Einstellugen"
+    public void SwitchToSettings(ActionEvent event) throws IOException { // called by button "Einstellugen"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
@@ -76,9 +70,7 @@ public class ControllerScreens implements Initializable {
         previous.close();
     }
 
-    public void SwitchToLeveleditor(ActionEvent event) throws IOException {
-
-        // called by button "Level Editor"
+    public void SwitchToLeveleditor(ActionEvent event) throws IOException { // called by button "Level Editor"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
@@ -94,19 +86,10 @@ public class ControllerScreens implements Initializable {
         previous.close();
     }
 
-    /**
-     *_________________________________________________________________________________________________________________
-     */
 
-    /**
-     * Das darunter ist daweil nur ein Bouncing Ball und ne Bar die hin und her geht
-     * halt nicht auf input reagiert
-     */
     private Game game = new Game();
 
-    public void SwitchToGame(ActionEvent event) throws IOException {
-
-        // called by button "Level Editor"
+    public void SwitchToGame(ActionEvent event) throws IOException { // called by button "level [id]"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
@@ -120,60 +103,64 @@ public class ControllerScreens implements Initializable {
         Node n = (Node) event.getSource();
         Stage previous = (Stage) n.getScene().getWindow();
         previous.close();
+
+
         this.scene = (AnchorPane) scene.lookup("#scene");
-
-
-        Bounds bounds = scene.lookup("#scene").getBoundsInLocal();////////////////////////////////////
-
-
         this.circle = (Circle) scene.lookup("#circle");
         this.rectangle = (Rectangle) scene.lookup("#rectangle");
-        Ball ball = new Ball();///////////////////////////////////////////////////////////////////////////
+
+
         game = new Game(scene, this.scene);
-        game.setBall(new Ball(circle, 1, -1));
+        game.setBall(new Ball(circle, 5, -5, 500, 600));
         game.setBar(new Bar(rectangle));
         game.checkBall();
-      scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-            //BarDirectX can be moved or changed depending on how if feels
-            double BarDirectX = 5;
-          /** ///////////////////////////////////////
-           * moving left
-           */
-          if (key.getCode() == KeyCode.A) { System.out.println("left"); if(this.rectangle.getLayoutX()<= 0) { this.rectangle.setLayoutX(0);} else { game.moveBar(-BarDirectX);}}
 
-          /** ///////////////////////////////////////
-           * moving right
-           */
-          if (key.getCode() == KeyCode.D) { System.out.println("right"); if(this.rectangle.getLayoutX() + this.rectangle.getWidth()  >= 1000) { this.rectangle.setLayoutX(1000-rectangle.getWidth());} else { game.moveBar(+BarDirectX);}}
+        //testin purposes
+     List<Block>blocks=createBlocks(10, 5, 2);
+     game.setBlocks(blocks);
 
-          /*
-          boolean    rightBorder     = ball.getpositionalinfo().get(0) >= (bounds.getMaxX() - ball.getpositionalinfo().get(2));
-          boolean    leftBorder      = ball.getpositionalinfo().get(0) <= (bounds.getMinX() + ball.getpositionalinfo().get(2));
-          boolean    topBorder       = ball.getpositionalinfo().get(1) <= (bounds.getMinY() + ball.getpositionalinfo().get(2));
-          boolean    bottomBorder    = ball.getpositionalinfo().get(1) >= (bounds.getMaxY() - ball.getpositionalinfo().get(2));
+        // listening to certain KeyEvent's
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            double BarDirectX = 15; //BarDirectX can be moved or changed depending on how it feels
 
-          if(rightBorder || leftBorder) { System.out.println("changeleftright"); ball.changemomentum(-1,1);}
-
-          if(topBorder){ System.out.println("changetop"); ball.changemomentum(1,-1);}
-
-          if(bottomBorder){timeline.stop();}
-
- */
+            if (key.getCode() == KeyCode.A) {
+                System.out.println("Bar Left in Controller");
+                if (this.rectangle.getLayoutX() <= 0) {
+                    this.rectangle.setLayoutX(0);
+                } else {
+                    game.moveBar(-BarDirectX);
+                }
+            }
+            if (key.getCode() == KeyCode.D) {
+                System.out.println("Bar Right in Controller");
+                if (this.rectangle.getLayoutX() + this.rectangle.getWidth() >= 1000) {
+                    this.rectangle.setLayoutX(1000 - rectangle.getWidth());
+                } else {
+                    game.moveBar(+BarDirectX);
+                }
+            }
+            // this.rectangle.getLayoutX --> most left point
 
         });
+
         //have the timeline stop when you exit out
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-        //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we we change scenes
+
+        //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we change scenes
     }
+
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
 
-    @FXML private AnchorPane scene;
+    @FXML
+    private AnchorPane scene;
 
-    @FXML private Circle circle;// circle == ball
+    @FXML
+    private Circle circle;// circle == ball
 
-    @FXML private Rectangle rectangle;
+    @FXML
+    private Rectangle rectangle;
 
 
   /*  //1 Frame evey 10 millis, which means 100 FPS
@@ -202,15 +189,20 @@ public class ControllerScreens implements Initializable {
     //1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
 
+
         @Override
         public void handle(ActionEvent actionEvent) {
 
+            // methods used while timeline is ongoing
+
             game.moveBall();
             game.checkBall();
-            getAgeInSeconds(); // timer for highscore
 
-           /* circle.setLayoutX(circle.getLayoutX() + deltaX);
-            circle.setLayoutY(circle.getLayoutY() + deltaY);
+
+
+/*
+            circle.setLayoutX(circle.getLayoutX() + ball.getmomentum().get(0));
+            circle.setLayoutY(circle.getLayoutY() + ball.getmomentum().get(1));
 
             Bounds bounds = scene.getBoundsInLocal();
             boolean rightBorder = circle.getLayoutX() >= (bounds.getMaxX() - circle.getRadius());
@@ -220,10 +212,10 @@ public class ControllerScreens implements Initializable {
 
 
             if (rightBorder || leftBorder) {
-                deltaX *= -1;
+                 ball.changemomentum(ball.getmomentum().get(0)*(-1),ball.getmomentum().get(1)); // früher das mit deltay *=-1
             }
             if (topBorder) {
-                deltaY *= -1;
+                ball.changemomentum(ball.getmomentum().get(0),ball.getmomentum().get(1)*(-1)); // selbe wie oben
             }
 
 
@@ -231,20 +223,48 @@ public class ControllerScreens implements Initializable {
             boolean CollisionX = (rectangle.getLayoutX() + rectangle.getWidth() / 2) >= circle.getCenterX() && circle.getCenterX() >= (rectangle.getLayoutX() - rectangle.getWidth() / 2);
 
             if (CollisionX && CollisionY) {
-                deltaY *= -1;
+                ball.changemomentum(ball.getmomentum().get(0),ball.getmomentum().get(1)*(-1));
             }
 
             if (bottomBorder) {
                 timeline.stop();
-            }*/
+            }
+
+ */
+
+
         }
 
     }));
 
 
+    public List<Block> createBlocks(int blocks, int rows, int coloums) {
+        List<Block> blocklist = new LinkedList<Block>();
+        int xWert = 50;
+        int yWert = 50;
+        int count = 0;
+
+        while (count < blocks) {
+            for (int k = 0; k < rows; k++) {
+                xWert = 50;
+                for (int i = 0; i < coloums; i++) {
+                    Rectangle block = new Rectangle(xWert, yWert, 100, 30);
+                    blocklist.add(new Block(block,1));
+                    block.setFill(Color.RED);
+                    scene.getChildren().add(block);
+
+                    count++;
+                    xWert += 110;
+                }
+                yWert += 40;
+            }
+        }
+        return blocklist;
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
     }
 
 

@@ -53,7 +53,7 @@ public class Bar {
     public void showBar() {
         // place bar on scene (later implemented)
     }
-
+      /*
     //checks if a ball intersects the bar, uses the list created from getpositionalinfo in the ball class
     //these would be x,y and radius
     //got this method from https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
@@ -64,5 +64,22 @@ public class Bar {
         double Dx = Xn - ballinfo.get(0);
         double Dy = Yn - ballinfo.get(1);
         return (Dx * Dx + Dy * Dy) <= ballinfo.get(2) * ballinfo.get(2);
+    }*/
+
+    public boolean checkbar(List<Double> ballinfo) {
+        double Xn = Math.max(x, Math.min(ballinfo.get(0), x + width));
+        double Yn = Math.max(y, Math.min(ballinfo.get(1), y + height));
+        double Dx = Xn - ballinfo.get(0);
+        double Dy = Yn - ballinfo.get(1);
+        return (Dx * Dx + Dy * Dy) <= ballinfo.get(2) * ballinfo.get(2);
+    }
+
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 }

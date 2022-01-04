@@ -1,54 +1,28 @@
 package com.example.breakout.Classes;
 
+import javafx.scene.shape.Rectangle;
+
 import java.util.List;
 
 public class Block {
+    private Rectangle rectangle;
     private double x;
     private double y;
     private double width;
     private double height;
     private int strength;
-    private int ID;
     /*
     One thing I am unsure of is if we should make this into its own class or just have a String which gets
     used in a method in game.
     private Powerup/String powerup;
     */
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public Block(int ID, double x, double y, double width, double height, int strength) {
-        this.ID = ID;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+    public Block(Rectangle rectangle, int strength) {
+        this.rectangle = rectangle;
+        this.x = rectangle.getLayoutX();
+        this.y = rectangle.getLayoutY();
+        this.width = rectangle.getWidth();
+        this.height = rectangle.getHeight();
         this.strength = strength;
     }
 
@@ -59,14 +33,14 @@ public class Block {
     //0= ball doesnt hit block
     //1= ball hits from the left
     //2= ball hits from the right
-    //3= ball hits from the bottom
-    //4= ball hits from the top
+    //3= ball hits from the top
+    //4= ball hits from the bottom
     public int checkblock(List<Double> ballinfo) {
         if (strength < 1) {
             return 0;
         }
-        double Xn = Math.max(x - (width / 2), Math.min(ballinfo.get(0), x + (width / 2)));
-        double Yn = Math.max(y - (height / 2), Math.min(ballinfo.get(1), y + (height / 2)));
+        double Xn = Math.max(x, Math.min(ballinfo.get(0), x + width));
+        double Yn = Math.max(y, Math.min(ballinfo.get(1), y + height));
         double Dx = Xn - ballinfo.get(0);
         double Dy = Yn - ballinfo.get(1);
         if ((Dx * Dx + Dy * Dy) <= ballinfo.get(2) * ballinfo.get(2)) {
@@ -75,14 +49,18 @@ public class Block {
             double ydif = y - ballinfo.get(1);
             if (Math.abs(xdif) > Math.abs(ydif)) {
                 if (xdif > 0) {
+                    System.out.println("left");
                     return 1;
                 } else {
+                    System.out.println("right");
                     return 2;
                 }
             } else {
                 if (ydif > 0) {
+                    System.out.println("top");
                     return 3;
                 } else {
+                    System.out.println("bottom");
                     return 4;
                 }
             }
@@ -95,6 +73,7 @@ public class Block {
     public boolean lowerHP(int damage) {
         strength -= damage;
         if (strength < 1) {
+            rectangle.setVisible(false);
             return false;
         }
         return true;

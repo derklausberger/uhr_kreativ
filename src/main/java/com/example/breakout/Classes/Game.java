@@ -1,33 +1,42 @@
 package com.example.breakout.Classes;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private Ball ball = new Ball();
     private Bar bar = new Bar();
-    private Level level = new Level();
+    private List<Block> blocks = new ArrayList<Block>();
     private Scene scene;
     private AnchorPane leftside = new AnchorPane();
+
 
     public Game(Scene scene, AnchorPane pane) {
         ball = null;
         bar = null;
+        //blocks = null;///////////////////////////////////////////////
         this.scene = scene;
         leftside = pane;
     }
 
-    public Game(Level level) {
-        this.level = level;
+    public Game(Game game) {
+        ball = game.ball;
+        bar = game.bar;
+        blocks = game.blocks;
+        scene = null;
     }
 
     public Game() {
     }
 
     public Game(String filepath) {
-        loadLevelFromFile(filepath);
+        this(loadGameFromFile(filepath));
     }
 
     public void setBall(Ball ball) {
@@ -39,15 +48,23 @@ public class Game {
     }
 
     public void setBlocks(List<Block> blocks) {
-        this.level.setBlocks(blocks);
+        this.blocks = blocks;
     }
 
     public Ball getBall() {
         return ball;
     }
 
-    public void loadLevelFromFile(String filepath) {
-        level = Level.loadLevel(filepath);
+    public static Game loadGameFromFile(String filepath) {
+        try {
+            FileInputStream fis = new FileInputStream(filepath);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            return (Game) ois.readObject();
+            // as this was below the return i commented it out as it would throw an error ==> ois.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void moveBall() {
@@ -55,7 +72,7 @@ public class Game {
         List<Double> position = ball.getpositionalinfo();
 
         ball.moveTo(position.get(0) + momentum.get(0),
-                position.get(1) + momentum.get(1));
+                    position.get(1) + momentum.get(1));
     }
 
     public void moveBar(double xchange) {
@@ -69,7 +86,7 @@ public class Game {
     public boolean checkBall() {
         List<Double> position = ball.getpositionalinfo();
         List<Double> momentum = ball.getmomentum();
-/*
+        
         for (Block block : blocks) {
             int touches = block.checkblock(position);
             // ball touches block on left or right side
@@ -79,8 +96,6 @@ public class Game {
                 ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             }
         }
-
- */
 
         // ball touches left or right side of the window
         if (position.get(0) - position.get(2) == 0) {
@@ -92,18 +107,14 @@ public class Game {
         // ball touches top or bottom side of the window
         if (position.get(1) - position.get(2) == 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
-            System.out.println("change");///////////////////////////////////////////////////////////////
             //moveBall();
         } else if (position.get(1) + position.get(2) == leftside.getHeight()) {
-            System.out.println("change");///////////////////////////////////////////////////////////////
             return false;
         }
-        //ball touches Bar
+     // ball touches bar
         if (bar.checkbar(position)) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
-            System.out.println("change");//////////////////////////////////////////////////////////////////
         }
-
         return true;
     }
 
