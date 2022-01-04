@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.ControllerScreens">
    <children>
       <Button layoutX="614.0" layoutY="347.0" mnemonicParsing="false" onAction="#SwitchToGame" text="game(Level 1)" />
-      <Label layoutX="577.0" layoutY="80.0" text="press &quot;A&quot; to move paddle to the left" textFill="#24ae0b" />
-      <Label layoutX="576.0" layoutY="101.0" text="press &quot;D&quot; to move paddle to the right" textFill="#24ae0b" />
    </children>
 </AnchorPane>
+
