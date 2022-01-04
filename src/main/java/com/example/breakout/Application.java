@@ -1,5 +1,6 @@
 package com.example.breakout;
 
+import com.example.breakout.Classes.staticclass;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +21,8 @@ public class Application extends javafx.application.Application {
         stage.show();
         // das braucht nur klausberger, bitte nicht löschen
         //((Button)scene.lookup("#lvlEditBtn")).fire();
+        staticclass.playsong("titlescreen.mp3");
+        staticclass.setMediaPlayertorepeat();
     }
 
 
