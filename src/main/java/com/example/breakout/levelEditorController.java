@@ -60,7 +60,7 @@ public class levelEditorController {
 
     private void loadBlocks() {
         try {
-            level = Level.loadLevel("name");
+            //level = Level.loadLevel("name");
             Block block;
             for (int i = 0; i < level.getBlocks().size(); i++) {
                 block = level.getBlocks().get(i);
