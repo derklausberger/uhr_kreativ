@@ -5,6 +5,9 @@ import com.example.breakout.Classes.Level;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -23,6 +26,12 @@ public class levelEditorController {
     @FXML
     private AnchorPane mainPane;
 
+    @FXML
+    private Button saveLevelBtn;
+
+    @FXML
+    private TextField name;
+
     private Level level;
 
     public levelEditorController() {
@@ -34,39 +43,59 @@ public class levelEditorController {
         blueRect.setFill(Color.BLUE);
         greenRect.setFill(Color.GREEN);
 
-        redRect.setOnMouseEntered(e -> placeBlock(e, 1));
-        blueRect.setOnMouseEntered(e -> placeBlock(e, 2));
-        greenRect.setOnMouseEntered(e -> placeBlock(e, 3));
+        redRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), 1090, 50, 100, 30, 1)));
+        blueRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), 1090, 130, 100, 30, 2)));
+        greenRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), 1090, 210, 100, 30, 3)));
 
         level = new Level();
+
+        loadBlocks();
+
+        saveLevelBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> level.saveLevel(name.getText())));
+
+        name.addEventHandler(KeyEvent.KEY_RELEASED, (e -> saveLevelBtn.setDisable(name.getText().equals(""))));
+
+        saveLevelBtn.setDisable(true);
     }
 
-    private void placeBlock(MouseEvent event, int strength) {
-        Rectangle rect;
-        Block block;
+    private void loadBlocks() {
+        try {
+            level = Level.loadLevel("name");
+            Block block;
+            for (int i = 0; i < level.getBlocks().size(); i++) {
+                block = level.getBlocks().get(i);
+                placeBlock(block);
+            }
+        }catch(Exception e){
 
-        if (strength == 1) {
-            rect = new Rectangle(1090, 50, 100, 30);
-              block = new Block(level.getCount(), rect, strength);
-           // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
+        }
+    }
+
+    private void placeBlock(Block b) {
+        Rectangle rect;
+
+        if (b.getStrength() == 1) {
+            rect = new Rectangle(b.getX(), b.getY(), 100, 30);
+            //block = new Block(level.getCount(), rect, b.getStrength());
+            // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
             rect.setFill(Color.DARKRED);
-        } else if (strength == 2) {
-            rect = new Rectangle(1090, 130, 100, 30);
-               block = new Block(level.getCount(), rect, strength);
+        } else if (b.getStrength() == 2) {
+            rect = new Rectangle(b.getX(), b.getY(), 100, 30);
+            //block = new Block(level.getCount(), rect, strength);
             //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
             rect.setFill(Color.DARKBLUE);
         } else {
-            rect = new Rectangle(1090, 210, 100, 30);
-            block = new Block(level.getCount(),rect, strength);
+            rect = new Rectangle(b.getX(), b.getY(), 100, 30);
+            //block = new Block(level.getCount(), rect, strength);
             //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
             rect.setFill(Color.DARKGREEN);
         }
 
         EventHandler handler = (EventHandler<MouseEvent>) e -> {
-            if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
-                    !level.replaceBlock(block)) {
-                System.out.println("test");
+            if (e.getSceneX() + 50 > 1000) {
                 mainPane.getChildren().remove(rect);
+
+                level.removeBlock(b);
             }
         };
 
@@ -74,13 +103,21 @@ public class levelEditorController {
             rect.setX(e.getSceneX() - 50);
             rect.setY(e.getSceneY() - 15);
 
-            block.setX(e.getSceneX() - 50);
-            block.setY(e.getSceneY() - 15);
+            b.setX(e.getSceneX() - 50);
+            b.setY(e.getSceneY() - 15);
+            rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
+                    handler);
         }));
 
-        rect.addEventHandler(MouseEvent.MOUSE_RELEASED, handler);
-
         rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, handler);
+
+        rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+            if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
+                    !level.replaceBlock(b)) {
+                mainPane.getChildren().remove(rect);
+                level.removeBlock(b);
+            }
+        });
 
         /*rect.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
@@ -89,7 +126,9 @@ public class levelEditorController {
         }));*/
 
         mainPane.getChildren().add(rect);
-        level.addBlock(block);
+        if(!level.getBlocks().contains(b)) {
+            level.addBlock(b);
+        }
         mainPane.setCursor(Cursor.MOVE);
     }
 }

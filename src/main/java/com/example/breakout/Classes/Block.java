@@ -2,10 +2,11 @@ package com.example.breakout.Classes;
 
 import javafx.scene.shape.Rectangle;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Block {
-    private Rectangle rectangle;
+public class Block implements Serializable {
+    //private Rectangle rectangle;
     private int ID;
     private double x;
     private double y;
@@ -20,7 +21,7 @@ public class Block {
 
     public Block(int ID, Rectangle rectangle, int strength) {
         this.ID = ID;
-        this.rectangle = rectangle;
+        //this.rectangle = rectangle;
         this.x = rectangle.getLayoutX();
         this.y = rectangle.getLayoutY();
         this.width = rectangle.getWidth();
@@ -30,7 +31,7 @@ public class Block {
 
     public Block(int ID, double x, double y, double width, double height, int strength) {
         this.ID = ID;
-        this.rectangle = null;
+        //this.rectangle = null;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -38,14 +39,8 @@ public class Block {
         this.strength = strength;
     }
 
-    public void setX_(double x) {
-        this.x = x;
-        rectangle.setLayoutX(x);
-    }
-
-    public void setY_(double y) {
-        this.y = y;
-        rectangle.setLayoutY(y);
+    public double getX() {
+        return x;
     }
 
     public void setX(double x) {
@@ -53,10 +48,25 @@ public class Block {
         //rectangle.setLayoutX(x);
     }
 
+    /*public void setX_(double x) {
+        this.x = x;
+        rectangle.setLayoutX(x);
+    }*/
+
+    public double getY() {
+        return y;
+    }
+
     public void setY(double y) {
         this.y = y;
         //rectangle.setLayoutY(y);
     }
+
+
+    /*public void setY_(double y) {
+        this.y = y;
+        rectangle.setLayoutY(y);
+    }*/
 
     public double getHeight() {
         return height;
@@ -70,14 +80,13 @@ public class Block {
         return ID;
     }
 
-    public double getX() {
-        return x;
+    public int getStrength() {
+        return strength;
     }
 
-    public double getY() {
-        return y;
+    public void setStrength(int strength) {
+        this.strength = strength;
     }
-
 
     //checks if a ball intersects a block, if strength is below 1 it is always false, uses the list created from getpositionalinfo in the ball class
     //these would be x,y and radius
@@ -126,7 +135,7 @@ public class Block {
     public boolean lowerHP(int damage) {
         strength -= damage;
         if (strength < 1) {
-            rectangle.setVisible(false);
+            //rectangle.setVisible(false);
             return false;
         }
         return true;

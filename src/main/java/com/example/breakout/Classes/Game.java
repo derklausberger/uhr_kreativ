@@ -50,8 +50,8 @@ public class Game {
         this.bar = bar;
     }
 
-    public void setBlocks(List<Block> blocks) {
-        level.setBlocks(blocks);
+    public void setLevel(Level level) {
+        this.level = level;
     }
 
     public Ball getBall() {

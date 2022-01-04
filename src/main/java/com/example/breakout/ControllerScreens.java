@@ -1,9 +1,6 @@
 package com.example.breakout;
 
-import com.example.breakout.Classes.Block;
-import com.example.breakout.Classes.Game;
-import com.example.breakout.Classes.Ball;
-import com.example.breakout.Classes.Bar;
+import com.example.breakout.Classes.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,11 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -117,8 +116,9 @@ public class ControllerScreens implements Initializable {
         game.checkBall();
 
         //testin purposes
-        List<Block> blocks = createBlocks(10, 5, 2);
-        game.setBlocks(blocks);
+        Level lvl = Level.loadLevel("name");
+        loadBlocks(lvl);
+        game.setLevel(lvl);
 
 
         // listening to certain KeyEvent's
@@ -159,12 +159,15 @@ public class ControllerScreens implements Initializable {
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
 
-    @FXML private AnchorPane scene;
+    @FXML
+    private AnchorPane scene;
 
-    @FXML private Circle circle;// circle == ball
+    @FXML
+    private Circle circle;// circle == ball
 
-    @FXML private Rectangle rectangle;
-    
+    @FXML
+    private Rectangle rectangle;
+
 
     //1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
@@ -186,7 +189,7 @@ public class ControllerScreens implements Initializable {
     }));
 
 
-    public List<Block> createBlocks(int blocks, int rows, int coloums) {
+    /*public List<Block> createBlocks(int blocks, int rows, int coloums) {
         List<Block> blocklist = new LinkedList<Block>();
         int xWert = 50;
         int yWert = 50;
@@ -208,6 +211,39 @@ public class ControllerScreens implements Initializable {
             }
         }
         return blocklist;
+    }*/
+
+    private void loadBlocks(Level level) {
+        Block block;
+        for (int i = 0; i < level.getBlocks().size(); i++) {
+            block = level.getBlocks().get(i);
+            placeBlock(level, block.getX(), block.getY(), block.getStrength());
+        }
+    }
+
+    private void placeBlock(Level level, double x, double y, int strength) {
+        Rectangle rect;
+        Block block;
+
+        if (strength == 1) {
+            rect = new Rectangle(x, y, 100, 30);
+            block = new Block(level.getCount(), rect, strength);
+            // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
+            rect.setFill(Color.DARKRED);
+        } else if (strength == 2) {
+            rect = new Rectangle(x, y, 100, 30);
+            block = new Block(level.getCount(), rect, strength);
+            //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
+            rect.setFill(Color.DARKBLUE);
+        } else {
+            rect = new Rectangle(x, y, 100, 30);
+            block = new Block(level.getCount(), rect, strength);
+            //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
+            rect.setFill(Color.DARKGREEN);
+        }
+
+        scene.getChildren().add(rect);
+        //level.addBlock(block);
     }
 
 
