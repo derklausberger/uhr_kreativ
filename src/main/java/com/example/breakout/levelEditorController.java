@@ -13,6 +13,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.IOException;
+
 public class levelEditorController {
     @FXML
     private Rectangle redRect;// = new Rectangle(1000 + 90, 50, 100, 30);
@@ -28,6 +30,9 @@ public class levelEditorController {
 
     @FXML
     private Button saveLevelBtn;
+
+    @FXML
+    private Button exitLevelEditorBtn;
 
     @FXML
     private TextField name;
@@ -53,6 +58,14 @@ public class levelEditorController {
 
         saveLevelBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> level.saveLevel(name.getText())));
 
+        exitLevelEditorBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
+            try {
+                ControllerScreens.SwitchToMain();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }));
+
         name.addEventHandler(KeyEvent.KEY_RELEASED, (e -> saveLevelBtn.setDisable(name.getText().equals(""))));
 
         saveLevelBtn.setDisable(true);
@@ -60,7 +73,7 @@ public class levelEditorController {
 
     private void loadBlocks() {
         try {
-            //level = Level.loadLevel("name");
+            //level = Level.loadLevel("UHR");
             Block block;
             for (int i = 0; i < level.getBlocks().size(); i++) {
                 block = level.getBlocks().get(i);
@@ -113,11 +126,14 @@ public class levelEditorController {
 
         rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
+                    e.getSceneY() - 15 < 0 || e.getSceneY() + 15 >  700||
                     !level.replaceBlock(b)) {
                 mainPane.getChildren().remove(rect);
                 level.removeBlock(b);
             }
         });
+
+
 
         /*rect.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,

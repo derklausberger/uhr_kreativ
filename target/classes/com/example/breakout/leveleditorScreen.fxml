@@ -16,8 +16,9 @@
             <Rectangle fx:id="redRect" width="100" height="30" layoutX="90" layoutY="50"/>
             <Rectangle fx:id="blueRect" width="100" height="30" layoutX="90" layoutY="130"/>
             <Rectangle fx:id="greenRect" width="100" height="30" layoutX="90" layoutY="210"/>
-            <TextField fx:id="name" layoutY="610" layoutX="90" maxWidth="100" minWidth="100"></TextField>
-            <Button fx:id="saveLevelBtn" layoutY="650" layoutX="90" maxWidth="100" minWidth="100">Speichern</Button>
+            <TextField fx:id="name" layoutY="650" layoutX="40" maxWidth="100" minWidth="100"></TextField>
+            <Button fx:id="saveLevelBtn" layoutY="650" layoutX="160" maxWidth="100" minWidth="100">Speichern</Button>
+            <Button fx:id="exitLevelEditorBtn" layoutY="690" layoutX="160" maxWidth="100" minWidth="100">Beenden</Button>
         </AnchorPane>
     </SplitPane>
 </AnchorPane>

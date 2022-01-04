@@ -40,6 +40,16 @@ import java.util.ResourceBundle;
 
 
 public class ControllerScreens implements Initializable {
+    //public static Stage stage;
+    public static void SwitchToMain() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        //stage = new Stage();
+        Application.stage.setTitle("Breakout -> mainScreen");
+        Application.stage.setScene(scene);
+        Application.stage.setResizable(false);
+        Application.stage.show();
+    }
 
 
     public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
@@ -79,16 +89,16 @@ public class ControllerScreens implements Initializable {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-        Stage stage = new Stage();
-        stage.setTitle("Leveleditor");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        //Application.stage = new Stage();
+        Application.stage.setTitle("Leveleditor");
+        Application.stage.setScene(scene);
+        Application.stage.setResizable(false);
+        Application.stage.show();
 
         // close previous window
-        Node n = (Node) event.getSource();
+        /*Node n = (Node) event.getSource();
         Stage previous = (Stage) n.getScene().getWindow();
-        previous.close();
+        previous.close();*/
     }
 
 
@@ -122,7 +132,7 @@ public class ControllerScreens implements Initializable {
         game.checkBall();
 
         //testin purposes
-        Level lvl = Level.loadLevel("name");
+        Level lvl = Level.loadLevel("UHR");
         loadBlocks(lvl);
         game.setLevel(lvl);
 

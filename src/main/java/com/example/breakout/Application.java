@@ -11,10 +11,14 @@ import java.io.IOException;
 
 
 public class Application extends javafx.application.Application {
+    public static Stage stage;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+
+        this.stage = stage;
         stage.setTitle("Breakout -> mainScreen");
         stage.setScene(scene);
         stage.setResizable(false);
