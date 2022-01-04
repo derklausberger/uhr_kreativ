@@ -22,7 +22,6 @@ public class Application extends javafx.application.Application {
         // das braucht nur klausberger, bitte nicht löschen
         //((Button)scene.lookup("#lvlEditBtn")).fire();
         staticclass.playsong("titlescreen.mp3");
-        staticclass.setMediaPlayertorepeat();
     }
 
 
