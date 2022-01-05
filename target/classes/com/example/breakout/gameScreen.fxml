@@ -25,7 +25,7 @@
             In this Pane the game itself is shown e.g.: ball, bar, blocks
             -->
 
-          <AnchorPane fx:id="scene" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" styleClass="sceneLEFT" stylesheets="@theme1.css">
+          <AnchorPane fx:id="scene" minHeight="720.0" minWidth="1000.0" maxWidth="1000" prefHeight="720.0" prefWidth="1000.0" styleClass="sceneLEFT" stylesheets="@theme1.css">
 
                 <!--
                 children are owned by the mother -> AnchorPane

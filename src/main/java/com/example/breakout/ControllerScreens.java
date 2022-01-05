@@ -127,7 +127,7 @@ public class ControllerScreens implements Initializable {
         this.highscore = (Label) scene.lookup("#highscore");
 
         game = new Game(scene, this.scene);
-        game.setBall(new Ball(circle, 5, -5, 500, 600));
+        game.setBall(new Ball(circle, 0, 0, rectangle.getLayoutX() + rectangle.getWidth() / 2, rectangle.getLayoutY() - rectangle.getHeight()));
         game.setBar(new Bar(rectangle));
         checkBall();
 
@@ -136,9 +136,17 @@ public class ControllerScreens implements Initializable {
         loadBlocks(lvl);
         game.setLevel(lvl);
 
+
         // listening to certain KeyEvent's
         handler = (EventHandler<KeyEvent>) (key) -> {
-            double BarDirectX = 15; //BarDirectX can be moved or changed depending on how it feels
+            double BarDirectX = 5;//BarDirectX can be moved or changed depending on how it feels
+
+            if (key.getCode() == KeyCode.B) {
+                timeline.play();
+                gameStart = true;
+                game.getBall().changemomentum(1, -1);
+                createdMillis = System.currentTimeMillis();
+            }
 
             if (key.getCode() == KeyCode.A) {
                 System.out.println("Bar Left in Controller");
@@ -146,39 +154,48 @@ public class ControllerScreens implements Initializable {
                     this.rectangle.setLayoutX(0);
                 } else {
                     game.moveBar(-BarDirectX);
+                    if (!gameStart) {
+                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) - BarDirectX), game.getBall().getpositionalinfo().get(1));
+                    }
                 }
             }
+
             if (key.getCode() == KeyCode.D) {
                 System.out.println("Bar Right in Controller");
                 if (this.rectangle.getLayoutX() + this.rectangle.getWidth() >= 1000) {
                     this.rectangle.setLayoutX(1000 - rectangle.getWidth());
                 } else {
                     game.moveBar(+BarDirectX);
+                    if (!gameStart) {
+                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) + BarDirectX), game.getBall().getpositionalinfo().get(1));
+                    }
                 }
             }
+
             // this.rectangle.getLayoutX --> most left point
         };
+
         scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);
         if (checkBall()) {
             timeline.stop();
         }
 
+
         //have the timeline stop when you exit out
         timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
 
 
         //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we change scenes
     }
 
-    public boolean checkBall(){
+    public boolean checkBall() {
         boolean b = game.checkBall();
 
         for (int i = 0; i < scene.getChildren().size(); i++) {
             Node n = scene.getChildren().get(i);
             if (n.getClass().getSimpleName().equals("Rectangle")) {
                 Rectangle r = (Rectangle) n;
-                if (!game.getLevel().findBlock(r.getX(), r.getY())) {
+                if (!game.getLevel().findBlock(r.getX(), r.getY()) && r != rectangle) {
                     scene.getChildren().remove(r);
                 }
             }
@@ -196,7 +213,9 @@ public class ControllerScreens implements Initializable {
     private Circle circle;// circle == ball
 
     @FXML
-    private Rectangle rectangle;
+    private Rectangle rectangle; // rectangle == bar
+
+    private Boolean gameStart = false;
 
 
     //1 Frame evey 10 millis, which means 100 FPS
@@ -208,20 +227,20 @@ public class ControllerScreens implements Initializable {
 
             // methods used while timeline is ongoing
 
-
             game.moveBall();
+
             if (checkBall()) {
                 getAgeInSeconds();
             } else {
                 timeline.stop();
-                File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"),"src","resources", staticclass.theme, "lose.wav")));
-              System.out.println(path);
+                File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", staticclass.theme, "lose.wav")));
+                System.out.println(path);
                 try {
-                    AudioInputStream  audioinput2 = AudioSystem.getAudioInputStream(path);
-                    Clip clip= AudioSystem.getClip();
+                    AudioInputStream audioinput2 = AudioSystem.getAudioInputStream(path);
+                    Clip clip = AudioSystem.getClip();
                     clip.open(audioinput2);
                     clip.start();
-                }  catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -229,31 +248,6 @@ public class ControllerScreens implements Initializable {
         }
 
     }));
-
-
-    /*public List<Block> createBlocks(int blocks, int rows, int coloums) {
-        List<Block> blocklist = new LinkedList<Block>();
-        int xWert = 50;
-        int yWert = 50;
-        int count = 0;
-
-        while (count < blocks) {
-            for (int k = 0; k < rows; k++) {
-                xWert = 50;
-                for (int i = 0; i < coloums; i++) {
-                    Rectangle block = new Rectangle(xWert, yWert, 100, 30);
-                    blocklist.add(new Block(i + k * coloums, block, 1));
-                    block.setFill(Color.RED);
-                    scene.getChildren().add(block);
-
-                    count++;
-                    xWert += 110;
-                }
-                yWert += 40;
-            }
-        }
-        return blocklist;
-    }*/
 
     private void loadBlocks(Level level) {
         Block block;
@@ -265,19 +259,27 @@ public class ControllerScreens implements Initializable {
 
     private void placeBlock(Level level, double x, double y, int strength) {
         Rectangle rect;
+        Block block;
 
         if (strength == 1) {
             rect = new Rectangle(x, y, 100, 30);
+            block = new Block(level.getCount(), rect, strength);
+            // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
             rect.setFill(Color.DARKRED);
         } else if (strength == 2) {
             rect = new Rectangle(x, y, 100, 30);
+            block = new Block(level.getCount(), rect, strength);
+            //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
             rect.setFill(Color.DARKBLUE);
         } else {
             rect = new Rectangle(x, y, 100, 30);
+            block = new Block(level.getCount(), rect, strength);
+            //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
             rect.setFill(Color.DARKGREEN);
         }
 
         scene.getChildren().add(rect);
+        //level.addBlock(block);
     }
 
 
@@ -289,7 +291,7 @@ public class ControllerScreens implements Initializable {
     @FXML
     private Label highscore = new Label();
 
-    private final long createdMillis = System.currentTimeMillis();
+    private long createdMillis;
 
     public void getAgeInSeconds() {
         long nowMillis = System.currentTimeMillis();
@@ -298,4 +300,3 @@ public class ControllerScreens implements Initializable {
     }
 
 }
-
