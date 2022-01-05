@@ -129,7 +129,7 @@ public class ControllerScreens implements Initializable {
         game = new Game(scene, this.scene);
         game.setBall(new Ball(circle, 5, -5, 500, 600));
         game.setBar(new Bar(rectangle));
-        game.checkBall();
+        checkBall();
 
         //testin purposes
         Level lvl = Level.loadLevel("name");
@@ -159,7 +159,7 @@ public class ControllerScreens implements Initializable {
             // this.rectangle.getLayoutX --> most left point
         };
         scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);
-        if (game.checkBall()) {
+        if (checkBall()) {
             timeline.stop();
         }
 
@@ -171,8 +171,8 @@ public class ControllerScreens implements Initializable {
         //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we change scenes
     }
 
-    public void checkBall2(){
-        game.checkBall();
+    public boolean checkBall(){
+        boolean b = game.checkBall();
 
         for (int i = 0; i < scene.getChildren().size(); i++) {
             Node n = scene.getChildren().get(i);
@@ -183,6 +183,7 @@ public class ControllerScreens implements Initializable {
                 }
             }
         }
+        return b;
     }
 
 
@@ -209,7 +210,7 @@ public class ControllerScreens implements Initializable {
 
 
             game.moveBall();
-            if (game.checkBall()) {
+            if (checkBall()) {
                 getAgeInSeconds();
             } else {
                 timeline.stop();
