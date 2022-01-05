@@ -61,7 +61,7 @@ public class Game {
     public Ball getBall() {
         return ball;
     }
-
+    
     public void loadLevelFromFile(String filepath) {
         level = Level.loadLevel(filepath);
     }
