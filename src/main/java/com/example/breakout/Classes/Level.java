@@ -45,19 +45,23 @@ public class Level implements Serializable {
         this.blocks = blocks;
     }
 
-    public boolean addBlock(Block block){
+    public boolean addBlock(Block block) {
         Block b2;
         for (int i = 0; i < blocks.size(); i++) {
             b2 = blocks.get(i);
-            if ((block.getX() < (b2.getX() + b2.getWidth()) && block.getX() >
-                    b2.getX()) && (block.getY() < (b2.getY() + b2.getHeight())
-                    && block.getY() > b2.getY())) {
+            if ((((block.getX() < (b2.getX() + b2.getWidth())
+                    && block.getX() > b2.getX())
+                    || (block.getX() + block.getWidth() > b2.getX()
+                    && block.getX() < b2.getX()))
+                    && ((block.getY() < (b2.getY() + b2.getHeight())
+                    && block.getY() > b2.getY())
+                    || (block.getY() + block.getHeight() > b2.getY()
+                    && block.getY() < b2.getY())))) {
                 return false;
             }
         }
         blocks.add(block);
         count++;
-        //System.out.println(block.getX() + " " + block.getY());
         return true;
     }
 
@@ -69,13 +73,18 @@ public class Level implements Serializable {
         Block b2;
         for (int i = 0; i < blocks.size(); i++) {
             b2 = blocks.get(i);
-            if (block.getID() != b2.getID() && (block.getX() < (b2.getX() + b2.getWidth()) && block.getX() >
-                    b2.getX()) && (block.getY() < (b2.getY() + b2.getHeight())
-                    && block.getY() > b2.getY())) {
+            if (block.getID() != b2.getID()
+                    && (((block.getX() < (b2.getX() + b2.getWidth())
+                    && block.getX() >= b2.getX())
+                    || (block.getX() + block.getWidth() > b2.getX()
+                    && block.getX() <= b2.getX()))
+                    && ((block.getY() < (b2.getY() + b2.getHeight())
+                    && block.getY() >= b2.getY())
+                    || (block.getY() + block.getHeight() > b2.getY()
+                    && block.getY() <= b2.getY())))) {
                 return false;
             }
         }
-        //System.out.println(block.getX() + " " + block.getY());
         return true;
     }
 
@@ -85,14 +94,13 @@ public class Level implements Serializable {
             dirPath += "\\levels\\";
 
             File directory = new File(dirPath);
-            if (! directory.exists()){
+            if (!directory.exists()) {
                 directory.mkdir();
             }
 
             File file = new File(dirPath + filepath);
-            if (file.exists()){
+            if (file.exists()) {
                 file.delete();
-                System.out.println("del file");
             }
 
             FileOutputStream fos = new FileOutputStream(dirPath + filepath);
@@ -115,7 +123,6 @@ public class Level implements Serializable {
             Level level = (Level) ois.readObject();
             ois.close();
             fis.close();
-            System.out.println("de complete");
             return level;
         } catch (Exception e) {
             e.printStackTrace();

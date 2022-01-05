@@ -5,6 +5,7 @@ import com.example.breakout.Classes.Level;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -79,7 +80,7 @@ public class levelEditorController {
                 block = level.getBlocks().get(i);
                 placeBlock(block);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -89,27 +90,50 @@ public class levelEditorController {
 
         if (b.getStrength() == 1) {
             rect = new Rectangle(b.getX(), b.getY(), 100, 30);
-            //block = new Block(level.getCount(), rect, b.getStrength());
+            // block = new Block(level.getCount(), rect, b.getStrength());
             // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
-            rect.setFill(Color.DARKRED);
+            if (b.getX() == 1090) {
+                rect.setFill(Color.DARKRED);
+            } else {
+                rect.setFill(Color.RED);
+            }
         } else if (b.getStrength() == 2) {
             rect = new Rectangle(b.getX(), b.getY(), 100, 30);
-            //block = new Block(level.getCount(), rect, strength);
-            //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
-            rect.setFill(Color.DARKBLUE);
+            if (b.getX() == 1090) {
+                rect.setFill(Color.DARKBLUE);
+            } else {
+                rect.setFill(Color.BLUE);
+            }
         } else {
             rect = new Rectangle(b.getX(), b.getY(), 100, 30);
-            //block = new Block(level.getCount(), rect, strength);
-            //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
-            rect.setFill(Color.DARKGREEN);
+            if (b.getX() == 1090) {
+                rect.setFill(Color.DARKGREEN);
+            } else {
+                rect.setFill(Color.GREEN);
+            }
+        }
+
+        for (int i = 0; i < mainPane.getChildren().size(); i++) {
+            try {
+                Node n = mainPane.getChildren().get(i);
+                if (n.getClass().getSimpleName().equals("Rectangle")) {
+                    Rectangle r = (Rectangle) n;
+                    if (r.getX() == 1090 && r.getY() != rect.getY()) {
+                        mainPane.getChildren().remove(r);
+                    }
+                }
+            } catch (ClassCastException e) {
+                System.out.println("not a rectangle");
+            }
         }
 
         EventHandler handler = (EventHandler<MouseEvent>) e -> {
-            if (e.getSceneX() + 50 > 1000) {
+            if (rect.getX() + 50 > 1000) {
                 mainPane.getChildren().remove(rect);
 
                 level.removeBlock(b);
             }
+            mainPane.setCursor(Cursor.DEFAULT);
         };
 
         rect.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e -> {
@@ -118,33 +142,58 @@ public class levelEditorController {
 
             b.setX(e.getSceneX() - 50);
             b.setY(e.getSceneY() - 15);
-            rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
-                    handler);
+
+            if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
+                    e.getSceneY() - 15 < 0 || e.getSceneY() + 15 > 700 ||
+                    !level.replaceBlock(b)) {
+                if (b.getStrength() == 1) {
+                    rect.setFill(Color.DARKRED);
+                } else if (b.getStrength() == 2) {
+                    rect.setFill(Color.DARKBLUE);
+                } else {
+                    rect.setFill(Color.DARKGREEN);
+                }
+            } else {
+                if (b.getStrength() == 1) {
+                    rect.setFill(Color.RED);
+                } else if (b.getStrength() == 2) {
+                    rect.setFill(Color.BLUE);
+                } else {
+                    rect.setFill(Color.GREEN);
+                }
+            }
         }));
+
+        mainPane.getChildren().add(rect);
 
         rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, handler);
 
         rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
-                    e.getSceneY() - 15 < 0 || e.getSceneY() + 15 >  700||
+                    e.getSceneY() - 15 < 0 || e.getSceneY() + 15 > 700 ||
                     !level.replaceBlock(b)) {
                 mainPane.getChildren().remove(rect);
                 level.removeBlock(b);
             }
+            mainPane.setCursor(Cursor.DEFAULT);
         });
 
 
-
-        /*rect.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
+        rect.addEventHandler(MouseEvent.MOUSE_PRESSED, (e -> {
             rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
                     handler);
-            System.out.println("rem");
-        }));*/
+            rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, ev ->
+                    mainPane.setCursor(Cursor.DEFAULT));
+            mainPane.setCursor(Cursor.MOVE);
+        }));
 
-        mainPane.getChildren().add(rect);
-        if(!level.getBlocks().contains(b)) {
+        rect.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, (e -> {
+            mainPane.setCursor(Cursor.MOVE);
+        }));
+
+        if (!level.getBlocks().contains(b)) {
             level.addBlock(b);
         }
-        mainPane.setCursor(Cursor.MOVE);
+
     }
 }
