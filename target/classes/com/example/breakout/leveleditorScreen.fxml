@@ -10,7 +10,7 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.levelEditorController">
     <SplitPane dividerPositions="0.7" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <AnchorPane/>
+        <AnchorPane fx:id="placePane" maxWidth="100.0" minWidth="1000.0"/>
         <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0">
 
             <Rectangle fx:id="redRect" width="100" height="30" layoutX="90" layoutY="50"/>

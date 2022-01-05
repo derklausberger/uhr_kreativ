@@ -136,7 +136,6 @@ public class ControllerScreens implements Initializable {
         loadBlocks(lvl);
         game.setLevel(lvl);
 
-
         // listening to certain KeyEvent's
         handler = (EventHandler<KeyEvent>) (key) -> {
             double BarDirectX = 15; //BarDirectX can be moved or changed depending on how it feels
@@ -172,6 +171,20 @@ public class ControllerScreens implements Initializable {
         //use scene.removeEventHandler to remove it after the screen ends, though might not be needed if we change scenes
     }
 
+    public void checkBall2(){
+        game.checkBall();
+
+        for (int i = 0; i < scene.getChildren().size(); i++) {
+            Node n = scene.getChildren().get(i);
+            if (n.getClass().getSimpleName().equals("Rectangle")) {
+                Rectangle r = (Rectangle) n;
+                if (!game.getLevel().findBlock(r.getX(), r.getY())) {
+                    scene.getChildren().remove(r);
+                }
+            }
+        }
+    }
+
 
     // Quelle: https://www.youtube.com/watch?v=x6NFmzQHvMU
 
@@ -193,6 +206,7 @@ public class ControllerScreens implements Initializable {
         public void handle(ActionEvent actionEvent) {
 
             // methods used while timeline is ongoing
+
 
             game.moveBall();
             if (game.checkBall()) {
@@ -250,27 +264,19 @@ public class ControllerScreens implements Initializable {
 
     private void placeBlock(Level level, double x, double y, int strength) {
         Rectangle rect;
-        Block block;
 
         if (strength == 1) {
             rect = new Rectangle(x, y, 100, 30);
-            block = new Block(level.getCount(), rect, strength);
-            // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
             rect.setFill(Color.DARKRED);
         } else if (strength == 2) {
             rect = new Rectangle(x, y, 100, 30);
-            block = new Block(level.getCount(), rect, strength);
-            //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
             rect.setFill(Color.DARKBLUE);
         } else {
             rect = new Rectangle(x, y, 100, 30);
-            block = new Block(level.getCount(), rect, strength);
-            //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
             rect.setFill(Color.DARKGREEN);
         }
 
         scene.getChildren().add(rect);
-        //level.addBlock(block);
     }
 
 

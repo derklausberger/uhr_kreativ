@@ -65,6 +65,15 @@ public class Level implements Serializable {
         return true;
     }
 
+    public boolean findBlock(double x, double y) {
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i).getX() == x && blocks.get(i).getY() == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void removeBlock(Block block) {
         blocks.remove(block);
     }

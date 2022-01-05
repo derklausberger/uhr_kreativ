@@ -8,29 +8,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 
 <!-- Comments  -->
 <!-- Comments  -->
 <!-- Comments  -->
-<!-- Comments  -->
-<!-- Comments  -->
-<!-- Comments  -->
-<!-- Comments  -->
-<!-- Comments  -->
-<!-- Comments  -->
-<!-- Comments  -->
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.ControllerScreens">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@theme1.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.ControllerScreens">
    <children>
-      <SplitPane dividerPositions="0.7" prefHeight="160.0" prefWidth="200.0"
-                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.7" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
 
             <!--
@@ -38,40 +25,25 @@
             In this Pane the game itself is shown e.g.: ball, bar, blocks
             -->
 
-          <AnchorPane fx:id="scene" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0">
+          <AnchorPane fx:id="scene" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" styleClass="sceneLEFT" stylesheets="@theme1.css">
 
                 <!--
                 children are owned by the mother -> AnchorPane
                 -->
 
                <children>
+                   <Circle fx:id="circle" layoutX="0" layoutY="0" radius="10.0" stroke="BLACK" strokeType="INSIDE" styleClass="movBall">
 
-                    <!--
-                    ball go brbrbrbrbrbrbr
-                    -->
+                       <!--
+                       the circle is the ball (no shit...)
+                       -->
 
-                   <Circle fx:id="circle" layoutX="0" layoutY="0" radius="10.0" stroke="BLACK" strokeType="INSIDE">
-                     <fill>
-                        <LinearGradient endX="1.0" endY="1.0" startX="0.6136363993088405" startY="0.4583333477829442">
-                           <stops>
-                              <Stop>
-                                 <color>
-                                    <Color red="0.7699999809265137" green="0.477400004863739" blue="0.7384698390960693" />
-                                 </color>
-                              </Stop>
-                              <Stop offset="1.0">
-                                 <color>
-                                    <Color red="1.0" green="1.0" blue="1.0" />
-                                 </color>
-                              </Stop>
-                           </stops>
-                        </LinearGradient>
-                     </fill></Circle>
-                  <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="10.0" layoutX="450.0" layoutY="700.0" stroke="BLACK" strokeType="INSIDE" width="100" />
+                   </Circle>
+                  <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" height="10.0" layoutX="450.0" layoutY="700.0" stroke="BLACK" strokeType="INSIDE" styleClass="movBar" width="100" />
                </children>
           </AnchorPane>
 
-          <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0">
+          <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0" styleClass="sceneRIGHT" stylesheets="@theme1.css">
 
               <!--
               This is the right side of the window "gameScreen"
@@ -79,10 +51,23 @@
               -->
 
                <children>
-                  <HBox prefHeight="719.0" prefWidth="280.0">
+                  <HBox prefHeight="720.0" prefWidth="280.0">
                      <children>
                         <VBox prefWidth="280.0">
+
+                              <!--
+                              VBox splits vertically
+                              HBox splits horizontally
+                              -->
+
                            <padding>
+
+                               <!--
+                               Padding -> so that it buttons, etc... are not
+                               beginning on the window border. there is a little
+                               space in between (looks better)
+                               -->
+
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                            <children>
@@ -90,12 +75,34 @@
                                  <children>
                                     <Label text="Highscore/ time needed:" />
                                     <Region HBox.hgrow="ALWAYS" />
+
+                                     <!--
+                                     HBox.grow is there so that the label on the left
+                                     and on the right are always pushed to the most left
+                                     and most right (dynamically cause timer increases by time
+                                     and fixed values would do no good)
+                                     -->
+
                                     <Label fx:id="highscore" />
                                     <Label text="sec" />
                                  </children>
                               </HBox>
+
+                               <!--
+                              VBox splits vertically
+                              HBox splits horizontally
+                              -->
+
                               <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                              <Button fx:id="gametolevels" mnemonicParsing="false" onAction="#SwitchToLevels" text="Back to previous" />
+                              <Button mnemonicParsing="false" onAction="#SwitchToLevels" text="Back to previous" />
+
+                               <!--
+                               fx:id are used to give them a value
+                               onAction means if the button is pressed
+                               the methode called "SwitchToLevels" is
+                               called
+                               -->
+
                            </children>
                         </VBox>
                      </children>
@@ -106,3 +113,4 @@
       </SplitPane>
    </children>
 </AnchorPane>
+

@@ -54,6 +54,10 @@ public class Game {
         this.level = level;
     }
 
+    public Level getLevel() {
+        return level;
+    }
+
     public Ball getBall() {
         return ball;
     }
@@ -87,29 +91,39 @@ public class Game {
             // ball touches block on left or right side
             if (touches == 1 || touches == 2) {
                 ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
+                block.lowerHP(1);
+                if (block.getStrength() <= 0) {
+                    level.removeBlock(block);
+                }
+                return true;
             } else if (touches == 3 || touches == 4) { // ball touches block on top or bottom side
                 ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+                return true;
             }
         }
 
         // ball touches left or right side of the window
         if (position.get(0) - position.get(2) == 0) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
+            return true;
         } else if (position.get(0) + position.get(2) == leftside.getWidth()) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
+            return true;
         }
 
         // ball touches top or bottom side of the window
         if (position.get(1) - position.get(2) == 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+            return true; // seite
             //moveBall();
         } else if (position.get(1) + position.get(2) == leftside.getHeight()) {
             bar.stop();
-            return false;
+            return false; // verloren
         }
         // ball touches bar
         if (bar.checkbar(position)) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+            return true; // touch bar
         }
         return true;
     }
