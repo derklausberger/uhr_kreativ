@@ -23,24 +23,25 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class levelEditorController {
-    @FXML
-    private Rectangle redRect;// = new Rectangle(1000 + 90, 50, 100, 30);
+    public static final int rectWidth = 100;
+    public static final int rectHeight = 30;
+    public static final int mainPaneWidth = 1000;
+    public static final int mainPaneHeight = 720;
+    public static final int blockX = 1090;
 
+    @FXML
+    private Rectangle redRect;
     @FXML
     private Rectangle blueRect;
-
     @FXML
     private Rectangle greenRect;
-
     @FXML
     private AnchorPane mainPane;
-
     @FXML
     private AnchorPane placePane;
 
     @FXML
     private Button saveLevelBtn;
-
     @FXML
     private Button exitLevelEditorBtn;
 
@@ -50,11 +51,8 @@ public class levelEditorController {
     private Level level;
 
     private int blockSelected = 0;
-
-    private final Region selectRect = new Region();
-
     private final Point p = new Point();
-
+    private final Region selectRect = new Region();
     private double x = 0, y = 0;
 
     public levelEditorController() {
@@ -66,9 +64,9 @@ public class levelEditorController {
         blueRect.setFill(Color.BLUE);
         greenRect.setFill(Color.GREEN);
 
-        redRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), 1090, 50, 100, 30, 1)));
-        blueRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), 1090, 130, 100, 30, 2)));
-        greenRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), 1090, 210, 100, 30, 3)));
+        redRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 50, rectWidth, rectHeight, 1)));
+        blueRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 130, rectWidth, rectHeight, 2)));
+        greenRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 210, rectWidth, rectHeight, 3)));
 
         level = new Level();
 
@@ -111,41 +109,55 @@ public class levelEditorController {
         selectRect.setStyle("-fx-border-width: 2px; -fx-border-color: black; -fx-border-style: dashed;");
 
         placePane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            if (blockSelected == 0) {
-                p.setLocation(e.getSceneX(), e.getSceneY());
+            blockSelected = 0;
+            reloadScreen();
 
-                placePane.getChildren().add(selectRect);
-            } else {
-                blockSelected = 0;
-                reloadScreen();
+            selectRect.setMinHeight(0);
+            selectRect.setMinHeight(0);
+            selectRect.setMinWidth(0);
+            selectRect.setMaxWidth(0);
+            selectRect.setLayoutX(0);
+            selectRect.setLayoutY(0);
 
-                selectRect.setMinHeight(0);
-                selectRect.setMinHeight(0);
-                selectRect.setMinWidth(0);
-                selectRect.setMaxWidth(0);
-                selectRect.setLayoutX(0);
-                selectRect.setLayoutY(0);
-            }
+            p.setLocation(e.getSceneX(), e.getSceneY());
+
+            placePane.getChildren().add(selectRect);
         });
 
         placePane.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-            if (p.getX() > e.getSceneX()) {
+            if (p.getX() > e.getSceneX() && e.getSceneX() <= 0) {
+                selectRect.setMinWidth(p.getX());
+                selectRect.setMaxWidth(p.getX());
+                selectRect.setLayoutX(2);
+            } else if (p.getX() > e.getSceneX() && e.getSceneX() > 0 && e.getSceneX() < mainPaneWidth) {
                 selectRect.setMinWidth(p.getX() - e.getSceneX());
                 selectRect.setMaxWidth(p.getX() - e.getSceneX());
                 selectRect.setLayoutX(e.getSceneX());
+            } else if (e.getSceneX() >= mainPaneWidth) {
+                selectRect.setMinWidth(mainPaneWidth - 6 - p.getX());
+                selectRect.setMaxWidth(mainPaneWidth - 6 - p.getX());
+                selectRect.setLayoutX(p.getX());
             } else {
                 selectRect.setMinWidth(e.getSceneX() - p.getX());
                 selectRect.setMaxWidth(e.getSceneX() - p.getX());
                 selectRect.setLayoutX(p.getX());
             }
 
-            if (p.getY() > e.getSceneY()) {
+            if (p.getY() > e.getSceneY() && e.getSceneY() <= 0) {
+                selectRect.setMinHeight(p.getY());
+                selectRect.setMaxHeight(p.getY());
+                selectRect.setLayoutY(0);
+            } else if (p.getY() > e.getSceneY() && e.getSceneX() > 0) {
                 selectRect.setMinHeight(p.getY() - e.getSceneY());
                 selectRect.setMaxHeight(p.getY() - e.getSceneY());
                 selectRect.setLayoutY(e.getSceneY());
+            } else if (e.getSceneY() >= mainPaneHeight - 20) {
+                selectRect.setMinHeight(mainPaneHeight - 20 - p.getY());
+                selectRect.setMaxHeight(mainPaneHeight - 20 - p.getY());
+                selectRect.setLayoutY(p.getY());
             } else {
                 selectRect.setMinHeight(e.getSceneY() - p.getY());
-                selectRect.setMaxHeight(p.getY() - e.getSceneY());
+                selectRect.setMaxHeight(e.getSceneY() - p.getY());
                 selectRect.setLayoutY(p.getY());
             }
         });
@@ -154,12 +166,13 @@ public class levelEditorController {
         placePane.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             Block b;
             for (Rectangle r : getRectangles()) {
-                if (((r.getX() + 100 > selectRect.getLayoutX()) && (r.getX()
+                if (((r.getX() + rectWidth > selectRect.getLayoutX()) && (r.getX()
                         < selectRect.getLayoutX() + selectRect.getWidth()))
-                        && ((r.getY() + 30 > selectRect.getLayoutY()) &&
+                        && ((r.getY() + rectHeight > selectRect.getLayoutY()) &&
                         (r.getY() < selectRect.getLayoutY() +
                                 selectRect.getHeight()))) {
                     b = level.findBlock(r.getX(), r.getY());
+
                     if (b.getStrength() == 1) {
                         r.setFill(Color.DARKRED);
                     } else if (b.getStrength() == 2) {
@@ -167,6 +180,7 @@ public class levelEditorController {
                     } else {
                         r.setFill(Color.DARKGREEN);
                     }
+
                     blockSelected++;
                 }
             }
@@ -184,10 +198,10 @@ public class levelEditorController {
     private void loadBlocks() {
         try {
             //level = Level.loadLevel("UHR");
-            Block block;
+            Block b;
             for (int i = 0; i < level.getBlocks().size(); i++) {
-                block = level.getBlocks().get(i);
-                placeBlock(block);
+                b = level.getBlocks().get(i);
+                placeBlock(b);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,13 +209,20 @@ public class levelEditorController {
     }
 
     private void reloadScreen() {
+        Block b;
         for (Rectangle r : getRectangles()) {
-            if (r.getX() < 1000) {
-                mainPane.getChildren().remove(r);
+            b = level.findBlock(r.getX(), r.getY());
+            if (r.getX() < mainPaneWidth) {
+                if (b.getStrength() == 1) {
+                    r.setFill(Color.RED);
+                } else if (b.getStrength() == 2) {
+                    r.setFill(Color.BLUE);
+                } else {
+                    r.setFill(Color.GREEN);
+                }
+
             }
         }
-
-        loadBlocks();
     }
 
     private ArrayList<Rectangle> getRectangles() {
@@ -219,22 +240,23 @@ public class levelEditorController {
         Rectangle rect;
 
         if (block.getStrength() == 1) {
-            rect = new Rectangle(block.getX(), block.getY(), 100, 30);
-            if (block.getX() == 1090) {
+            rect = new Rectangle(block.getX(), block.getY(), rectWidth, rectHeight);
+            if (block.getX() == blockX) {
                 rect.setFill(Color.DARKRED);
             } else {
                 rect.setFill(Color.RED);
             }
         } else if (block.getStrength() == 2) {
-            rect = new Rectangle(block.getX(), block.getY(), 100, 30);
-            if (block.getX() == 1090) {
+            rect = new Rectangle(block.getX(), block.getY(), rectWidth, rectHeight);
+            if (block.getX() == blockX) {
                 rect.setFill(Color.DARKBLUE);
             } else {
                 rect.setFill(Color.BLUE);
             }
         } else {
-            rect = new Rectangle(block.getX(), block.getY(), 100, 30);
-            if (block.getX() == 1090) {
+            rect = new Rectangle(block.getX(), block.getY(), rectWidth, rectHeight);
+
+            if (block.getX() == blockX) {
                 rect.setFill(Color.DARKGREEN);
             } else {
                 rect.setFill(Color.GREEN);
@@ -242,15 +264,14 @@ public class levelEditorController {
         }
 
         for (Rectangle r : getRectangles()) {
-            if (r.getX() == 1090 && r.getY() != rect.getY()) {
+            if (r.getX() == blockX && r.getY() != rect.getY()) {
                 mainPane.getChildren().remove(r);
             }
         }
 
         EventHandler<MouseEvent> handler = e -> {
-            if (rect.getX() + 50 > 1000) {
+            if (rect.getX() + (double) rectWidth / 2 > mainPaneWidth) {
                 mainPane.getChildren().remove(rect);
-
                 level.removeBlock(block);
             }
             mainPane.setCursor(Cursor.DEFAULT);
@@ -258,22 +279,19 @@ public class levelEditorController {
 
         rect.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e -> {
             if (blockSelected == 1) {
-                rect.setX(e.getSceneX() - 50);
-                rect.setY(e.getSceneY() - 15);
+                rect.setX(e.getSceneX() - (double) rectWidth / 2);
+                rect.setY(e.getSceneY() - (double) rectHeight / 2);
 
-                block.setX(e.getSceneX() - 50);
-                block.setY(e.getSceneY() - 15);
+                block.setX(e.getSceneX() - (double) rectWidth / 2);
+                block.setY(e.getSceneY() - (double) rectHeight / 2);
 
-               /* if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
-                        e.getSceneY() - 15 < 0 || e.getSceneY() + 15 > 700 ||
-                        !level.replaceBlock(block)) {
-                    */if (block.getStrength() == 1) {
-                        rect.setFill(Color.DARKRED);
-                    } else if (block.getStrength() == 2) {
-                        rect.setFill(Color.DARKBLUE);
-                    } else {
-                        rect.setFill(Color.DARKGREEN);
-                    }
+                if (block.getStrength() == 1) {
+                    rect.setFill(Color.DARKRED);
+                } else if (block.getStrength() == 2) {
+                    rect.setFill(Color.DARKBLUE);
+                } else {
+                    rect.setFill(Color.DARKGREEN);
+                }
                /* } else {
                     if (block.getStrength() == 1) {
                         rect.setFill(Color.RED);
@@ -308,25 +326,26 @@ public class levelEditorController {
 
         rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             if (blockSelected == 1) {
-                if ((e.getSceneX() + 50 > 1000 || e.getSceneX() - 50 < 0) ||
-                        e.getSceneY() - 15 < 0 || e.getSceneY() + 15 > 700 ||
+                if ((e.getSceneX() + (double) rectWidth / 2 > mainPaneWidth || e.getSceneX() - (double) rectWidth / 2 < 0) ||
+                        (e.getSceneY() - (double) rectHeight / 2 < 0 || e.getSceneY() + (double) rectHeight / 2 > mainPaneHeight) ||
                         !level.replaceBlock(block)) {
                     mainPane.getChildren().remove(rect);
                     level.removeBlock(block);
                 }
-                blockSelected--;
                 reloadScreen();
+                blockSelected = 0;
             } else if (blockSelected > 1) {
                 Block b;
                 for (Rectangle r : getRectangles()) {
-                    if ((r.getFill() == Color.DARKGREEN || r.getFill() ==
-                            Color.DARKRED || r.getFill() == Color.DARKBLUE)
-                            && ((r.getX() > 1000 - 100 || r.getX() < 0) || (r.getY()
-                            < 0 || r.getY() > 700 - 30) || !level.replaceBlock(block))) {
+                    if (r.getFill() == Color.DARKGREEN || r.getFill() ==
+                            Color.DARKRED || r.getFill() == Color.DARKBLUE) {
                         b = level.findBlock(r.getX(), r.getY());
-                        mainPane.getChildren().remove(rect);
-                        level.removeBlock(b);
-                        blockSelected--;
+                        if (((r.getX() >= mainPaneWidth - rectWidth || r.getX() <= 0) || (r.getY()
+                                <= 0 || r.getY() >= mainPaneHeight - 20 - rectHeight)) || !level.replaceBlock(b)) {
+                            mainPane.getChildren().remove(r);
+                            level.removeBlock(b);
+                            blockSelected--;
+                        }
                     }
                 }
             }
@@ -336,24 +355,37 @@ public class levelEditorController {
 
 
         rect.addEventHandler(MouseEvent.MOUSE_PRESSED, (e -> {
-            if (blockSelected == 0) {
-                rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
-                        handler);
-                rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, ev ->
-                        mainPane.setCursor(Cursor.DEFAULT));
-                blockSelected++;
-            } else if (blockSelected > 1 && (rect.getFill() == Color.DARKGREEN || rect.getFill() ==
-                    Color.DARKRED || rect.getFill() == Color.DARKBLUE)) {
+            if (blockSelected > 1) {
+                for (Rectangle r : getRectangles()) {
+                    if (!(r.getX() < mainPaneWidth - (double) rectWidth / 2)) {
+                        blockSelected--;
+                        if (r.getFill() == Color.DARKGREEN) {
+                            r.setFill(Color.GREEN);
+                        } else if (r.getFill() == Color.DARKRED) {
+                            r.setFill(Color.RED);
+                        } else if (r.getFill() == Color.DARKBLUE) {
+                            r.setFill(Color.BLUE);
+                        }
+                    }
+                }
                 x = e.getSceneX();
                 y = e.getSceneY();
-            } else {
+            } else if (blockSelected == 1) {
                 reloadScreen();
+                blockSelected = 1;
                 rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
                         handler);
                 rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, ev ->
                         mainPane.setCursor(Cursor.DEFAULT));
-
+            } else {
+                if (blockSelected != 0) {
+                    reloadScreen();
+                }
                 blockSelected = 1;
+                rect.removeEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
+                        handler);
+                rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, ev ->
+                        mainPane.setCursor(Cursor.DEFAULT));
             }
 
             mainPane.setCursor(Cursor.MOVE);
@@ -362,7 +394,9 @@ public class levelEditorController {
         rect.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, (e ->
                 mainPane.setCursor(Cursor.MOVE)));
 
-        if (!level.getBlocks().contains(block)) {
+        if (!level.getBlocks().
+
+                contains(block)) {
             level.addBlock(block);
         }
     }

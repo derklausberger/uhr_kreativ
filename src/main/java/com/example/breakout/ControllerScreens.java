@@ -40,10 +40,12 @@ import java.util.ResourceBundle;
 
 
 public class ControllerScreens implements Initializable {
-    //public static Stage stage;
+    public static final int windowHeight = 720;
+    private static final int windowWidth = 1280;
+
     public static void SwitchToMain() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //stage = new Stage();
         Application.stage.setTitle("Breakout -> mainScreen");
         Application.stage.setScene(scene);
@@ -53,9 +55,8 @@ public class ControllerScreens implements Initializable {
 
 
     public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
-
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Stage stage = new Stage();
         stage.setTitle("Breakout -> mainScreen -> levelsScreen");
         stage.setScene(scene);
@@ -72,7 +73,7 @@ public class ControllerScreens implements Initializable {
     public void SwitchToSettings(ActionEvent event) throws IOException { // called by button "Einstellugen"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Stage stage = new Stage();
         stage.setTitle("Breakout -> mainScreen -> settingsScreen");
         stage.setScene(scene);
@@ -88,7 +89,7 @@ public class ControllerScreens implements Initializable {
     public void SwitchToLeveleditor(ActionEvent event) throws IOException { // called by button "Level Editor"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //Application.stage = new Stage();
         Application.stage.setTitle("Leveleditor");
         Application.stage.setScene(scene);
@@ -108,7 +109,7 @@ public class ControllerScreens implements Initializable {
     public void SwitchToGame(ActionEvent event) throws IOException { // called by button "level [id]"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Stage stage = new Stage();
         stage.setTitle("Breakout -> mainScreen -> levelsScreen -> gameScreen");
         stage.setScene(scene);
