@@ -216,7 +216,7 @@ public class ControllerScreens implements Initializable {
             Node n = scene.getChildren().get(i);
             if (n.getClass().getSimpleName().equals("Rectangle")) {
                 Rectangle r = (Rectangle) n;
-                if (!game.getLevel().findBlock(r.getX(), r.getY()) && r != rectangle) {
+                if (game.getLevel().findBlock(r.getX(), r.getY()) == null && r != rectangle) {
                     scene.getChildren().remove(r);
                 }
             }

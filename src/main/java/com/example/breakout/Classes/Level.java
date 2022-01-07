@@ -65,13 +65,13 @@ public class Level implements Serializable {
         return true;
     }
 
-    public boolean findBlock(double x, double y) {
+    public Block findBlock(double x, double y) {
         for (int i = 0; i < blocks.size(); i++) {
             if (blocks.get(i).getX() == x && blocks.get(i).getY() == y) {
-                return true;
+                return blocks.get(i);
             }
         }
-        return false;
+        return null;
     }
 
     public void removeBlock(Block block) {
@@ -97,7 +97,19 @@ public class Level implements Serializable {
         return true;
     }
 
-    public void saveLevel(String filepath) {
+    public void overwriteLevel(String filepath) {
+        String dirPath = new File("").getAbsolutePath();
+        dirPath += "\\levels\\";
+
+        File file = new File(dirPath + filepath);
+        if (file.exists()) {
+            file.delete();
+        }
+
+        saveLevel(filepath);
+    }
+
+    public boolean saveLevel(String filepath) {
         try {
             String dirPath = new File("").getAbsolutePath();
             dirPath += "\\levels\\";
@@ -109,7 +121,7 @@ public class Level implements Serializable {
 
             File file = new File(dirPath + filepath);
             if (file.exists()) {
-                file.delete();
+                return false;
             }
 
             FileOutputStream fos = new FileOutputStream(dirPath + filepath);
@@ -117,9 +129,12 @@ public class Level implements Serializable {
             oos.writeObject(this);
             oos.close();
             fos.close();
+
+            return true;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return false;
     }
 
     public static Level loadLevel(String filepath) {
