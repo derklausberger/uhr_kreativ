@@ -43,6 +43,17 @@ public class ControllerScreens implements Initializable {
     public static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
+    public void showClockScreen(ActionEvent event) throws IOException {
+
+
+        AnalogClock clock = new AnalogClock();
+
+        clock.start(Application.getStage());
+
+        //Application.getStage().setScene(clock.getScene());
+
+    }
+
     public static void SwitchToMain() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);

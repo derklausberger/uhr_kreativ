@@ -11,6 +11,7 @@
             <Button mnemonicParsing="false" onAction="#SwitchToLevels" prefHeight="20.0" prefWidth="150.0" text="Start" />
             <Button fx:id="lvlEditBtn" layoutX="34.0" layoutY="98.0" mnemonicParsing="false" onAction="#SwitchToLeveleditor" prefWidth="150.0" text="Level Editor" />
             <Button layoutX="34.0" layoutY="110.0" mnemonicParsing="false" onAction="#SwitchToSettings" prefWidth="150.0" text="Einstellungen" />
+            <Button layoutX="34.0" layoutY="122.0" mnemonicParsing="false" onAction="#showClockScreen" prefWidth="150.0" text="Click for surprise!"/>
          </children>
       </VBox>
    </children>
