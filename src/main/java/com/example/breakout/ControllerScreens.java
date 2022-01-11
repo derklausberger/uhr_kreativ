@@ -69,16 +69,19 @@ public class ControllerScreens implements Initializable {
     public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Stage stage = new Stage();
-        stage.setTitle("Breakout -> mainScreen -> levelsScreen");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        //Stage stage = new Stage();
+        Application.stage.setTitle("Breakout -> mainScreen -> levelsScreen");
+        Application.stage.setScene(scene);
+        Application.stage.setResizable(false);
+        Application.stage.show();
 
         // close previous window
+        /*
         Node n = (Node) event.getSource();
         Stage previous = (Stage) n.getScene().getWindow();
         previous.close();
+
+         */
 
     }
 
@@ -86,16 +89,19 @@ public class ControllerScreens implements Initializable {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Stage stage = new Stage();
-        stage.setTitle("Breakout -> mainScreen -> settingsScreen");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        //Stage stage = new Stage();
+        Application.stage.setTitle("Breakout -> mainScreen -> settingsScreen");
+        Application.stage.setScene(scene);
+        Application.stage.setResizable(false);
+        Application.stage.show();
 
         // close previous window
+        /*
         Node n = (Node) event.getSource();
         Stage previous = (Stage) n.getScene().getWindow();
         previous.close();
+
+         */
     }
 
     public void SwitchToLeveleditor(ActionEvent event) throws IOException { // called by button "Level Editor"
@@ -122,16 +128,19 @@ public class ControllerScreens implements Initializable {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Stage stage = new Stage();
-        stage.setTitle("Breakout -> mainScreen -> levelsScreen -> gameScreen");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        //Stage stage = new Stage();
+        Application.stage.setTitle("Breakout -> mainScreen -> levelsScreen -> gameScreen");
+        Application.stage.setScene(scene);
+        Application.stage.setResizable(false);
+        Application.stage.show();
 
         // close previous window
+        /*
         Node n = (Node) event.getSource();
         Stage previous = (Stage) n.getScene().getWindow();
         previous.close();
+
+         */
 
 
         this.scene = (AnchorPane) scene.lookup("#scene"); // -> scene in which the gameplay is done

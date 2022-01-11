@@ -15,7 +15,7 @@
 <!-- Comments  -->
 <!-- Comments  -->
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@theme1.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.ControllerScreens">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.ControllerScreens">
    <children>
       <SplitPane dividerPositions="0.7" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -25,7 +25,7 @@
             In this Pane the game itself is shown e.g.: ball, bar, blocks
             -->
 
-          <AnchorPane fx:id="scene" minHeight="720.0" minWidth="1000.0" maxWidth="1000" prefHeight="720.0" prefWidth="1000.0" styleClass="sceneLEFT" stylesheets="@theme1.css">
+          <AnchorPane fx:id="scene" maxWidth="1000" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" styleClass="sceneLEFT" stylesheets="@theme2.css">
 
                 <!--
                 children are owned by the mother -> AnchorPane
@@ -43,7 +43,7 @@
                </children>
           </AnchorPane>
 
-          <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0" styleClass="sceneRIGHT" stylesheets="@theme1.css">
+          <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0" styleClass="sceneRIGHT" stylesheets="@theme2.css">
 
               <!--
               This is the right side of the window "gameScreen"
@@ -113,4 +113,3 @@
       </SplitPane>
    </children>
 </AnchorPane>
-
