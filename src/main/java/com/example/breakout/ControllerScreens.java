@@ -49,7 +49,6 @@ public class ControllerScreens implements Initializable {
         AnalogClock clock = new AnalogClock();
 
         clock.start(Application.getStage());
-
         //Application.getStage().setScene(clock.getScene());
 
     }
@@ -62,7 +61,9 @@ public class ControllerScreens implements Initializable {
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
+        //staticclass.playsong("titlescreen.mp3");
     }
+
 
 
     public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
@@ -149,7 +150,6 @@ public class ControllerScreens implements Initializable {
         game.setLevel(lvl);
 
 
-
         handler = (EventHandler<KeyEvent>) (key) -> {
             // listening to KeyEvent's
 
@@ -180,8 +180,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) - BarDirectX),
-                                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) - BarDirectX),
+                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -201,8 +201,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) + BarDirectX),
-                                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) + BarDirectX),
+                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -213,8 +213,9 @@ public class ControllerScreens implements Initializable {
         };
         scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);///////////////////// I don't think we need them -> ??? why
 
-        if (checkBall()) {timeline.stop();}/////////////////////////////////////// I don't think we need them -> solved in timeline
-
+        if (checkBall()) {
+            timeline.stop();
+        }/////////////////////////////////////// I don't think we need them -> solved in timeline
 
 
         //have the timeline stop when you exit out
@@ -269,17 +270,7 @@ public class ControllerScreens implements Initializable {
                 getAgeInSeconds();
             } else {
                 timeline.stop();
-                File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", staticclass.theme, "lose.wav")));
-                // sound played if player lost
-                System.out.println(path);
-                try {
-                    AudioInputStream audioinput2 = AudioSystem.getAudioInputStream(path);
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(audioinput2);
-                    clip.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                staticclass.playsound("lose.wav");
             }
         }
 
@@ -319,7 +310,8 @@ public class ControllerScreens implements Initializable {
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) { }
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+    }
 
 
     public void getAgeInSeconds() {
