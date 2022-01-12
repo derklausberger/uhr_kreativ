@@ -18,7 +18,7 @@ public class Ball {
     private Circle circle;
 
 
-    public Ball(Circle circle, double dx, double dy,double centerX, double centerY) {
+    public Ball(Circle circle, double dx, double dy, double centerX, double centerY) {
         circle.setCenterX(centerX);
         circle.setCenterY(centerY);
         this.circle=circle;

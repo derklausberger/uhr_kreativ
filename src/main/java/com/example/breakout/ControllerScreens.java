@@ -173,7 +173,7 @@ public class ControllerScreens implements Initializable {
         handler = (EventHandler<KeyEvent>) (key) -> {
             // listening to KeyEvent's
 
-            double BarDirectX = 5;
+            double BarDirectX = 15;
             //BarDirectX can be moved or changed depending on how it feels
 
             if (key.getCode() == KeyCode.B && !gameStartLock) {
@@ -181,7 +181,7 @@ public class ControllerScreens implements Initializable {
                 gameStart = true;
                 gameStartLock = true;
                 // locking the ability to press B multiple times
-                game.getBall().changemomentum(1, -1);
+                game.getBall().changemomentum(3, -3);
                 // momentum is given
                 // why 1, -1? cause top left corner is 0, 0
                 createdMillis = System.currentTimeMillis();

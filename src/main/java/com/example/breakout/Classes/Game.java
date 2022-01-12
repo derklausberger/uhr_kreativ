@@ -103,20 +103,20 @@ public class Game {
         }
 
         // ball touches left or right side of the window
-        if (position.get(0) - position.get(2) == 0) {
+        if (position.get(0) - position.get(2) <= 0) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
-        } else if (position.get(0) + position.get(2) == leftside.getWidth()) {
+        } else if (position.get(0) + position.get(2) >= leftside.getWidth()) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
         }
 
         // ball touches top or bottom side of the window
-        if (position.get(1) - position.get(2) == 0) {
+        if (position.get(1) - position.get(2) <= 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // seite
             //moveBall();
-        } else if (position.get(1) + position.get(2) == leftside.getHeight()) {
+        } else if (position.get(1) + position.get(2) >= leftside.getHeight()) {
             bar.stop();
             return false; // verloren
         }
