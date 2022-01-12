@@ -14,6 +14,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -40,6 +41,8 @@ import java.util.ResourceBundle;
 
 
 public class ControllerScreens implements Initializable {
+
+
     public static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
@@ -143,13 +146,21 @@ public class ControllerScreens implements Initializable {
          */
 
 
-        this.scene = (AnchorPane) scene.lookup("#scene"); // -> scene in which the gameplay is done
-        this.circle = (Circle) scene.lookup("#circle"); // --> the ball
-        this.rectangle = (Rectangle) scene.lookup("#rectangle"); // -> the bar
-        this.highscore = (Label) scene.lookup("#highscore"); // -> score
+        this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
+                                                                      // -> #[fx:id]
+        this.circle = (Circle) scene.lookup("#circle");            // --> the ball
+        this.rectangle = (Rectangle) scene.lookup("#rectangle");   // -> the bar
+        this.highscore = (Label) scene.lookup("#highscore");       // -> score
 
         game = new Game(scene, this.scene);
-        game.setBall(new Ball(circle, 0, 0, rectangle.getLayoutX() + rectangle.getWidth() / 2, rectangle.getLayoutY() - rectangle.getHeight()));
+        game.setBall(new Ball(circle,   0,
+                                        0,
+                                        rectangle.getLayoutX() + rectangle.getWidth() / 2,
+                                        rectangle.getLayoutY() - rectangle.getHeight()));
+                                        // dx: dy: --> momentum
+                                        // centerX: centerY: --> initial positional info
+                                        // no initial momentum for the ball -> after pressing "B" method changeMomentum is called
+
         game.setBar(new Bar(rectangle));
         checkBall();
 
@@ -171,6 +182,8 @@ public class ControllerScreens implements Initializable {
                 gameStartLock = true;
                 // locking the ability to press B multiple times
                 game.getBall().changemomentum(1, -1);
+                // momentum is given
+                // why 1, -1? cause top left corner is 0, 0
                 createdMillis = System.currentTimeMillis();
                 // used in getAgeInSeconds() for the score (time needed)
                 // -> starts only if B is pressed, so players have the "freedom" to
@@ -179,7 +192,7 @@ public class ControllerScreens implements Initializable {
 
             if (key.getCode() == KeyCode.A) {
                 // keycodes == keyboard input
-                System.out.println("Bar Left in Controller");
+                System.out.println("Bar Left in Controller"); // console output for testing
                 if (this.rectangle.getLayoutX() <= 0) {
                     // looks if the bar "rectangle" is out of bounds and
                     // adjusts it's x-value
@@ -189,8 +202,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) - BarDirectX),
-                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) - BarDirectX),
+                                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -200,7 +213,7 @@ public class ControllerScreens implements Initializable {
 
             if (key.getCode() == KeyCode.D) {
                 // keycodes == keyboard input
-                System.out.println("Bar Right in Controller");
+                System.out.println("Bar Right in Controller"); // console output for testing
                 if (this.rectangle.getLayoutX() + this.rectangle.getWidth() >= 1000) {
                     // looks if the bar "rectangle" is out of bounds and
                     // adjusts it's x-value
@@ -210,8 +223,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) + BarDirectX),
-                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) + BarDirectX),
+                                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -235,17 +248,19 @@ public class ControllerScreens implements Initializable {
         boolean b = game.checkBall();
 
         for (int i = 0; i < scene.getChildren().size(); i++) {
+            // iterates to the number of children the scene has
             Node n = scene.getChildren().get(i);
             if (n.getClass().getSimpleName().equals("Rectangle")) {
+                // filtering -> we are only interested in rectangles
                 Rectangle r = (Rectangle) n;
                 if (game.getLevel().findBlock(r.getX(), r.getY()) == null && r != rectangle) {
+                    // && r != rectangle -> the bar is also a rectangle, so we need to take it out
                     scene.getChildren().remove(r);
                 }
             }
         }
         return b;
     }
-
 
     @FXML
     private AnchorPane scene; // scene in which the gameplay is done
@@ -276,10 +291,14 @@ public class ControllerScreens implements Initializable {
             // moving the Bar to the spot the user would like to begin
             game.moveBall();
             if (checkBall()) {
+                // checkBall returns boolean -> looks if ball hit the bottom border of the scene
                 getAgeInSeconds();
+                // score/ timer counts up
             } else {
                 timeline.stop();
+                // if lost, timeline is stopped
                 staticclass.playsound("lose.wav");
+                // losing sound
             }
         }
 
@@ -319,8 +338,7 @@ public class ControllerScreens implements Initializable {
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-    }
+    public void initialize(URL url, ResourceBundle resourceBundle) { }
 
 
     public void getAgeInSeconds() {
@@ -332,5 +350,4 @@ public class ControllerScreens implements Initializable {
         int zw = (int) ((nowMillis - this.createdMillis) / 1000);
         highscore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
     }
-
 }
