@@ -109,7 +109,9 @@ public class Block implements Serializable {
             //this part I though of on my own(Peter), if you find a mistake or a better option feel free to improve it
             double xdif = x - ballinfo.get(0);
             double ydif = y - ballinfo.get(1);
-            if (Math.abs(xdif) > Math.abs(ydif)) {
+            //if (Math.abs(xdif) > Math.abs(ydif)) {
+            if (Math.max(x, ballinfo.get(0)) - Math.min(x, ballinfo.get(0))
+                    <= Math.max(y, ballinfo.get(1)) - Math.min(y, ballinfo.get(1))) {
                 if (xdif > 0) {
                     System.out.println("left");
                     return 1;

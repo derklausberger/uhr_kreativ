@@ -95,9 +95,15 @@ public class Game {
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
                 }
+                System.out.println("red stre right siddddddddddddddddddddd");
                 return true;
             } else if (touches == 3 || touches == 4) { // ball touches block on top or bottom side
                 ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+                block.lowerHP(1);
+                if (block.getStrength() <= 0) {
+                    level.removeBlock(block);
+                }
+                System.out.println("red stre tooooooooooooooooooooooooooop");
                 return true;
             }
         }
@@ -112,7 +118,7 @@ public class Game {
         }
 
         // ball touches top or bottom side of the window
-        if (position.get(1) - position.get(2) <= 0) {
+        if (position.get(1) - position.get(2) == 0) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // seite
             //moveBall();
@@ -121,7 +127,7 @@ public class Game {
             return false; // verloren
         }
         // ball touches bar
-        if (bar.checkbar(position)) {
+        else if (bar.checkbar(position)) {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // touch bar
         }

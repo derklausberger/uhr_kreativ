@@ -41,8 +41,6 @@ import java.util.ResourceBundle;
 
 
 public class ControllerScreens implements Initializable {
-
-
     public static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
@@ -108,19 +106,12 @@ public class ControllerScreens implements Initializable {
     }
 
     public void SwitchToLeveleditor(ActionEvent event) throws IOException { // called by button "Level Editor"
-
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        //Application.stage = new Stage();
         Application.stage.setTitle("Leveleditor");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
-
-        // close previous window
-        /*Node n = (Node) event.getSource();
-        Stage previous = (Stage) n.getScene().getWindow();
-        previous.close();*/
     }
 
 
@@ -165,9 +156,8 @@ public class ControllerScreens implements Initializable {
         checkBall();
 
         //testin purposes
-        Level lvl = Level.loadLevel("name");
-        loadBlocks(lvl);
-        game.setLevel(lvl);
+        game.setLevel(Level.loadLevel("name"));
+        loadBlocks();
 
 
         handler = (EventHandler<KeyEvent>) (key) -> {
@@ -192,7 +182,7 @@ public class ControllerScreens implements Initializable {
 
             if (key.getCode() == KeyCode.A) {
                 // keycodes == keyboard input
-                System.out.println("Bar Left in Controller"); // console output for testing
+                //System.out.println("Bar Left in Controller"); // console output for testing
                 if (this.rectangle.getLayoutX() <= 0) {
                     // looks if the bar "rectangle" is out of bounds and
                     // adjusts it's x-value
@@ -213,7 +203,7 @@ public class ControllerScreens implements Initializable {
 
             if (key.getCode() == KeyCode.D) {
                 // keycodes == keyboard input
-                System.out.println("Bar Right in Controller"); // console output for testing
+                //System.out.println("Bar Right in Controller"); // console output for testing
                 if (this.rectangle.getLayoutX() + this.rectangle.getWidth() >= 1000) {
                     // looks if the bar "rectangle" is out of bounds and
                     // adjusts it's x-value
@@ -253,12 +243,15 @@ public class ControllerScreens implements Initializable {
             if (n.getClass().getSimpleName().equals("Rectangle")) {
                 // filtering -> we are only interested in rectangles
                 Rectangle r = (Rectangle) n;
-                if (game.getLevel().findBlock(r.getX(), r.getY()) == null && r != rectangle) {
+                if (//game.getLevel().findBlock(r.getX(), r.getY()) == null &&
+                    r != rectangle) {
                     // && r != rectangle -> the bar is also a rectangle, so we need to take it out
                     scene.getChildren().remove(r);
                 }
             }
         }
+
+        loadBlocks();
         return b;
     }
 
@@ -304,36 +297,35 @@ public class ControllerScreens implements Initializable {
 
     }));
 
-    private void loadBlocks(Level level) {
+    private void loadBlocks() {
         Block block;
-        for (int i = 0; i < level.getBlocks().size(); i++) {
-            block = level.getBlocks().get(i);
-            placeBlock(level, block.getX(), block.getY(), block.getStrength());
+        for (int i = 0; i < game.getLevel().getBlocks().size(); i++) {
+            block = game.getLevel().getBlocks().get(i);
+            placeBlock(block.getX(), block.getY(), block.getStrength());
         }
     }
 
-    private void placeBlock(Level level, double x, double y, int strength) {
+    private void placeBlock(double x, double y, int strength) {
         Rectangle rect;
         Block block;
 
         if (strength == 1) {
             rect = new Rectangle(x, y, 100, 30);
-            block = new Block(level.getCount(), rect, strength);
+            block = new Block(game.getLevel().getCount(), rect, strength);
             // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
-            rect.setFill(Color.DARKRED);
+            rect.setFill(Color.RED);
         } else if (strength == 2) {
             rect = new Rectangle(x, y, 100, 30);
-            block = new Block(level.getCount(), rect, strength);
+            block = new Block(game.getLevel().getCount(), rect, strength);
             //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
-            rect.setFill(Color.DARKBLUE);
+            rect.setFill(Color.BLUE);
         } else {
             rect = new Rectangle(x, y, 100, 30);
-            block = new Block(level.getCount(), rect, strength);
+            block = new Block(game.getLevel().getCount(), rect, strength);
             //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
-            rect.setFill(Color.DARKGREEN);
+            rect.setFill(Color.GREEN);
         }
         scene.getChildren().add(rect);
-        //level.addBlock(block);
     }
 
 
