@@ -144,10 +144,31 @@ public class Level implements Serializable {
 
             FileInputStream fis = new FileInputStream(dirPath + filepath);
             ObjectInputStream ois = new ObjectInputStream(fis);
+            //System.out.println(filepath);
             Level level = (Level) ois.readObject();
             ois.close();
             fis.close();
             return level;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Level[] loadLevelList() {
+        try {
+            String dirPath = new File("").getAbsolutePath();
+            dirPath += "\\levels\\";
+
+            String[] filenames = new File(dirPath).list();
+            Level[] levelList = new Level[filenames.length];
+
+            for (int i = 0; i < filenames.length; i++) {
+                levelList[i] = loadLevel(filenames[i]);
+                //System.out.println(filenames[i]);
+            }
+
+            return levelList;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,13 +8,19 @@ import java.io.ObjectInputStream;
 import java.util.List;
 
 public class Game {
-    private Ball ball = new Ball();
-    private Bar bar = new Bar();
-    private Level level = new Level();
-    private Scene scene;
-    private AnchorPane leftside = new AnchorPane();
+    private Ball ball;
+    private Bar bar;
+    private Level level;
+    //private Scene scene;
+    //private AnchorPane leftside = new AnchorPane();
 
+    public Game() {
+        ball = null;
+        bar = null;
+        level = null;
+    }
 
+    /*
     public Game(Scene scene, AnchorPane pane) {
         ball = null;
         bar = null;
@@ -22,19 +28,18 @@ public class Game {
         this.scene = scene;
         leftside = pane;
     }
+     */
 
     public Game(Game game) {
         ball = game.ball;
         bar = game.bar;
         level = game.level;
-        scene = null;
+        //scene = null;
     }
 
     public Game(Level level) {
+        this();
         this.level = level;
-    }
-
-    public Game() {
     }
 
     public Game(String filepath) {
@@ -61,7 +66,7 @@ public class Game {
     public Ball getBall() {
         return ball;
     }
-    
+
     public void loadLevelFromFile(String filepath) {
         level = Level.loadLevel(filepath);
     }
@@ -95,7 +100,6 @@ public class Game {
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
                 }
-                System.out.println("red stre right siddddddddddddddddddddd");
                 return true;
             } else if (touches == 3 || touches == 4) { // ball touches block on top or bottom side
                 ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
@@ -103,7 +107,6 @@ public class Game {
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
                 }
-                System.out.println("red stre tooooooooooooooooooooooooooop");
                 return true;
             }
         }
@@ -112,7 +115,7 @@ public class Game {
         if (position.get(0) - position.get(2) <= 0) {
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
-        } else if (position.get(0) + position.get(2) >= leftside.getWidth()) {
+        } else if (position.get(0) + position.get(2) >= 1000) { // leftside.getWidth()
             ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
         }
@@ -122,7 +125,7 @@ public class Game {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // seite
             //moveBall();
-        } else if (position.get(1) + position.get(2) >= leftside.getHeight()) {
+        } else if (position.get(1) + position.get(2) >= 1000) { // leftside.getWidth()
             bar.stop();
             return false; // verloren
         }
@@ -132,12 +135,6 @@ public class Game {
             return true; // touch bar
         }
         return true;
-    }
-
-
-    public void youLost() {
-        System.out.println("you lost boy");
-
     }
 
     /*

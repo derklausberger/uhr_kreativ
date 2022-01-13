@@ -74,6 +74,7 @@ public class levelEditorController {
 
         saveLevelBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             Alert alert;
+            level.setName(name.getText());
             if (level.saveLevel(name.getText())) {
                 alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Speichern");

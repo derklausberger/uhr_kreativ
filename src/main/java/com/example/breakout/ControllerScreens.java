@@ -11,11 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -23,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -34,10 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class ControllerScreens implements Initializable {
@@ -45,13 +45,10 @@ public class ControllerScreens implements Initializable {
     private static final int windowWidth = 1280;
 
     public void showClockScreen(ActionEvent event) throws IOException {
-
-
         AnalogClock clock = new AnalogClock();
 
         clock.start(Application.getStage());
         //Application.getStage().setScene(clock.getScene());
-
     }
 
     public static void SwitchToMain() throws IOException {
@@ -65,29 +62,144 @@ public class ControllerScreens implements Initializable {
         //staticclass.playsong("titlescreen.mp3");
     }
 
-
+    @FXML
+    AnchorPane mainPaneLevelScreen;
 
     public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        //Stage stage = new Stage();
         Application.stage.setTitle("Breakout -> mainScreen -> levelsScreen");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
 
-        // close previous window
-        /*
-        Node n = (Node) event.getSource();
-        Stage previous = (Stage) n.getScene().getWindow();
-        previous.close();
+        mainPaneLevelScreen = (AnchorPane) scene.lookup("#mainPaneLevelScreen");
 
-         */
+        Button backToMain = new Button("Back to Menu");
 
+        backToMain.setLayoutX(65);
+        backToMain.setLayoutY(38);
+
+        backToMain.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
+            try {
+                ControllerScreens.SwitchToMain();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }));
+
+        TextField searchField = new TextField();
+
+        searchField.setLayoutX(1005);
+        searchField.setLayoutY(38);
+
+        searchField.setMinHeight(30);
+        searchField.setMaxHeight(30);
+
+        searchField.setMinWidth(100);
+        searchField.setMaxWidth(100);
+
+
+        Button searchBtn = new Button("Search");
+
+        searchBtn.setLayoutX(1115);
+        searchBtn.setLayoutY(38);
+
+        searchBtn.setMinHeight(30);
+        searchBtn.setMaxHeight(30);
+
+        searchBtn.setMinWidth(100);
+        searchBtn.setMaxWidth(100);
+
+        searchBtn.setOnMouseClicked(e -> {
+            for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
+                Node n = mainPaneLevelScreen.getChildren().get(i);
+                if (n.getClass().getSimpleName().equals("AnchorPane")) {
+                    mainPaneLevelScreen.getChildren().remove((AnchorPane) n);
+                }
+            }
+
+            showLevels(searchField.getText());
+        });
+
+        mainPaneLevelScreen.getChildren().addAll(backToMain, searchField, searchBtn);
+
+        showLevels("");
+
+        mainPaneLevelScreen.setOnScroll(e -> {
+            for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
+                Node n = mainPaneLevelScreen.getChildren().get(i);
+
+                //n.setLayoutY(n.getLayoutY() - 50);
+            }
+        });
+    }
+
+    public void showLevels(String filterBy) {
+        Level[] levels = Level.loadLevelList();
+
+        int x = 65;
+        int y = 90;
+
+        for (int i = 0; i < levels.length; i++) {
+            Level level = levels[i];
+
+            if (level.getName().toLowerCase().contains(filterBy.toLowerCase()) ) {
+                AnchorPane pane = new AnchorPane();
+
+                pane.setMinWidth(250);
+                pane.setMaxWidth(250);
+
+                pane.setMinHeight(200);
+                pane.setMaxHeight(200);
+
+                pane.setLayoutX(x);
+                pane.setLayoutY(y);
+
+                if ((i + 1) % 4 == 0) {
+                    x = 65;
+                    y += 720 / 4 + 50;
+                } else {
+                    x += 250 + 50;
+                }
+
+                game = new Game(level);
+                loadBlocks(0.25, pane);
+
+                Label label = new Label(level.getName());
+                AnchorPane.setLeftAnchor(label, 0.0);
+                AnchorPane.setRightAnchor(label, 0.0);
+                AnchorPane.setBottomAnchor(label, 0.0);
+                AnchorPane.setTopAnchor(label, 0.0);
+
+                label.setAlignment(Pos.BOTTOM_CENTER);
+
+                pane.getChildren().add(label);
+                pane.setOnMouseClicked(e -> {
+                    try {
+                        game = new Game(level);
+                        SwitchToGame();//(ActionEvent) e);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+                pane.setOnMouseEntered(e -> {
+                    pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;");
+                });
+
+                pane.setOnMouseExited(e -> {
+                    pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;");
+                });
+
+                pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;");
+
+                mainPaneLevelScreen.getChildren().add(pane);
+            }
+        }
     }
 
     public void SwitchToSettings(ActionEvent event) throws IOException { // called by button "Einstellugen"
-
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //Stage stage = new Stage();
@@ -95,14 +207,6 @@ public class ControllerScreens implements Initializable {
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
-
-        // close previous window
-        /*
-        Node n = (Node) event.getSource();
-        Stage previous = (Stage) n.getScene().getWindow();
-        previous.close();
-
-         */
     }
 
     public void SwitchToLeveleditor(ActionEvent event) throws IOException { // called by button "Level Editor"
@@ -115,10 +219,10 @@ public class ControllerScreens implements Initializable {
     }
 
 
-    private Game game = new Game();
+    private Game game;// = new Game();
     private EventHandler handler;
 
-    public void SwitchToGame(ActionEvent event) throws IOException { // called by button "level [id]"
+    public void SwitchToGame(/*ActionEvent event*/) throws IOException { // called by button "level [id]"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
@@ -135,15 +239,13 @@ public class ControllerScreens implements Initializable {
         previous.close();
 
          */
-
-
         this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
                                                                       // -> #[fx:id]
         this.circle = (Circle) scene.lookup("#circle");            // --> the ball
         this.rectangle = (Rectangle) scene.lookup("#rectangle");   // -> the bar
         this.highscore = (Label) scene.lookup("#highscore");       // -> score
 
-        game = new Game(scene, this.scene);
+        //game = new Game();//(scene, this.scene);
         game.setBall(new Ball(circle,   0,
                                         0,
                                         rectangle.getLayoutX() + rectangle.getWidth() / 2,
@@ -156,8 +258,8 @@ public class ControllerScreens implements Initializable {
         checkBall();
 
         //testin purposes
-        game.setLevel(Level.loadLevel("name"));
-        loadBlocks();
+        //game.setLevel(Level.loadLevel("name"));
+        loadBlocks(1, this.scene);
 
 
         handler = (EventHandler<KeyEvent>) (key) -> {
@@ -171,7 +273,7 @@ public class ControllerScreens implements Initializable {
                 gameStart = true;
                 gameStartLock = true;
                 // locking the ability to press B multiple times
-                game.getBall().changemomentum(3, -3);
+                game.getBall().changemomentum(1, -1);
                 // momentum is given
                 // why 1, -1? cause top left corner is 0, 0
                 createdMillis = System.currentTimeMillis();
@@ -237,7 +339,7 @@ public class ControllerScreens implements Initializable {
     public boolean checkBall() {
         boolean b = game.checkBall();
 
-        for (int i = 0; i < scene.getChildren().size(); i++) {
+        for (int i = scene.getChildren().size() - 1; i >= 0; i--) {
             // iterates to the number of children the scene has
             Node n = scene.getChildren().get(i);
             if (n.getClass().getSimpleName().equals("Rectangle")) {
@@ -251,7 +353,7 @@ public class ControllerScreens implements Initializable {
             }
         }
 
-        loadBlocks();
+        loadBlocks(1, this.scene);
         return b;
     }
 
@@ -297,35 +399,29 @@ public class ControllerScreens implements Initializable {
 
     }));
 
-    private void loadBlocks() {
+    private void loadBlocks(double factor, AnchorPane pane) {
         Block block;
         for (int i = 0; i < game.getLevel().getBlocks().size(); i++) {
             block = game.getLevel().getBlocks().get(i);
-            placeBlock(block.getX(), block.getY(), block.getStrength());
+            placeBlock(block.getX() * factor,
+                    block.getY() * factor,
+                    block.getStrength(), factor, pane);
         }
     }
 
-    private void placeBlock(double x, double y, int strength) {
-        Rectangle rect;
-        Block block;
+    private void placeBlock(double x, double y, int strength, double factor, AnchorPane pane) {
+        Rectangle rect = new Rectangle(x, y, 100 * factor, 30 * factor);
+        Block block = new Block(game.getLevel().getCount(), rect, strength);
 
         if (strength == 1) {
-            rect = new Rectangle(x, y, 100, 30);
-            block = new Block(game.getLevel().getCount(), rect, strength);
-            // block = new Block(level.getCount(), 1090, 50, 100, 30, strength);
             rect.setFill(Color.RED);
         } else if (strength == 2) {
-            rect = new Rectangle(x, y, 100, 30);
-            block = new Block(game.getLevel().getCount(), rect, strength);
-            //block = new Block(level.getCount(), 1090, 130, 100, 30, strength);
             rect.setFill(Color.BLUE);
         } else {
-            rect = new Rectangle(x, y, 100, 30);
-            block = new Block(game.getLevel().getCount(), rect, strength);
-            //block = new Block(level.getCount(), 1090, 210, 100, 30, strength);
             rect.setFill(Color.GREEN);
         }
-        scene.getChildren().add(rect);
+
+        pane.getChildren().add(rect);
     }
 
 
