@@ -395,9 +395,7 @@ public class levelEditorController {
         rect.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, (e ->
                 mainPane.setCursor(Cursor.MOVE)));
 
-        if (!level.getBlocks().
-
-                contains(block)) {
+        if (!level.getBlocks().contains(block)) {
             level.addBlock(block);
         }
     }

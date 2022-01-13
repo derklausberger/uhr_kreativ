@@ -55,7 +55,7 @@ public class ControllerScreens implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //stage = new Stage();
-        Application.stage.setTitle("Breakout -> mainScreen");
+        Application.stage.setTitle("Breakout");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
@@ -68,7 +68,7 @@ public class ControllerScreens implements Initializable {
     public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Breakout -> mainScreen -> levelsScreen");
+        Application.stage.setTitle("Levels");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
@@ -203,7 +203,7 @@ public class ControllerScreens implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //Stage stage = new Stage();
-        Application.stage.setTitle("Breakout -> mainScreen -> settingsScreen");
+        Application.stage.setTitle("Settings");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
@@ -227,7 +227,7 @@ public class ControllerScreens implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //Stage stage = new Stage();
-        Application.stage.setTitle("Breakout -> mainScreen -> levelsScreen -> gameScreen");
+        Application.stage.setTitle("Game");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
