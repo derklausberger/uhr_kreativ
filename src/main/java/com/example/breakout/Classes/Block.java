@@ -112,7 +112,7 @@ public class Block implements Serializable {
             //if (Math.abs(xdif) > Math.abs(ydif)) {
             if (Math.max(x, ballinfo.get(0)) - Math.min(x, ballinfo.get(0))
                     <= Math.max(y, ballinfo.get(1)) - Math.min(y, ballinfo.get(1))
-                    && xdif > ydif) {
+                    ) {
                 if (xdif > 0) {
                     System.out.println("left");
                     return 1;
