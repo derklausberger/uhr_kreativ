@@ -15,10 +15,12 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -60,6 +62,7 @@ public class ControllerScreens implements Initializable {
     @FXML
     AnchorPane mainPaneLevelScreen;
 
+
     public void SwitchToLevels() throws IOException { // called by button "Start"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
@@ -69,6 +72,15 @@ public class ControllerScreens implements Initializable {
         Application.stage.show();
 
         mainPaneLevelScreen = (AnchorPane) scene.lookup("#mainPaneLevelScreen");
+
+        /* ScrollPane scroll = new ScrollPane();
+        scroll.setContent(mainPaneLevelScreen);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setPannable(true);
+        */
+
+
+
 
         Button backToMain = new Button("Back to Menu");
 
@@ -120,25 +132,27 @@ public class ControllerScreens implements Initializable {
         mainPaneLevelScreen.getChildren().addAll(backToMain, searchField, searchBtn);
 
         showLevels("");
-        //double scroll = 0;
+        final double[] scroll = {0};
 
-        /*mainPaneLevelScreen.setOnScroll(e -> {
+
+
+        mainPaneLevelScreen.setOnScroll(e -> {
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
-                if (scroll + e.getDeltaY() >= 0) {
-                    n.setLayoutY(n.getLayoutY() + scroll);
-                    scroll = 0;
-                } else if (scroll + e.getDeltaY() >= winHeight + 500){
-                    n.setLayoutY(n.getLayoutY() + (winHeight - scroll));
-                    scroll = 1000 - winHeight;
+                if (scroll[0] + e.getDeltaY() >= 0) {
+                    n.setLayoutY(n.getLayoutY() + scroll[0]);
+                    scroll[0] = 0;
+                } else if (scroll[0] + e.getDeltaY() >= windowHeight + 500){
+                    n.setLayoutY(n.getLayoutY() + (windowHeight - scroll[0]));
+                    scroll[0] = 1000 - windowHeight;
                 } else {
                     n.setLayoutY(n.getLayoutY() + e.getDeltaY());
-                    scroll += e.getDeltaY();
+                    scroll[0] += e.getDeltaY();
                 }
 
-                System.out.println(scroll);
+                //System.out.println(scroll[0]);
             }
-        });*/
+        });
     }
 
     public void showLevels(String filterBy) {
