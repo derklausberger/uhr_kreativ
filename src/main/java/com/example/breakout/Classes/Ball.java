@@ -4,9 +4,6 @@ import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import javafx.scene.shape.Circle;
 
 public class Ball {
     //momentum means how fast it moves in a certain direction and if its - or +
@@ -15,13 +12,13 @@ public class Ball {
     private double x;
     private double y;
     private double radius;
-    private Circle circle;
+    private final Circle circle;
 
 
     public Ball(Circle circle, double dx, double dy, double centerX, double centerY) {
         circle.setCenterX(centerX);
         circle.setCenterY(centerY);
-        this.circle=circle;
+        this.circle = circle;
         this.x = circle.getCenterX();
         this.y = circle.getCenterY();
         this.radius = circle.getRadius();
@@ -29,15 +26,12 @@ public class Ball {
         ymomentum = dy;
     }
 
-    public Ball() {
-    }
-
     public void moveTo(double x, double y) {
         this.x = x;
         this.y = y;
-       // System.out.println(x+" this."+this.x);
+        // System.out.println(x+" this."+this.x);
         circle.setCenterX(x);
-       // System.out.println(y+" this."+this.y);
+        // System.out.println(y+" this."+this.y);
         circle.setCenterY(y);
     }
 
@@ -52,7 +46,7 @@ public class Ball {
     }
 
     public List<Double> getmomentum() {
-        List<Double> returnme = new ArrayList<Double>();
+        List<Double> returnme = new ArrayList<>();
         returnme.add(xmomentum);
         returnme.add(ymomentum);
         return returnme;
@@ -60,7 +54,7 @@ public class Ball {
 
     //gets you x,y and radius in that order in a list
     public List<Double> getpositionalinfo() {
-        List<Double> returnme = new ArrayList<Double>();
+        List<Double> returnme = new ArrayList<>();
         returnme.add(x);
         returnme.add(y);
         returnme.add(radius);

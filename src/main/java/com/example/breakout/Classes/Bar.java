@@ -12,13 +12,6 @@ public class Bar {
     private Rectangle rectangle;
     private boolean moveable = true;
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
 
     public Bar(Rectangle rectangle) {
         this.rectangle = rectangle;
@@ -26,9 +19,6 @@ public class Bar {
         this.y = rectangle.getLayoutY();
         this.width = rectangle.getWidth();
         this.height = rectangle.getHeight();
-    }
-
-    public Bar() {
     }
 
     public void move(double x) {

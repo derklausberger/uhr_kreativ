@@ -10,9 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,18 +23,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -44,7 +34,7 @@ public class ControllerScreens implements Initializable {
     public static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
-    public void showClockScreen(ActionEvent event) throws IOException {
+    public void showClockScreen() {
         AnalogClock clock = new AnalogClock();
 
         clock.start(Application.getStage());
@@ -65,7 +55,7 @@ public class ControllerScreens implements Initializable {
     @FXML
     AnchorPane mainPaneLevelScreen;
 
-    public void SwitchToLevels(ActionEvent event) throws IOException { // called by button "Start"
+    public void SwitchToLevels() throws IOException { // called by button "Start"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Application.stage.setTitle("Levels");
@@ -115,7 +105,7 @@ public class ControllerScreens implements Initializable {
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
                 if (n.getClass().getSimpleName().equals("AnchorPane")) {
-                    mainPaneLevelScreen.getChildren().remove((AnchorPane) n);
+                    mainPaneLevelScreen.getChildren().remove(n);
                 }
             }
 
@@ -125,91 +115,101 @@ public class ControllerScreens implements Initializable {
         mainPaneLevelScreen.getChildren().addAll(backToMain, searchField, searchBtn);
 
         showLevels("");
+        //double scroll = 0;
 
-        mainPaneLevelScreen.setOnScroll(e -> {
+        /*mainPaneLevelScreen.setOnScroll(e -> {
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
+                if (scroll + e.getDeltaY() >= 0) {
+                    n.setLayoutY(n.getLayoutY() + scroll);
+                    scroll = 0;
+                } else if (scroll + e.getDeltaY() >= winHeight + 500){
+                    n.setLayoutY(n.getLayoutY() + (winHeight - scroll));
+                    scroll = 1000 - winHeight;
+                } else {
+                    n.setLayoutY(n.getLayoutY() + e.getDeltaY());
+                    scroll += e.getDeltaY();
+                }
 
-                //n.setLayoutY(n.getLayoutY() - 50);
+                System.out.println(scroll);
             }
-        });
+        });*/
     }
 
     public void showLevels(String filterBy) {
         Level[] levels = Level.loadLevelList();
+        if (levels != null) {
 
-        int x = 65;
-        int y = 90;
+            int x = 65;
+            int y = 90;
 
-        for (int i = 0; i < levels.length; i++) {
-            Level level = levels[i];
+            //double winHeight = y + levels.length * 250;
 
-            if (level.getName().toLowerCase().contains(filterBy.toLowerCase()) ) {
-                AnchorPane pane = new AnchorPane();
+            for (int i = 0; i < levels.length; i++) {
+                Level level = levels[i];
 
-                pane.setMinWidth(250);
-                pane.setMaxWidth(250);
+                if (level.getName().toLowerCase().contains(filterBy.toLowerCase())) {
+                    AnchorPane pane = new AnchorPane();
 
-                pane.setMinHeight(200);
-                pane.setMaxHeight(200);
+                    pane.setMinWidth(250);
+                    pane.setMaxWidth(250);
 
-                pane.setLayoutX(x);
-                pane.setLayoutY(y);
+                    pane.setMinHeight(200);
+                    pane.setMaxHeight(200);
 
-                if ((i + 1) % 4 == 0) {
-                    x = 65;
-                    y += 720 / 4 + 50;
-                } else {
-                    x += 250 + 50;
-                }
+                    pane.setLayoutX(x);
+                    pane.setLayoutY(y);
 
-                game = new Game(level);
-                loadBlocks(0.25, pane);
-
-                Label label = new Label(level.getName());
-                AnchorPane.setLeftAnchor(label, 0.0);
-                AnchorPane.setRightAnchor(label, 0.0);
-                AnchorPane.setBottomAnchor(label, 0.0);
-                AnchorPane.setTopAnchor(label, 0.0);
-
-                label.setAlignment(Pos.BOTTOM_CENTER);
-
-                pane.getChildren().add(label);
-                pane.setOnMouseClicked(e -> {
-                    try {
-                        game = new Game(level);
-                        SwitchToGame();//(ActionEvent) e);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
+                    if ((i + 1) % 4 == 0) {
+                        x = 65;
+                        y += 720 / 4 + 50;
+                    } else {
+                        x += 250 + 50;
                     }
-                });
 
-                pane.setOnMouseEntered(e -> {
-                    pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;");
-                });
+                    game = new Game(level);
+                    loadBlocks(0.25, pane);
 
-                pane.setOnMouseExited(e -> {
+                    Label label = new Label(level.getName());
+                    AnchorPane.setLeftAnchor(label, 0.0);
+                    AnchorPane.setRightAnchor(label, 0.0);
+                    AnchorPane.setBottomAnchor(label, 0.0);
+                    AnchorPane.setTopAnchor(label, 0.0);
+
+                    label.setAlignment(Pos.BOTTOM_CENTER);
+
+                    pane.getChildren().add(label);
+                    pane.setOnMouseClicked(e -> {
+                        try {
+                            game = new Game(level);
+                            SwitchToGame();//(ActionEvent) e);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+
+                    pane.setOnMouseEntered(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;"));
+
+                    pane.setOnMouseExited(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;"));
+
                     pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;");
-                });
 
-                pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;");
-
-                mainPaneLevelScreen.getChildren().add(pane);
+                    mainPaneLevelScreen.getChildren().add(pane);
+                }
             }
         }
     }
 
-    public void SwitchToSettings(ActionEvent event) throws IOException { // called by button "Einstellugen"
+    public void SwitchToSettings() throws IOException { // called by button "Einstellugen"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        //Stage stage = new Stage();
         Application.stage.setTitle("Settings");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
     }
 
-    public void SwitchToLeveleditor(ActionEvent event) throws IOException { // called by button "Level Editor"
+    public void SwitchToLeveleditor() throws IOException { // called by button "Level Editor"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Application.stage.setTitle("Leveleditor");
@@ -220,7 +220,6 @@ public class ControllerScreens implements Initializable {
 
 
     private Game game;// = new Game();
-    private EventHandler handler;
 
     public void SwitchToGame(/*ActionEvent event*/) throws IOException { // called by button "level [id]"
 
@@ -262,7 +261,34 @@ public class ControllerScreens implements Initializable {
         loadBlocks(1, this.scene);
 
 
-        handler = (EventHandler<KeyEvent>) (key) -> {
+        // listening to KeyEvent's
+        //BarDirectX can be moved or changed depending on how it feels
+        // locking the ability to press B multiple times
+        // momentum is given
+        // why 1, -1? cause top left corner is 0, 0
+        // used in getAgeInSeconds() for the score (time needed)
+        // -> starts only if B is pressed, so players have the "freedom" to
+        // position the bar wherever they want before the timer starts
+        // keycodes == keyboard input
+        //System.out.println("Bar Left in Controller"); // console output for testing
+        // looks if the bar "rectangle" is out of bounds and
+        // adjusts it's x-value
+        // boolean value -> looks if game has started
+        // it is changed if the key B is pressed
+        // if the key B hasn't been pressed yet
+        // changes the ball's x-value corresponding to the bar's x-value
+        // --> "ball stays on top of bar"
+        // keycodes == keyboard input
+        //System.out.println("Bar Right in Controller"); // console output for testing
+        // looks if the bar "rectangle" is out of bounds and
+        // adjusts it's x-value
+        // boolean value -> looks if game has started
+        // it is changed if the key B is pressed
+        // if the key B hasn't been pressed yet
+        // changes the ball's x-value corresponding to the bar's x-value
+        // --> "ball stays on top of bar"
+        // this.rectangle.getLayoutX --> most left point
+        EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
 
             double BarDirectX = 15;
@@ -294,8 +320,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) - BarDirectX),
-                                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) - BarDirectX),
+                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -315,8 +341,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) + BarDirectX),
-                                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) + BarDirectX),
+                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -411,7 +437,7 @@ public class ControllerScreens implements Initializable {
 
     private void placeBlock(double x, double y, int strength, double factor, AnchorPane pane) {
         Rectangle rect = new Rectangle(x, y, 100 * factor, 30 * factor);
-        Block block = new Block(game.getLevel().getCount(), rect, strength);
+        //Block block = new Block(game.getLevel().getCount(), rect, strength);
 
         if (strength == 1) {
             rect.setFill(Color.RED);

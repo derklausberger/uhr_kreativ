@@ -1,13 +1,11 @@
 package com.example.breakout.Classes;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Level implements Serializable {
-    private List<Block> blocks;
+    private final List<Block> blocks;
     private int count = 0;
     private String name;
 
@@ -41,22 +39,16 @@ public class Level implements Serializable {
         return blocks;
     }
 
-    public void setBlocks(List<Block> blocks) {
-        this.blocks = blocks;
-    }
-
     public boolean addBlock(Block block) {
-        Block b2;
-        for (int i = 0; i < blocks.size(); i++) {
-            b2 = blocks.get(i);
-            if ((((block.getX() < (b2.getX() + b2.getWidth())
-                    && block.getX() > b2.getX())
-                    || (block.getX() + block.getWidth() > b2.getX()
-                    && block.getX() < b2.getX()))
-                    && ((block.getY() < (b2.getY() + b2.getHeight())
-                    && block.getY() > b2.getY())
-                    || (block.getY() + block.getHeight() > b2.getY()
-                    && block.getY() < b2.getY())))) {
+        for (Block b : blocks) {
+            if ((((block.getX() < (b.getX() + b.getWidth())
+                    && block.getX() > b.getX())
+                    || (block.getX() + block.getWidth() > b.getX()
+                    && block.getX() < b.getX()))
+                    && ((block.getY() < (b.getY() + b.getHeight())
+                    && block.getY() > b.getY())
+                    || (block.getY() + block.getHeight() > b.getY()
+                    && block.getY() < b.getY())))) {
                 return false;
             }
         }
@@ -66,9 +58,9 @@ public class Level implements Serializable {
     }
 
     public Block findBlock(double x, double y) {
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i).getX() == x && blocks.get(i).getY() == y) {
-                return blocks.get(i);
+        for (Block block : blocks) {
+            if (block.getX() == x && block.getY() == y) {
+                return block;
             }
         }
         return null;
@@ -79,18 +71,16 @@ public class Level implements Serializable {
     }
 
     public boolean replaceBlock(Block block) {
-        Block b2;
-        for (int i = 0; i < blocks.size(); i++) {
-            b2 = blocks.get(i);
-            if (block.getID() != b2.getID()
-                    && (((block.getX() < (b2.getX() + b2.getWidth())
-                    && block.getX() >= b2.getX())
-                    || (block.getX() + block.getWidth() > b2.getX()
-                    && block.getX() <= b2.getX()))
-                    && ((block.getY() < (b2.getY() + b2.getHeight())
-                    && block.getY() >= b2.getY())
-                    || (block.getY() + block.getHeight() > b2.getY()
-                    && block.getY() <= b2.getY())))) {
+        for (Block b : blocks) {
+            if (block.getID() != b.getID()
+                    && (((block.getX() < (b.getX() + b.getWidth())
+                    && block.getX() >= b.getX())
+                    || (block.getX() + block.getWidth() > b.getX()
+                    && block.getX() <= b.getX()))
+                    && ((block.getY() < (b.getY() + b.getHeight())
+                    && block.getY() >= b.getY())
+                    || (block.getY() + block.getHeight() > b.getY()
+                    && block.getY() <= b.getY())))) {
                 return false;
             }
         }
@@ -165,7 +155,6 @@ public class Level implements Serializable {
 
             for (int i = 0; i < filenames.length; i++) {
                 levelList[i] = loadLevel(filenames[i]);
-                //System.out.println(filenames[i]);
             }
 
             return levelList;

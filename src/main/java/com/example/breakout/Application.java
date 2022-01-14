@@ -1,7 +1,5 @@
 package com.example.breakout;
 
-import com.example.breakout.Classes.AnalogClock;
-import com.example.breakout.Classes.staticclass;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,13 +19,7 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-
-        AnalogClock clock = new AnalogClock();
-
-        this.stage = stage;
-
-        clock.start(stage);
-        stage.setScene(clock.getScene());
+        Application.stage = stage;
         stage.setTitle("Breakout -> mainScreen");
         stage.setScene(scene);
         stage.setResizable(false);
@@ -40,5 +32,7 @@ public class Application extends javafx.application.Application {
     }
 
 
-    public static void main(String[] args) { launch();}
+    public static void main(String[] args) {
+        launch();
+    }
 }

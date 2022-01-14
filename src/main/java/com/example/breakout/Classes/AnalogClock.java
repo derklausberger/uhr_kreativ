@@ -3,15 +3,12 @@ package com.example.breakout.Classes;
 import com.example.breakout.ControllerScreens;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
-import java.awt.event.ActionEvent;
-import java.beans.EventHandler;
 import java.util.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -24,7 +21,7 @@ public class AnalogClock extends Application {
     final Circle circle1 = new Circle();
 
     final int xCENTER = 640;
-    final int yCENTER = 210;
+    final int yCENTER = 310;
     final int radius = 200;
 
     //initialize clock components
@@ -168,8 +165,6 @@ public class AnalogClock extends Application {
 
         MyTimer timer = new MyTimer();
         timer.start();
-
-
     }
 
     //public static void main(String[] args) {
@@ -192,11 +187,17 @@ public class AnalogClock extends Application {
 
                 prevTime = now;
 
+                /*
                 Date currentDate = new Date();
 
                 currentMinute = currentDate.getMinutes();
                 currentHour = currentDate.getHours();
                 currentSecond = currentDate.getSeconds();
+                */
+
+                currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
+                currentHour = Calendar.getInstance().get(Calendar.HOUR);
+                currentSecond = Calendar.getInstance().get(Calendar.SECOND);
 
 
                 xsecond = (int)(Math.cos(currentSecond * 3.14f / 30 - 3.14f / 2) * 160 + xCENTER);

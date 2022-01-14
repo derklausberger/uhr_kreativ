@@ -227,14 +227,14 @@ public class levelEditorController {
     }
 
     private ArrayList<Rectangle> getRectangles() {
-        ArrayList<Rectangle> rects = new ArrayList<>();
+        ArrayList<Rectangle> rectList = new ArrayList<>();
         for (int i = 0; i < mainPane.getChildren().size(); i++) {
             Node n = mainPane.getChildren().get(i);
             if (n.getClass().getSimpleName().equals("Rectangle")) {
-                rects.add((Rectangle) n);
+                rectList.add((Rectangle) n);
             }
         }
-        return rects;
+        return rectList;
     }
 
     private void placeBlock(Block block) {
@@ -293,15 +293,6 @@ public class levelEditorController {
                 } else {
                     rect.setFill(Color.DARKGREEN);
                 }
-               /* } else {
-                    if (block.getStrength() == 1) {
-                        rect.setFill(Color.RED);
-                    } else if (block.getStrength() == 2) {
-                        rect.setFill(Color.BLUE);
-                    } else {
-                        rect.setFill(Color.GREEN);
-                    }
-                }*/
             } else if (blockSelected > 1) {
                 Block b;
                 for (Rectangle r : getRectangles()) {

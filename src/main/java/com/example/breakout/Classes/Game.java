@@ -1,10 +1,5 @@
 package com.example.breakout.Classes;
 
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.List;
 
 public class Game {
@@ -30,21 +25,9 @@ public class Game {
     }
      */
 
-    public Game(Game game) {
-        ball = game.ball;
-        bar = game.bar;
-        level = game.level;
-        //scene = null;
-    }
-
     public Game(Level level) {
         this();
         this.level = level;
-    }
-
-    public Game(String filepath) {
-        loadLevelFromFile(filepath);
-        // was this but it caused an error so I changed it to this ^ above  this(loadLevelFromFile(filepath));
     }
 
     public void setBall(Ball ball) {
@@ -55,20 +38,12 @@ public class Game {
         this.bar = bar;
     }
 
-    public void setLevel(Level level) {
-        this.level = level;
-    }
-
     public Level getLevel() {
         return level;
     }
 
     public Ball getBall() {
         return ball;
-    }
-
-    public void loadLevelFromFile(String filepath) {
-        level = Level.loadLevel(filepath);
     }
 
     public void moveBall() {

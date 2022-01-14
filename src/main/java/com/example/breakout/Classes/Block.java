@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Block implements Serializable {
     //private Rectangle rectangle;
-    private int ID;
+    private final int ID;
     private double x;
     private double y;
-    private double width;
-    private double height;
+    private final double width;
+    private final double height;
     private int strength;
     /*
     One thing I am unsure of is if we should make this into its own class or just have a String which gets
@@ -84,10 +84,6 @@ public class Block implements Serializable {
         return strength;
     }
 
-    public void setStrength(int strength) {
-        this.strength = strength;
-    }
-
     //checks if a ball intersects a block, if strength is below 1 it is always false, uses the list created from getpositionalinfo in the ball class
     //these would be x,y and radius
     //got this method from https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
@@ -135,13 +131,7 @@ public class Block implements Serializable {
 
     //true means the block still exists, false means its gone, only do this after
     //using checkBlock to see if the block gets touched
-    public boolean lowerHP(int damage) {
+    public void lowerHP(int damage) {
         strength -= damage;
-        if (strength < 1) {
-            //rectangle.setVisible(false);
-            return false;
-        }
-        return true;
-
     }
 }
