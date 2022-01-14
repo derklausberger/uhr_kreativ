@@ -29,7 +29,7 @@ public class Staticclass {
 
 
     public static void playsong(String songname) {
-        //these lines need to be here due to settings being able to turn on or off music with a button there
+        //these lines need to be here and not in the if due to settings being able to turn on or off music with a button there
         Media hit = new Media(new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, songname
         ))).toURI().toString());
         mediaPlayer = new MediaPlayer(hit);
