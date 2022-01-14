@@ -7,6 +7,14 @@
     <children>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
+                <Button mnemonicParsing="false"  prefHeight="20.0" prefWidth="150.0"
+                        text="Niklas wanted to do something with a button"/>
+                <Button fx:id="Musicbutton" layoutX="34.0" layoutY="98.0" mnemonicParsing="false" onAction="#ChangeMusicSetting"
+                         prefWidth="150.0" text="Disable Music"/>
+                <Button  fx:id="Soundbutton" layoutX="34.0" layoutY="110.0" mnemonicParsing="false" onAction="#ChangeSoundSetting"
+                        prefWidth="150.0" text="Disable Sound"/>
+                <Button layoutX="34.0" layoutY="122.0" mnemonicParsing="false" onAction="#SwitchToMainns" prefWidth="150.0"
+                        text="Go Back"/>
             </children>
         </VBox>
     </children>

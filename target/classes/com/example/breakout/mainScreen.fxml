@@ -18,7 +18,7 @@
         <Button layoutX="34.0" layoutY="98.0" mnemonicParsing="false"
                 onAction="#SwitchToLeveleditor" prefWidth="150.0" text="Level Editor"/> <!--fx:id="lvlEditBtn"-->
         <Button layoutX="34.0" layoutY="110.0" mnemonicParsing="false" onAction="#SwitchToSettings"
-                prefWidth="150.0" text="Einstellungen"/>
+                prefWidth="150.0" text="Settings"/>
         <Button layoutX="34.0" layoutY="122.0" mnemonicParsing="false" onAction="#showClockScreen" prefWidth="150.0"
                 text="Click for surprise!"/>
     </VBox>

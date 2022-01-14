@@ -49,8 +49,13 @@ public class ControllerScreens implements Initializable {
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
-        //staticclass.playsong("titlescreen.mp3");
+        Staticclass.playsong("titlescreen.mp3");
     }
+
+    public void SwitchToMainns() throws IOException {// Called by a button to go back to the main, as Static methods cant be used by on-action in fxml
+        SwitchToMain();
+    }
+
 
     @FXML
     AnchorPane mainPaneLevelScreen;
@@ -200,6 +205,11 @@ public class ControllerScreens implements Initializable {
         }
     }
 
+    @FXML
+    Button Musicbutton;
+    @FXML
+    Button Soundbutton;
+
     public void SwitchToSettings() throws IOException { // called by button "Einstellugen"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
@@ -207,6 +217,32 @@ public class ControllerScreens implements Initializable {
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
+        this.Musicbutton = (Button) scene.lookup("#Musicbutton");   // -> the Music button
+        if(!Staticclass.isMusicsetting()){
+            Musicbutton.setText("Enable Music");
+        }
+        this.Soundbutton = (Button) scene.lookup("#Soundbutton");   // -> the Sound button
+        if(!Staticclass.isSoundsetting()){
+            Soundbutton.setText("Enable Sound");
+        }
+    }
+
+    public void ChangeMusicSetting() throws IOException { // Called by button "Music button" to turn music on or off
+        Staticclass.setMusicsetting(!Staticclass.isMusicsetting());
+        if(Staticclass.isMusicsetting()){
+            Musicbutton.setText("Disable Music");
+        }else{
+            Musicbutton.setText("Enable Music");
+        }
+    }
+
+    public void ChangeSoundSetting() throws IOException { // Called by button "Sound button" to turn Sound on or off
+        Staticclass.setSoundsetting(!Staticclass.isSoundsetting());
+        if(Staticclass.isSoundsetting()){
+            Soundbutton.setText("Disable Sound");
+        }else{
+            Soundbutton.setText("Enable Sound");
+        }
     }
 
     public void SwitchToLeveleditor() throws IOException { // called by button "Level Editor"
@@ -239,19 +275,19 @@ public class ControllerScreens implements Initializable {
 
          */
         this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
-                                                                      // -> #[fx:id]
+        // -> #[fx:id]
         this.circle = (Circle) scene.lookup("#circle");            // --> the ball
         this.rectangle = (Rectangle) scene.lookup("#rectangle");   // -> the bar
         this.highscore = (Label) scene.lookup("#highscore");       // -> score
 
         //game = new Game();//(scene, this.scene);
-        game.setBall(new Ball(circle,   0,
-                                        0,
-                                        rectangle.getLayoutX() + rectangle.getWidth() / 2,
-                                        rectangle.getLayoutY() - rectangle.getHeight()));
-                                        // dx: dy: --> momentum
-                                        // centerX: centerY: --> initial positional info
-                                        // no initial momentum for the ball -> after pressing "B" method changeMomentum is called
+        game.setBall(new Ball(circle, 0,
+                0,
+                rectangle.getLayoutX() + rectangle.getWidth() / 2,
+                rectangle.getLayoutY() - rectangle.getHeight()));
+        // dx: dy: --> momentum
+        // centerX: centerY: --> initial positional info
+        // no initial momentum for the ball -> after pressing "B" method changeMomentum is called
 
         game.setBar(new Bar(rectangle));
         checkBall();
@@ -372,7 +408,7 @@ public class ControllerScreens implements Initializable {
                 // filtering -> we are only interested in rectangles
                 Rectangle r = (Rectangle) n;
                 if (//game.getLevel().findBlock(r.getX(), r.getY()) == null &&
-                    r != rectangle) {
+                        r != rectangle) {
                     // && r != rectangle -> the bar is also a rectangle, so we need to take it out
                     scene.getChildren().remove(r);
                 }
@@ -418,7 +454,7 @@ public class ControllerScreens implements Initializable {
             } else {
                 timeline.stop();
                 // if lost, timeline is stopped
-                staticclass.playsound("lose.wav");
+                Staticclass.playsound("lose.wav");
                 // losing sound
             }
         }
@@ -452,7 +488,8 @@ public class ControllerScreens implements Initializable {
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) { }
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+    }
 
 
     public void getAgeInSeconds() {
