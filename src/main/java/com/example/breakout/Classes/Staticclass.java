@@ -25,24 +25,28 @@ public class Staticclass {
 
     private static boolean soundsetting = true;
     private static boolean musicsetting = true;
-    private static double mediaplayervolume = 0.3;
+    private static double mediaplayervolume = 0.15;
+    private static String currentsong = "no song";
 
 
     public static void playsong(String songname) {
         //these lines need to be here and not in the if due to settings being able to turn on or off music with a button there
-        Media hit = new Media(new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, songname
-        ))).toURI().toString());
-        mediaPlayer = new MediaPlayer(hit);
-        mediaPlayer.setVolume(mediaplayervolume);
-        mediaPlayer.setOnEndOfMedia(new Runnable() {
-            @Override
-            public void run() {
-                mediaPlayer.seek(Duration.ZERO);
+        if (!currentsong.equals(songname)) {
+            currentsong = songname;
+            Media hit = new Media(new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, songname
+            ))).toURI().toString());
+            mediaPlayer = new MediaPlayer(hit);
+            mediaPlayer.setVolume(mediaplayervolume);
+            mediaPlayer.setOnEndOfMedia(new Runnable() {
+                @Override
+                public void run() {
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
+                }
+            });
+            if (musicsetting) {
                 mediaPlayer.play();
             }
-        });
-        if (musicsetting) {
-            mediaPlayer.play();
         }
     }
 

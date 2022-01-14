@@ -210,7 +210,8 @@ public class ControllerScreens implements Initializable {
     @FXML
     Button Soundbutton;
 
-    public void SwitchToSettings() throws IOException { // called by button "Einstellugen"
+    public void SwitchToSettings() throws IOException { // called by button "Settings"
+        Staticclass.playsong("settings.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Application.stage.setTitle("Settings");
@@ -246,6 +247,7 @@ public class ControllerScreens implements Initializable {
     }
 
     public void SwitchToLeveleditor() throws IOException { // called by button "Level Editor"
+        Staticclass.playsong("Leveleditor.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Application.stage.setTitle("Leveleditor");
