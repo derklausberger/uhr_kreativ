@@ -1,3 +1,5 @@
+#local settings file
+src/resources/settings.txt
 # Compiled class file
 *.class
 
