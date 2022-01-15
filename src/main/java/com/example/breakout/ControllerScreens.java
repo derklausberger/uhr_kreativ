@@ -340,6 +340,7 @@ public class ControllerScreens implements Initializable {
         // changes the ball's x-value corresponding to the bar's x-value
         // --> "ball stays on top of bar"
         // this.rectangle.getLayoutX --> most left point
+
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
 
