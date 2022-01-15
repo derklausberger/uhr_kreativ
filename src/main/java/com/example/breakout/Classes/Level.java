@@ -119,12 +119,10 @@ public class Level implements Serializable {
             oos.writeObject(this);
             oos.close();
             fos.close();
-
-            return true;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return false;
+        return true;
     }
 
     public static Level loadLevel(String filepath) {
@@ -154,6 +152,7 @@ public class Level implements Serializable {
             Level[] levelList = new Level[filenames.length];
 
             for (int i = 0; i < filenames.length; i++) {
+                //new File(dirPath + filenames[i]).delete();
                 levelList[i] = loadLevel(filenames[i]);
             }
 

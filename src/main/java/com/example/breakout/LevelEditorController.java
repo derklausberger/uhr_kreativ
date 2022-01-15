@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class levelEditorController {
+public class LevelEditorController {
     public static final int rectWidth = 100;
     public static final int rectHeight = 30;
     public static final int mainPaneWidth = 1000;
@@ -41,6 +41,8 @@ public class levelEditorController {
     private AnchorPane placePane;
 
     @FXML
+    private Button resetScreenBtn;
+    @FXML
     private Button saveLevelBtn;
     @FXML
     private Button exitLevelEditorBtn;
@@ -48,14 +50,14 @@ public class levelEditorController {
     @FXML
     private TextField name;
 
-    private Level level;
+    public static Level level = new Level();
 
     private int blockSelected = 0;
     private final Point p = new Point();
     private final Region selectRect = new Region();
     private double x = 0, y = 0;
 
-    public levelEditorController() {
+    public LevelEditorController() {
     }
 
     @FXML
@@ -68,44 +70,89 @@ public class levelEditorController {
         blueRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 130, rectWidth, rectHeight, 2)));
         greenRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 210, rectWidth, rectHeight, 3)));
 
-        level = new Level();
-
         loadBlocks();
+        name.setText(level.getName());
 
+        resetScreenBtn.setFocusTraversable(false);
+        resetScreenBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
+            Alert resetAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            resetAlert.setTitle("Löschen");
+            resetAlert.setHeaderText("Alle platzierten Blöcke werden gelöscht.");
+            resetAlert.setContentText("Möchten Sie fortfahren?");
+
+            Optional<ButtonType> result = resetAlert.showAndWait();
+            if (result.isPresent()) {
+                if (result.get() == ButtonType.OK) {
+                    for (Rectangle r : getRectangles()) {
+                        level.removeBlock(level.findBlock(r.getX(), r.getY()));
+                        mainPane.getChildren().remove(r);
+                    }
+
+                    reloadScreen();
+                }
+            }
+        }));
+
+        saveLevelBtn.setDisable(true);
+        saveLevelBtn.setFocusTraversable(false);
         saveLevelBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
-            Alert alert;
+            reloadScreen();
             level.setName(name.getText());
-            if (level.saveLevel(name.getText())) {
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Speichern");
-                alert.setHeaderText("Level gespeichert.");
-                alert.setContentText("Level wurde unter dem Namen \"" + name.getText() + "\" abgespeichert.");
-            } else {
-                alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Speichern");
-                alert.setHeaderText("Level mit dem Namen \"" + name.getText() + "\" existiert bereits.");
-                alert.setContentText("Möchten Sie trotzdem fortfahren?");
+            System.out.println();
 
-                Optional<ButtonType> result = alert.showAndWait();
+            Alert saveAlert = new Alert(Alert.AlertType.INFORMATION);
+            saveAlert.setTitle("Speichern");
+            saveAlert.setHeaderText("Level gespeichert.");
+            saveAlert.setContentText("Level wurde unter dem Namen \"" + name.getText() + "\" abgespeichert.");
+            if (level.saveLevel(name.getText())) {
+                saveAlert.show();
+            } else {
+                Alert overwriteAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                overwriteAlert.setTitle("Speichern");
+                overwriteAlert.setHeaderText("Level mit dem Namen \"" + name.getText() + "\" existiert bereits.");
+                overwriteAlert.setContentText("Möchten Sie trotzdem fortfahren?");
+
+                Optional<ButtonType> result = overwriteAlert.showAndWait();
                 if (result.isPresent()) {
                     if (result.get() == ButtonType.OK) {
                         level.overwriteLevel(name.getText());
+                        saveAlert.show();
                     }
                 }
             }
         }));
 
+
+        exitLevelEditorBtn.setFocusTraversable(false);
         exitLevelEditorBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
-            try {
-                ControllerScreens.SwitchToMain();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            Alert resetAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            resetAlert.setTitle("Beenden");
+            resetAlert.setHeaderText("Alle platzierten Blöcke werden gelöscht.");
+            resetAlert.setContentText("Möchten Sie trotzdem fortfahren?");
+
+            Optional<ButtonType> result = resetAlert.showAndWait();
+            if (result.isPresent()) {
+                if (result.get() == ButtonType.OK) {
+                    try {
+                        level = new Level();
+                        ControllerScreens.SwitchToMain();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
+
         }));
 
-        name.addEventHandler(KeyEvent.KEY_RELEASED, (e -> saveLevelBtn.setDisable(name.getText().equals(""))));
-
-        saveLevelBtn.setDisable(true);
+        name.setFocusTraversable(false);
+        name.setPromptText("Levelname");
+        name.addEventHandler(KeyEvent.KEY_RELEASED, (e -> {
+            if (getRectangles().size() == 0) {
+                saveLevelBtn.setDisable(true);
+            } else {
+                saveLevelBtn.setDisable(name.getText().equals(""));
+            }
+        }));
 
         selectRect.setStyle("-fx-border-width: 2px; -fx-border-color: black; -fx-border-style: dashed;");
 
@@ -124,7 +171,6 @@ public class levelEditorController {
 
             placePane.getChildren().add(selectRect);
         });
-
         placePane.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
             if (p.getX() > e.getSceneX() && e.getSceneX() <= 0) {
                 selectRect.setMinWidth(p.getX());
@@ -162,8 +208,6 @@ public class levelEditorController {
                 selectRect.setLayoutY(p.getY());
             }
         });
-
-
         placePane.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             Block b;
             for (Rectangle r : getRectangles()) {
@@ -193,6 +237,8 @@ public class levelEditorController {
 
             placePane.getChildren().remove(selectRect);
         });
+
+        mainPane.requestFocus();
     }
 
 
@@ -213,7 +259,7 @@ public class levelEditorController {
         Block b;
         for (Rectangle r : getRectangles()) {
             b = level.findBlock(r.getX(), r.getY());
-            if (r.getX() < mainPaneWidth) {
+            if (r.getX() <= (mainPaneWidth - rectWidth)) {
                 if (b.getStrength() == 1) {
                     r.setFill(Color.RED);
                 } else if (b.getStrength() == 2) {
@@ -221,8 +267,16 @@ public class levelEditorController {
                 } else {
                     r.setFill(Color.GREEN);
                 }
-
+            } else {
+                mainPane.getChildren().remove(r);
+                level.removeBlock(b);
             }
+        }
+
+        if (getRectangles().size() == 0) {
+            saveLevelBtn.setDisable(true);
+        } else {
+            saveLevelBtn.setDisable(name.getText().equals(""));
         }
     }
 
@@ -271,80 +325,14 @@ public class levelEditorController {
         }
 
         EventHandler<MouseEvent> handler = e -> {
-            if (rect.getX() + (double) rectWidth / 2 > mainPaneWidth) {
+            if (rect.getX() + (double) rectWidth / 2 > mainPaneWidth - rectWidth) {
                 mainPane.getChildren().remove(rect);
                 level.removeBlock(block);
             }
             mainPane.setCursor(Cursor.DEFAULT);
         };
 
-        rect.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e -> {
-            if (blockSelected == 1) {
-                rect.setX(e.getSceneX() - (double) rectWidth / 2);
-                rect.setY(e.getSceneY() - (double) rectHeight / 2);
-
-                block.setX(e.getSceneX() - (double) rectWidth / 2);
-                block.setY(e.getSceneY() - (double) rectHeight / 2);
-
-                if (block.getStrength() == 1) {
-                    rect.setFill(Color.DARKRED);
-                } else if (block.getStrength() == 2) {
-                    rect.setFill(Color.DARKBLUE);
-                } else {
-                    rect.setFill(Color.DARKGREEN);
-                }
-            } else if (blockSelected > 1) {
-                Block b;
-                for (Rectangle r : getRectangles()) {
-                    if (r.getFill() == Color.DARKGREEN || r.getFill() == Color.DARKRED
-                            || r.getFill() == Color.DARKBLUE) {
-                        b = level.findBlock(r.getX(), r.getY());
-
-                        b.setX(r.getX() - (x - e.getSceneX()));
-                        b.setY(r.getY() - (y - e.getSceneY()));
-
-                        r.setX(r.getX() - (x - e.getSceneX()));
-                        r.setY(r.getY() - (y - e.getSceneY()));
-                    }
-                }
-                x = e.getSceneX();
-                y = e.getSceneY();
-            }
-        }));
-
-        mainPane.getChildren().add(rect);
-
         rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, handler);
-
-        rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
-            if (blockSelected == 1) {
-                if ((e.getSceneX() + (double) rectWidth / 2 > mainPaneWidth || e.getSceneX() - (double) rectWidth / 2 < 0) ||
-                        (e.getSceneY() - (double) rectHeight / 2 < 0 || e.getSceneY() + (double) rectHeight / 2 > mainPaneHeight) ||
-                        !level.replaceBlock(block)) {
-                    mainPane.getChildren().remove(rect);
-                    level.removeBlock(block);
-                }
-                reloadScreen();
-                blockSelected = 0;
-            } else if (blockSelected > 1) {
-                Block b;
-                for (Rectangle r : getRectangles()) {
-                    if (r.getFill() == Color.DARKGREEN || r.getFill() ==
-                            Color.DARKRED || r.getFill() == Color.DARKBLUE) {
-                        b = level.findBlock(r.getX(), r.getY());
-                        if (((r.getX() >= mainPaneWidth - rectWidth || r.getX() <= 0) || (r.getY()
-                                <= 0 || r.getY() >= mainPaneHeight - 20 - rectHeight)) || !level.replaceBlock(b)) {
-                            mainPane.getChildren().remove(r);
-                            level.removeBlock(b);
-                            blockSelected--;
-                        }
-                    }
-                }
-            }
-
-            mainPane.setCursor(Cursor.MOVE);
-        });
-
 
         rect.addEventHandler(MouseEvent.MOUSE_PRESSED, (e -> {
             if (blockSelected > 1) {
@@ -383,11 +371,75 @@ public class levelEditorController {
             mainPane.setCursor(Cursor.MOVE);
         }));
 
+        rect.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e -> {
+            if (blockSelected == 1) {
+                rect.setX(e.getSceneX() - (double) rectWidth / 2);
+                rect.setY(e.getSceneY() - (double) rectHeight / 2);
+
+                block.setX(e.getSceneX() - (double) rectWidth / 2);
+                block.setY(e.getSceneY() - (double) rectHeight / 2);
+
+                if (block.getStrength() == 1) {
+                    rect.setFill(Color.DARKRED);
+                } else if (block.getStrength() == 2) {
+                    rect.setFill(Color.DARKBLUE);
+                } else {
+                    rect.setFill(Color.DARKGREEN);
+                }
+            } else if (blockSelected > 1) {
+                Block b;
+                for (Rectangle r : getRectangles()) {
+                    if (r.getFill() == Color.DARKGREEN || r.getFill() == Color.DARKRED
+                            || r.getFill() == Color.DARKBLUE) {
+                        b = level.findBlock(r.getX(), r.getY());
+
+                        b.setX(r.getX() - (x - e.getSceneX()));
+                        b.setY(r.getY() - (y - e.getSceneY()));
+
+                        r.setX(r.getX() - (x - e.getSceneX()));
+                        r.setY(r.getY() - (y - e.getSceneY()));
+                    }
+                }
+                x = e.getSceneX();
+                y = e.getSceneY();
+            }
+        }));
+
+        rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+            if (blockSelected == 1) {
+                if ((e.getSceneX() + (double) rectWidth / 2 > mainPaneWidth || e.getSceneX() - (double) rectWidth / 2 < 0) ||
+                        (e.getSceneY() - (double) rectHeight / 2 < 0 || e.getSceneY() + (double) rectHeight / 2 > mainPaneHeight) ||
+                        !level.replaceBlock(block)) {
+                    mainPane.getChildren().remove(rect);
+                    level.removeBlock(block);
+                }
+                reloadScreen();
+                blockSelected = 0;
+            } else if (blockSelected > 1) {
+                Block b;
+                for (Rectangle r : getRectangles()) {
+                    if (r.getFill() == Color.DARKGREEN || r.getFill() ==
+                            Color.DARKRED || r.getFill() == Color.DARKBLUE) {
+                        b = level.findBlock(r.getX(), r.getY());
+                        if (((r.getX() >= mainPaneWidth - rectWidth || r.getX() <= 0) || (r.getY()
+                                <= 0 || r.getY() >= mainPaneHeight - 20 - rectHeight)) || !level.replaceBlock(b)) {
+                            mainPane.getChildren().remove(r);
+                            level.removeBlock(b);
+                            blockSelected--;
+                        }
+                    }
+                }
+            }
+
+            mainPane.setCursor(Cursor.MOVE);
+        });
+
         rect.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, (e ->
                 mainPane.setCursor(Cursor.MOVE)));
 
         if (!level.getBlocks().contains(block)) {
             level.addBlock(block);
         }
+        mainPane.getChildren().add(rect);
     }
 }
