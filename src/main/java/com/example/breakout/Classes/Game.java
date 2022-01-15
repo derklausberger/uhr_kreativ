@@ -100,7 +100,7 @@ public class Game {
             ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // seite
             //moveBall();
-        } else if (position.get(1) + position.get(2) >= 1000) { // leftside.getWidth()
+        } else if (position.get(1) + position.get(2) >= 720) { // leftside.getHeigth()
             bar.stop();
             return false; // verloren
         }

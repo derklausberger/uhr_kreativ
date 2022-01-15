@@ -13,10 +13,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -33,12 +34,6 @@ public class ControllerScreens implements Initializable {
     public static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
-    private static double scroll;
-    private static double scrollableHeight;
-
-    @FXML
-    AnchorPane mainPaneLevelScreen;
-
     public void showClockScreen() {
         AnalogClock clock = new AnalogClock();
 
@@ -50,31 +45,49 @@ public class ControllerScreens implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //stage = new Stage();
-        Application.stage.setTitle("Breakout");
+        Application.stage.setTitle("Hauptfenster");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
         Staticclass.playsong("titlescreen.mp3");
     }
 
-    public void SwitchToMainns() throws IOException {// Called by a button to go back to the main, as Static methods cant be used by on-action in fxml
+    public void SwitchToMainns() throws IOException {// Called by a button to go back to the main, as Static methods can't be used by on-action in fxml
         SwitchToMain();
     }
+
+
+    @FXML
+    AnchorPane mainPaneLevelScreen;
+
 
     public void SwitchToLevels() throws IOException { // called by button "Start"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Levels");
+        Application.stage.setTitle("Levelauswahl");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
 
         mainPaneLevelScreen = (AnchorPane) scene.lookup("#mainPaneLevelScreen");
 
-        Button backToMain = new Button("Hauptmenü");
+        /* ScrollPane scroll = new ScrollPane();
+        scroll.setContent(mainPaneLevelScreen);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setPannable(true);
+        */
+
+
+
+
+        Button backToMain = new Button("Zurück zum Hauptfenster");
 
         backToMain.setLayoutX(65);
         backToMain.setLayoutY(38);
+
+        backToMain.setMinHeight(30);
+        backToMain.setMaxHeight(30);
+
 
         backToMain.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             try {
@@ -114,33 +127,29 @@ public class ControllerScreens implements Initializable {
                     mainPaneLevelScreen.getChildren().remove(n);
                 }
             }
-
             showLevels(searchField.getText());
         });
 
         mainPaneLevelScreen.getChildren().addAll(backToMain, searchField, searchBtn);
 
         showLevels("");
-
-        scroll = 0;
-
-        for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
-            Node n = mainPaneLevelScreen.getChildren().get(i);
-            n.getProperties().put("originalY", n.getLayoutY());
-        }
+        final double[] scroll = {0};
 
         mainPaneLevelScreen.setOnScroll(e -> {
-            if (scroll - e.getDeltaY() <= 0) {
-                scroll = 0;
-            } else if (scroll - e.getDeltaY() >= scrollableHeight) {
-                scroll = scrollableHeight;
-            } else {
-                scroll += e.getDeltaY() * -1;
-            }
-
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
-                n.setLayoutY((double) n.getProperties().get("originalY") - scroll);
+                if (scroll[0] + e.getDeltaY() >= 0) {
+                    n.setLayoutY(n.getLayoutY() + scroll[0]);
+                    scroll[0] = 0;
+                } else if (scroll[0] + e.getDeltaY() >= windowHeight + 500){
+                    n.setLayoutY(n.getLayoutY() + (windowHeight - scroll[0]));
+                    scroll[0] = 1000 - windowHeight;
+                } else {
+                    n.setLayoutY(n.getLayoutY() + e.getDeltaY());
+                    scroll[0] += e.getDeltaY();
+                }
+
+                //System.out.println(scroll[0]);
             }
         });
     }
@@ -152,12 +161,12 @@ public class ControllerScreens implements Initializable {
             int x = 65;
             int y = 90;
 
-            scrollableHeight = y + (((levels.length - 1) / 4) + 1) * 250 - 720;
+            //double winHeight = y + levels.length * 250;
 
             for (int i = 0; i < levels.length; i++) {
                 Level level = levels[i];
 
-                if (level != null && level.getName().toLowerCase().contains(filterBy.toLowerCase())) {
+                if (level.getName().toLowerCase().contains(filterBy.toLowerCase())) {
                     AnchorPane pane = new AnchorPane();
 
                     pane.setMinWidth(250);
@@ -171,7 +180,7 @@ public class ControllerScreens implements Initializable {
 
                     if ((i + 1) % 4 == 0) {
                         x = 65;
-                        y += 200 + 50;
+                        y += 720 / 4 + 50;
                     } else {
                         x += 250 + 50;
                     }
@@ -184,50 +193,20 @@ public class ControllerScreens implements Initializable {
                     AnchorPane.setRightAnchor(label, 0.0);
                     AnchorPane.setBottomAnchor(label, 0.0);
                     AnchorPane.setTopAnchor(label, 0.0);
-                    label.setAlignment(Pos.BOTTOM_CENTER);
-                    pane.getChildren().add(label);
 
+                    label.setAlignment(Pos.BOTTOM_CENTER);
+
+                    pane.getChildren().add(label);
                     pane.setOnMouseClicked(e -> {
-                        if (e.getButton() == MouseButton.PRIMARY) {
-                            try {
-                                game = new Game(level);
-                                SwitchToGame();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
+                        try {
+                            game = new Game(level);
+                            SwitchToGame();//(ActionEvent) e);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     });
 
-                    pane.setOnContextMenuRequested(e -> {
-                        ContextMenu contextMenu = new ContextMenu();
-                        MenuItem playItem = new MenuItem("Spielen");
-                        playItem.setOnAction(ev -> {
-                            try {
-                                game = new Game(level);
-                                SwitchToGame();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        });
-
-                        MenuItem editItem = new MenuItem("Bearbeiten");
-                        editItem.setOnAction(ev -> {
-                            try {
-                                LevelEditorController.level = level;
-                                SwitchToLeveleditor();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        });
-
-                        contextMenu.getItems().addAll(playItem, editItem);
-                        contextMenu.show(pane, e.getScreenX(), e.getScreenY());
-                    });
-
-                    pane.setOnMouseEntered(e -> {
-                        pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;");
-
-                    });
+                    pane.setOnMouseEntered(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;"));
 
                     pane.setOnMouseExited(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;"));
 
@@ -248,35 +227,35 @@ public class ControllerScreens implements Initializable {
         Staticclass.playsong("settings.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Settings");
+        Application.stage.setTitle("Einstellungen");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
         this.Musicbutton = (Button) scene.lookup("#Musicbutton");   // -> the Music button
-        if (!Staticclass.isMusicsetting()) {
-            Musicbutton.setText("Enable Music");
+        if(!Staticclass.isMusicsetting()){
+            Musicbutton.setText("Musik einschalten");
         }
         this.Soundbutton = (Button) scene.lookup("#Soundbutton");   // -> the Sound button
-        if (!Staticclass.isSoundsetting()) {
-            Soundbutton.setText("Enable Sound");
+        if(!Staticclass.isSoundsetting()){
+            Soundbutton.setText("Ton einschalten");
         }
     }
 
     public void ChangeMusicSetting() throws IOException { // Called by button "Music button" to turn music on or off
         Staticclass.setMusicsetting(!Staticclass.isMusicsetting());
-        if (Staticclass.isMusicsetting()) {
-            Musicbutton.setText("Disable Music");
-        } else {
-            Musicbutton.setText("Enable Music");
+        if(Staticclass.isMusicsetting()){
+            Musicbutton.setText("Musik ausschalten");
+        }else{
+            Musicbutton.setText("Musik einschalten");
         }
     }
 
     public void ChangeSoundSetting() throws IOException { // Called by button "Sound button" to turn Sound on or off
         Staticclass.setSoundsetting(!Staticclass.isSoundsetting());
-        if (Staticclass.isSoundsetting()) {
-            Soundbutton.setText("Disable Sound");
-        } else {
-            Soundbutton.setText("Enable Sound");
+        if(Staticclass.isSoundsetting()){
+            Soundbutton.setText("Ton ausschalten");
+        }else{
+            Soundbutton.setText("Ton einschalten");
         }
     }
 
@@ -284,7 +263,7 @@ public class ControllerScreens implements Initializable {
         Staticclass.playsong("Leveleditor.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Leveleditor");
+        Application.stage.setTitle("Level Editor");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
@@ -298,7 +277,7 @@ public class ControllerScreens implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //Stage stage = new Stage();
-        Application.stage.setTitle("Game");
+        Application.stage.setTitle("Spielfenster");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
@@ -308,8 +287,8 @@ public class ControllerScreens implements Initializable {
         Node n = (Node) event.getSource();
         Stage previous = (Stage) n.getScene().getWindow();
         previous.close();
-
          */
+
         this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
         // -> #[fx:id]
         this.circle = (Circle) scene.lookup("#circle");            // --> the ball
@@ -317,7 +296,8 @@ public class ControllerScreens implements Initializable {
         this.highscore = (Label) scene.lookup("#highscore");       // -> score
 
         //game = new Game();//(scene, this.scene);
-        game.setBall(new Ball(circle, 0,
+        game.setBall(new Ball(circle,
+                0,
                 0,
                 rectangle.getLayoutX() + rectangle.getWidth() / 2,
                 rectangle.getLayoutY() - rectangle.getHeight()));
@@ -371,7 +351,7 @@ public class ControllerScreens implements Initializable {
                 gameStart = true;
                 gameStartLock = true;
                 // locking the ability to press B multiple times
-                game.getBall().changemomentum(1, -1);
+                game.getBall().changemomentum(2, -2);
                 // momentum is given
                 // why 1, -1? cause top left corner is 0, 0
                 createdMillis = System.currentTimeMillis();
@@ -425,9 +405,12 @@ public class ControllerScreens implements Initializable {
         };
         scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);///////////////////// I don't think we need them -> ??? why
 
+        /*
         if (checkBall()) {
             timeline.stop();
         }/////////////////////////////////////// I don't think we need them -> solved in timeline
+
+         */
 
 
         //have the timeline stop when you exit out
@@ -443,8 +426,9 @@ public class ControllerScreens implements Initializable {
             if (n.getClass().getSimpleName().equals("Rectangle")) {
                 // filtering -> we are only interested in rectangles
                 Rectangle r = (Rectangle) n;
-                if (r != rectangle) {
-                    // r != rectangle -> the bar is also a rectangle, so we need to take it out
+                if (//game.getLevel().findBlock(r.getX(), r.getY()) == null &&
+                        r != rectangle) {
+                    // && r != rectangle -> the bar is also a rectangle, so we need to take it out
                     scene.getChildren().remove(r);
                 }
             }
@@ -453,6 +437,7 @@ public class ControllerScreens implements Initializable {
         loadBlocks(1, this.scene);
         return b;
     }
+
 
     @FXML
     private AnchorPane scene; // scene in which the gameplay is done
@@ -481,6 +466,10 @@ public class ControllerScreens implements Initializable {
             // methods used while timeline is ongoing
             // is started by start button "B" after
             // moving the Bar to the spot the user would like to begin
+            if(scene.getChildren().size() == 2){
+                timeline.stop();
+            }
+
             game.moveBall();
             if (checkBall()) {
                 // checkBall returns boolean -> looks if ball hit the bottom border of the scene
@@ -523,8 +512,7 @@ public class ControllerScreens implements Initializable {
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-    }
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
 
 
     public void getAgeInSeconds() {

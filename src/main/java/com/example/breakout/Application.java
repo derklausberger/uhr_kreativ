@@ -23,7 +23,7 @@ public class Application extends javafx.application.Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         Application.stage = stage;
-        stage.setTitle("Breakout -> mainScreen");
+        stage.setTitle("Hauptfenster");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
