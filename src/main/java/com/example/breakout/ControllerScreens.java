@@ -343,7 +343,6 @@ public class ControllerScreens implements Initializable {
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
 
-            double BarDirectX = 15;
             //BarDirectX can be moved or changed depending on how it feels
 
             if (key.getCode() == KeyCode.B && !gameStartLock) {
@@ -405,13 +404,6 @@ public class ControllerScreens implements Initializable {
         };
         scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);///////////////////// I don't think we need them -> ??? why
 
-        /*
-        if (checkBall()) {
-            timeline.stop();
-        }/////////////////////////////////////// I don't think we need them -> solved in timeline
-
-         */
-
 
         //have the timeline stop when you exit out
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -437,6 +429,8 @@ public class ControllerScreens implements Initializable {
         loadBlocks(1, this.scene);
         return b;
     }
+
+    private double BarDirectX = 15;
 
 
     @FXML
@@ -468,8 +462,8 @@ public class ControllerScreens implements Initializable {
             // moving the Bar to the spot the user would like to begin
             if(scene.getChildren().size() == 2){
                 timeline.stop();
+                BarDirectX = 0;
             }
-
             game.moveBall();
             if (checkBall()) {
                 // checkBall returns boolean -> looks if ball hit the bottom border of the scene
@@ -477,6 +471,7 @@ public class ControllerScreens implements Initializable {
                 // score/ timer counts up
             } else {
                 timeline.stop();
+                BarDirectX = 0;
                 // if lost, timeline is stopped
                 Staticclass.playsound("lose.wav");
                 // losing sound
