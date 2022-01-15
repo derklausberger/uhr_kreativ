@@ -138,7 +138,11 @@ public class AnalogClock extends Application {
         hourline.setStrokeWidth(3);
 
         button.setText("Zurück zum Hauptfenster");
-        button.setLayoutX(605);
+
+        button.setMinWidth(200);
+        button.setMaxWidth(200);
+
+        button.setLayoutX(scene.getWidth()/2-100);
         button.setLayoutY(680);
 
         button.setOnAction(e -> {
