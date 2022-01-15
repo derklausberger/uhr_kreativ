@@ -73,7 +73,7 @@
                            <children>
                               <HBox prefHeight="20.0">
                                  <children>
-                                    <Label text="Highscore/ time needed:" />
+                                    <Label text="Benötigte Zeit:" />
                                     <Region HBox.hgrow="ALWAYS" />
 
                                      <!--
