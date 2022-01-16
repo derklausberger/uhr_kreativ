@@ -418,7 +418,7 @@ public class ControllerScreens implements Initializable {
                 // checks if all blocks are gone
                 timeline.stop();
                 BarDirectX = 0;
-                Staticclass.playsound("lose.wav");
+                Staticclass.playsound("win.wav");
             }
             game.moveBall();
             if (checkBall()) {
