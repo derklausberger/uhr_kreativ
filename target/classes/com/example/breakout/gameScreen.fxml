@@ -73,7 +73,7 @@
                            <children>
                               <HBox prefHeight="20.0">
                                  <children>
-                                    <Label text="Highscore/ time needed:" />
+                                    <Label text="Benötigte Zeit:" />
                                     <Region HBox.hgrow="ALWAYS" />
 
                                      <!--
@@ -94,7 +94,7 @@
                               -->
 
                               <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                              <Button mnemonicParsing="false" onAction="#SwitchToLevels" text="Back to previous" />
+                              <Button mnemonicParsing="false" onAction="#SwitchToLevels" text="Zurück zur Levelauswahl" />
 
                                <!--
                                fx:id are used to give them a value

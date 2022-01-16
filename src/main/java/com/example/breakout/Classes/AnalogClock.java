@@ -137,8 +137,12 @@ public class AnalogClock extends Application {
         minuteline.setStrokeWidth(2);
         hourline.setStrokeWidth(3);
 
-        button.setText("Back To Game");
-        button.setLayoutX(605);
+        button.setText("Zurück zum Hauptfenster");
+
+        button.setMinWidth(200);
+        button.setMaxWidth(200);
+
+        button.setLayoutX(scene.getWidth()/2-100);
         button.setLayoutY(680);
 
         button.setOnAction(e -> {
@@ -146,7 +150,7 @@ public class AnalogClock extends Application {
             try {
                 ControllerScreens.SwitchToMain();
             } catch (Exception a) {
-                System.out.println("MainScreen could not be loaded.");
+                System.out.println("Hauptfenster konnte nicht geladen werden.");
             }
         });
 
@@ -159,7 +163,7 @@ public class AnalogClock extends Application {
                 mark5, mark10, mark20, mark25, mark35, mark40, mark50, mark55, label);
         primaryStage.setScene(scene);
 
-        primaryStage.setTitle("clockScreen");
+        primaryStage.setTitle("Uhr-Kreative Uhr");
         primaryStage.show();
 
 

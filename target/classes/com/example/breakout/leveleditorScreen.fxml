@@ -25,7 +25,7 @@
             <TextField fx:id="name" layoutY="635" layoutX="30" maxWidth="100" minWidth="100" />
             <Button fx:id="saveLevelBtn" layoutY="635" layoutX="150" maxWidth="100" minWidth="100">Speichern</Button>
 
-            <Button fx:id="exitLevelEditorBtn" layoutY="670" layoutX="150" maxWidth="100" minWidth="100">Beenden
+            <Button fx:id="exitLevelEditorBtn" layoutY="670" layoutX="150" maxWidth="100" minWidth="100">Zurück zum Hauptfenster
             </Button>
         </AnchorPane>
     </SplitPane>

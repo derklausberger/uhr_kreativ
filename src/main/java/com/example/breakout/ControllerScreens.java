@@ -50,31 +50,37 @@ public class ControllerScreens implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         //stage = new Stage();
-        Application.stage.setTitle("Breakout");
+        Application.stage.setTitle("Hauptfenster");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
         Staticclass.playsong("titlescreen.mp3");
     }
 
-    public void SwitchToMainns() throws IOException {// Called by a button to go back to the main, as Static methods cant be used by on-action in fxml
+    public void SwitchToMainns() throws IOException {// Called by a button to go back to the main, as Static methods can't be used by on-action in fxml
         SwitchToMain();
     }
+
+    @FXML
+    AnchorPane mainPaneLevelScreen;
 
     public void SwitchToLevels() throws IOException { // called by button "Start"
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Levels");
+        Application.stage.setTitle("Levelauswahl");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
 
         mainPaneLevelScreen = (AnchorPane) scene.lookup("#mainPaneLevelScreen");
 
-        Button backToMain = new Button("Hauptmenü");
+        Button backToMain = new Button("Zurück zum Hauptfenster");
 
         backToMain.setLayoutX(65);
         backToMain.setLayoutY(38);
+
+        backToMain.setMinHeight(30);
+        backToMain.setMaxHeight(30);
 
         backToMain.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             try {
@@ -147,7 +153,6 @@ public class ControllerScreens implements Initializable {
 
     public void showLevels(String filterBy) {
         Level[] levels = Level.loadLevelList();
-
         if (levels != null) {
 
             int x = 65;
@@ -262,35 +267,35 @@ public class ControllerScreens implements Initializable {
         Staticclass.playsong("settings.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Settings");
+        Application.stage.setTitle("Einstellungen");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
         this.Musicbutton = (Button) scene.lookup("#Musicbutton");   // -> the Music button
         if (!Staticclass.isMusicsetting()) {
-            Musicbutton.setText("Enable Music");
+            Musicbutton.setText("Musik einschalten");
         }
         this.Soundbutton = (Button) scene.lookup("#Soundbutton");   // -> the Sound button
         if (!Staticclass.isSoundsetting()) {
-            Soundbutton.setText("Enable Sound");
+            Soundbutton.setText("Ton einschalten");
         }
     }
 
     public void ChangeMusicSetting() throws IOException { // Called by button "Music button" to turn music on or off
         Staticclass.setMusicsetting(!Staticclass.isMusicsetting());
-        if (Staticclass.isMusicsetting()) {
-            Musicbutton.setText("Disable Music");
-        } else {
-            Musicbutton.setText("Enable Music");
+        if(Staticclass.isMusicsetting()){
+            Musicbutton.setText("Musik ausschalten");
+        }else{
+            Musicbutton.setText("Musik einschalten");
         }
     }
 
     public void ChangeSoundSetting() throws IOException { // Called by button "Sound button" to turn Sound on or off
         Staticclass.setSoundsetting(!Staticclass.isSoundsetting());
-        if (Staticclass.isSoundsetting()) {
-            Soundbutton.setText("Disable Sound");
-        } else {
-            Soundbutton.setText("Enable Sound");
+        if(Staticclass.isSoundsetting()){
+            Soundbutton.setText("Ton ausschalten");
+        }else{
+            Soundbutton.setText("Ton einschalten");
         }
     }
 
@@ -311,83 +316,40 @@ public class ControllerScreens implements Initializable {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        //Stage stage = new Stage();
-        Application.stage.setTitle("Game");
+        Application.stage.setTitle("Spielfenster");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
 
-        // close previous window
-        /*
-        Node n = (Node) event.getSource();
-        Stage previous = (Stage) n.getScene().getWindow();
-        previous.close();
-
-         */
+        // with scene.lookup linking to fx:id
         this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
-        // -> #[fx:id]
         this.circle = (Circle) scene.lookup("#circle");            // --> the ball
         this.rectangle = (Rectangle) scene.lookup("#rectangle");   // -> the bar
         this.highscore = (Label) scene.lookup("#highscore");       // -> score
 
-        //game = new Game();//(scene, this.scene);
-        game.setBall(new Ball(circle, 0,
-                0,
-                rectangle.getLayoutX() + rectangle.getWidth() / 2,
-                rectangle.getLayoutY() - rectangle.getHeight()));
+        game.setBall(new Ball(      circle,
+                                    0,
+                                    0,
+                                    rectangle.getLayoutX() + rectangle.getWidth() / 2,
+                                    rectangle.getLayoutY() - rectangle.getHeight()));
         // dx: dy: --> momentum
         // centerX: centerY: --> initial positional info
         // no initial momentum for the ball -> after pressing "B" method changeMomentum is called
 
         game.setBar(new Bar(rectangle));
-        checkBall();
-
-        //testin purposes
-        //game.setLevel(Level.loadLevel("name"));
         loadBlocks(1, this.scene);
 
-
-        // listening to KeyEvent's
-        //BarDirectX can be moved or changed depending on how it feels
-        // locking the ability to press B multiple times
-        // momentum is given
-        // why 1, -1? cause top left corner is 0, 0
-        // used in getAgeInSeconds() for the score (time needed)
-        // -> starts only if B is pressed, so players have the "freedom" to
-        // position the bar wherever they want before the timer starts
-        // keycodes == keyboard input
-        //System.out.println("Bar Left in Controller"); // console output for testing
-        // looks if the bar "rectangle" is out of bounds and
-        // adjusts it's x-value
-        // boolean value -> looks if game has started
-        // it is changed if the key B is pressed
-        // if the key B hasn't been pressed yet
-        // changes the ball's x-value corresponding to the bar's x-value
-        // --> "ball stays on top of bar"
-        // keycodes == keyboard input
-        //System.out.println("Bar Right in Controller"); // console output for testing
-        // looks if the bar "rectangle" is out of bounds and
-        // adjusts it's x-value
-        // boolean value -> looks if game has started
-        // it is changed if the key B is pressed
-        // if the key B hasn't been pressed yet
-        // changes the ball's x-value corresponding to the bar's x-value
-        // --> "ball stays on top of bar"
-        // this.rectangle.getLayoutX --> most left point
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
-
-            double BarDirectX = 15;
             //BarDirectX can be moved or changed depending on how it feels
-
             if (key.getCode() == KeyCode.B && !gameStartLock) {
                 timeline.play();
                 gameStart = true;
                 gameStartLock = true;
                 // locking the ability to press B multiple times
-                game.getBall().changemomentum(1, -1);
+                game.getBall().changemomentum(2, -2);
                 // momentum is given
-                // why 1, -1? cause top left corner is 0, 0
+                // why x, -y? cause top left corner is 0, 0
                 createdMillis = System.currentTimeMillis();
                 // used in getAgeInSeconds() for the score (time needed)
                 // -> starts only if B is pressed, so players have the "freedom" to
@@ -406,8 +368,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) - BarDirectX),
-                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) - BarDirectX),
+                                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -427,24 +389,16 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) + BarDirectX),
-                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo(( game.getBall().getpositionalinfo().get(0) + BarDirectX),
+                                                game.getBall().getpositionalinfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
                     }
                 }
             }
-            // this.rectangle.getLayoutX --> most left point
         };
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);///////////////////// I don't think we need them -> ??? why
-
-        if (checkBall()) {
-            timeline.stop();
-        }/////////////////////////////////////// I don't think we need them -> solved in timeline
-
-
-        //have the timeline stop when you exit out
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);
         timeline.setCycleCount(Animation.INDEFINITE);
     }
 
@@ -457,8 +411,9 @@ public class ControllerScreens implements Initializable {
             if (n.getClass().getSimpleName().equals("Rectangle")) {
                 // filtering -> we are only interested in rectangles
                 Rectangle r = (Rectangle) n;
-                if (r != rectangle) {
-                    // r != rectangle -> the bar is also a rectangle, so we need to take it out
+                if (//game.getLevel().findBlock(r.getX(), r.getY()) == null &&
+                        r != rectangle) {
+                    // && r != rectangle -> the bar is also a rectangle, so we need to take it out
                     scene.getChildren().remove(r);
                 }
             }
@@ -468,11 +423,16 @@ public class ControllerScreens implements Initializable {
         return b;
     }
 
+    private Boolean gameStart = false;
+    private Boolean gameStartLock = false;
+    private long createdMillis;
+    private double BarDirectX = 15;
+
     @FXML
     private AnchorPane scene; // scene in which the gameplay is done
 
     @FXML
-    private Circle circle;// circle == ball
+    private Circle circle; // circle == ball
 
     @FXML
     private Rectangle rectangle; // rectangle == bar
@@ -480,21 +440,19 @@ public class ControllerScreens implements Initializable {
     @FXML
     private Label highscore = new Label();
 
-
-    private Boolean gameStart = false;
-    private Boolean gameStartLock = false;
-    private long createdMillis;
-
-
     // 1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
-
         @Override
         public void handle(ActionEvent actionEvent) {
-
             // methods used while timeline is ongoing
             // is started by start button "B" after
             // moving the Bar to the spot the user would like to begin
+            if(scene.getChildren().size() == 2){
+                // checks if all blocks are gone
+                timeline.stop();
+                BarDirectX = 0;
+                Staticclass.playsound("win.wav");
+            }
             game.moveBall();
             if (checkBall()) {
                 // checkBall returns boolean -> looks if ball hit the bottom border of the scene
@@ -502,12 +460,12 @@ public class ControllerScreens implements Initializable {
                 // score/ timer counts up
             } else {
                 timeline.stop();
+                BarDirectX = 0;
                 // if lost, timeline is stopped
                 Staticclass.playsound("lose.wav");
                 // losing sound
             }
         }
-
     }));
 
     private void loadBlocks(double factor, AnchorPane pane) {
@@ -535,11 +493,8 @@ public class ControllerScreens implements Initializable {
         pane.getChildren().add(rect);
     }
 
-
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-    }
-
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
 
     public void getAgeInSeconds() {
         // is needed for score, looks if start button is pressed "B" and then
