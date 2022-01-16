@@ -276,7 +276,7 @@ public class LevelEditorController {
         if (getRectangles().size() == 0) {
             saveLevelBtn.setDisable(true);
         } else {
-            saveLevelBtn.setDisable(name.getText().equals(""));
+            saveLevelBtn.setDisable(name.getText() != null && name.getText().equals(""));
         }
     }
 

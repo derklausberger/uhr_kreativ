@@ -87,7 +87,7 @@ public class Level implements Serializable {
         return true;
     }
 
-    public void overwriteLevel(String filepath) {
+    public static void deleteLevel(String filepath) {
         String dirPath = new File("").getAbsolutePath();
         dirPath += "\\levels\\";
 
@@ -95,6 +95,10 @@ public class Level implements Serializable {
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    public void overwriteLevel(String filepath) {
+        deleteLevel(filepath);
 
         saveLevel(filepath);
     }

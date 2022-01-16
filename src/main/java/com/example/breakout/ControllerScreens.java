@@ -147,6 +147,7 @@ public class ControllerScreens implements Initializable {
 
     public void showLevels(String filterBy) {
         Level[] levels = Level.loadLevelList();
+
         if (levels != null) {
 
             int x = 65;
@@ -220,7 +221,20 @@ public class ControllerScreens implements Initializable {
                             }
                         });
 
-                        contextMenu.getItems().addAll(playItem, editItem);
+                        MenuItem deleteItem = new MenuItem("Löschen");
+                        deleteItem.setOnAction(ev -> {
+                            Level.deleteLevel(level.getName());
+                            for (int j = mainPaneLevelScreen.getChildren().size() - 1; j >= 0; j--) {
+                                Node n = mainPaneLevelScreen.getChildren().get(j);
+                                if (n.getClass().getSimpleName().equals("AnchorPane")) {
+                                    mainPaneLevelScreen.getChildren().remove(n);
+                                }
+                            }
+
+                            showLevels(filterBy);
+                        });
+
+                        contextMenu.getItems().addAll(playItem, editItem, deleteItem);
                         contextMenu.show(pane, e.getScreenX(), e.getScreenY());
                     });
 
