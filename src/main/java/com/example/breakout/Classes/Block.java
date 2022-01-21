@@ -16,7 +16,7 @@ public class Block implements Serializable {
     /*
     One thing I am unsure of is if we should make this into its own class or just have a String which gets
     used in a method in game.
-    private Powerup/String powerup;
+    private PowerUp/String powerUp;
     */
 
     public Block(int ID, Rectangle rectangle, int strength) {
@@ -45,13 +45,7 @@ public class Block implements Serializable {
 
     public void setX(double x) {
         this.x = x;
-        //rectangle.setLayoutX(x);
     }
-
-    /*public void setX_(double x) {
-        this.x = x;
-        rectangle.setLayoutX(x);
-    }*/
 
     public double getY() {
         return y;
@@ -59,14 +53,7 @@ public class Block implements Serializable {
 
     public void setY(double y) {
         this.y = y;
-        //rectangle.setLayoutY(y);
     }
-
-
-    /*public void setY_(double y) {
-        this.y = y;
-        rectangle.setLayoutY(y);
-    }*/
 
     public double getHeight() {
         return height;
@@ -84,32 +71,30 @@ public class Block implements Serializable {
         return strength;
     }
 
-    //checks if a ball intersects a block, if strength is below 1 it is always false, uses the list created from getpositionalinfo in the ball class
+    //checks if a ball intersects a block, if strength is below 1 it is always false, uses the list created from getPositionalInfo in the ball class
     //these would be x,y and radius
     //got this method from https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
     //could be moved into Game class if desired with minimal modifications
-    //0= ball doesnt hit block
+    //0= ball doesn't hit block
     //1= ball hits from the left
     //2= ball hits from the right
     //3= ball hits from the top
     //4= ball hits from the bottom
-    public int checkblock(List<Double> ballinfo) {
+    public int checkBlock(List<Double> ballInfo) {
         if (strength < 1) {
             return 0;
         }
-        double Xn = Math.max(x, Math.min(ballinfo.get(0), x + width));
-        double Yn = Math.max(y, Math.min(ballinfo.get(1), y + height));
-        double Dx = Xn - ballinfo.get(0);
-        double Dy = Yn - ballinfo.get(1);
-        if ((Dx * Dx + Dy * Dy) <= ballinfo.get(2) * ballinfo.get(2)) {
-            //this part I though of on my own(Peter), if you find a mistake or a better option feel free to improve it
-            double xdif = x - ballinfo.get(0);
-            double ydif = y - ballinfo.get(1);
-            //if (Math.abs(xdif) > Math.abs(ydif)) {
-            if (Math.max(x, ballinfo.get(0)) - Math.min(x, ballinfo.get(0))
-                    <= Math.max(y, ballinfo.get(1)) - Math.min(y, ballinfo.get(1))
-                    ) {
-                if (xdif > 0) {
+        double Xn = Math.max(x, Math.min(ballInfo.get(0), x + width));
+        double Yn = Math.max(y, Math.min(ballInfo.get(1), y + height));
+        double Dx = Xn - ballInfo.get(0);
+        double Dy = Yn - ballInfo.get(1);
+        if ((Dx * Dx + Dy * Dy) <= ballInfo.get(2) * ballInfo.get(2)) {
+            double xDif = x - ballInfo.get(0);
+            double yDif = y - ballInfo.get(1);
+            if (Math.max(x, ballInfo.get(0)) - Math.min(x, ballInfo.get(0))
+                    <= Math.max(y, ballInfo.get(1)) - Math.min(y, ballInfo.get(1))
+            ) {
+                if (xDif > 0) {
                     System.out.println("left");
                     return 1;
                 } else {
@@ -117,7 +102,7 @@ public class Block implements Serializable {
                     return 2;
                 }
             } else {
-                if (ydif > 0) {
+                if (yDif > 0) {
                     System.out.println("top");
                     return 3;
                 } else {

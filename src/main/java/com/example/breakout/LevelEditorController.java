@@ -39,14 +39,12 @@ public class LevelEditorController {
     private AnchorPane mainPane;
     @FXML
     private AnchorPane placePane;
-
     @FXML
     private Button resetScreenBtn;
     @FXML
     private Button saveLevelBtn;
     @FXML
     private Button exitLevelEditorBtn;
-
     @FXML
     private TextField name;
 
@@ -135,7 +133,7 @@ public class LevelEditorController {
                 if (result.get() == ButtonType.OK) {
                     try {
                         level = new Level();
-                        ControllerScreens.SwitchToMain();
+                        ControllerScreens.switchToMain();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

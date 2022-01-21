@@ -25,7 +25,7 @@
             In this Pane the game itself is shown e.g.: ball, bar, blocks
             -->
 
-          <AnchorPane fx:id="scene" maxWidth="1000" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" styleClass="sceneLEFT" stylesheets="@theme2.css">
+          <AnchorPane fx:id="scene" maxWidth="1000" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #f0f0f0;" styleClass="sceneLEFT" stylesheets="@Theme2.css">
 
                 <!--
                 children are owned by the mother -> AnchorPane
@@ -43,7 +43,7 @@
                </children>
           </AnchorPane>
 
-          <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0" styleClass="sceneRIGHT" stylesheets="@theme2.css">
+          <AnchorPane maxWidth="280.0" minWidth="280.0" prefWidth="280.0" styleClass="sceneRIGHT" stylesheets="@Theme2.css">
 
               <!--
               This is the right side of the window "gameScreen"
@@ -83,7 +83,7 @@
                                      and fixed values would do no good)
                                      -->
 
-                                    <Label fx:id="highscore" />
+                                    <Label fx:id="highScore" />
                                     <Label text="sec" />
                                  </children>
                               </HBox>
@@ -94,7 +94,7 @@
                               -->
 
                               <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                              <Button mnemonicParsing="false" onAction="#SwitchToLevels" text="Zurück zur Levelauswahl" />
+                              <Button mnemonicParsing="false" onAction="#switchToLevels" text="Zurück zur Levelauswahl" />
 
                                <!--
                                fx:id are used to give them a value

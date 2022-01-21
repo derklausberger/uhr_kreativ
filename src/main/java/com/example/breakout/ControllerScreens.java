@@ -14,6 +14,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -24,46 +26,81 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 
 public class ControllerScreens implements Initializable {
-    public static final int windowHeight = 720;
+
+    private static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
     private static double scroll;
     private static double scrollableHeight;
+
+
+    public void changePictureMainScreen(MouseEvent e) throws FileNotFoundException {
+        String pathToPicture = "";
+
+        if (MouseEvent.MOUSE_ENTERED == e.getEventType()) {
+            if (((Button) e.getSource()).getId().equals("ButtonStart")) {
+                pathToPicture = "BreakoutButtonStart.png";
+            } else if (((Button) e.getSource()).getId().equals("ButtonEditor")) {
+                pathToPicture = "BreakoutButtonEditor.png";
+            } else if (((Button) e.getSource()).getId().equals("ButtonOptions")) {
+                pathToPicture = "BreakoutButtonOptions.png";
+            } else if (((Button) e.getSource()).getId().equals("ButtonSecret")) {
+                pathToPicture = "BreakoutButtonSecret.png";
+            }
+        } else {
+            pathToPicture = "Breakout.png";
+        }
+
+        String dirPath = new File("").getAbsolutePath();
+        dirPath += "\\src\\main\\resources\\com\\example\\breakout\\";
+        dirPath += pathToPicture;
+
+        ImageView imageView = (ImageView) scene.lookup("#imageMain");
+        Image image = new Image(new FileInputStream(dirPath));
+        imageView.setImage(image);
+
+        //this.scene = (AnchorPane) scene.lookup("#scene");
+
+    }
+
 
     @FXML
     AnchorPane mainPaneLevelScreen;
 
     public void showClockScreen() {
         AnalogClock clock = new AnalogClock();
-
         clock.start(Application.getStage());
-        //Application.getStage().setScene(clock.getScene());
     }
 
-    public static void SwitchToMain() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainScreen.fxml"));
+    public static void switchToMain() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("MainScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        //stage = new Stage();
+
         Application.stage.setTitle("Hauptfenster");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
-        Staticclass.playsong("titlescreen.mp3");
+        StaticClass.playSong("titlescreen.mp3");
     }
 
-    public void SwitchToMainns() throws IOException {// Called by a button to go back to the main, as Static methods can't be used by on-action in fxml
-        SwitchToMain();
+    public void switchToMain2() throws IOException {
+        // Called by a button to go back to the main, as Static methods can't be used by on-action in fxml
+        switchToMain();
     }
 
-    public void SwitchToLevels() throws IOException { // called by button "Start"
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("levelsScreen.fxml"));
+    public void switchToLevels() throws IOException { // called by button "Start"
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("LevelsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
+
         Application.stage.setTitle("Levelauswahl");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
@@ -81,7 +118,7 @@ public class ControllerScreens implements Initializable {
 
         backToMain.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             try {
-                ControllerScreens.SwitchToMain();
+                ControllerScreens.switchToMain();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -194,7 +231,7 @@ public class ControllerScreens implements Initializable {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             try {
                                 game = new Game(level);
-                                SwitchToGame();
+                                switchToGame();
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
@@ -207,7 +244,7 @@ public class ControllerScreens implements Initializable {
                         playItem.setOnAction(ev -> {
                             try {
                                 game = new Game(level);
-                                SwitchToGame();
+                                switchToGame();
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
@@ -217,7 +254,7 @@ public class ControllerScreens implements Initializable {
                         editItem.setOnAction(ev -> {
                             try {
                                 LevelEditorController.level = level;
-                                SwitchToLeveleditor();
+                                switchToLevelEditor();
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
@@ -253,49 +290,50 @@ public class ControllerScreens implements Initializable {
     }
 
     @FXML
-    Button Musicbutton;
+    Button musicButton;
     @FXML
-    Button Soundbutton;
+    Button soundButton;
 
-    public void SwitchToSettings() throws IOException { // called by button "Settings"
-        Staticclass.playsong("settings.mp3");
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settingsScreen.fxml"));
+    public void switchToSettings() throws IOException { // called by button "Settings"
+        StaticClass.playSong("settings.mp3");
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("SettingsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
+
         Application.stage.setTitle("Einstellungen");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
-        this.Musicbutton = (Button) scene.lookup("#Musicbutton");   // -> the Music button
-        if (!Staticclass.isMusicsetting()) {
-            Musicbutton.setText("Musik einschalten");
+        this.musicButton = (Button) scene.lookup("#Musicbutton");   // -> the Music button
+        if (!StaticClass.isMusicSetting()) {
+            musicButton.setText("Musik einschalten");
         }
-        this.Soundbutton = (Button) scene.lookup("#Soundbutton");   // -> the Sound button
-        if (!Staticclass.isSoundsetting()) {
-            Soundbutton.setText("Ton einschalten");
+        this.soundButton = (Button) scene.lookup("#Soundbutton");   // -> the Sound button
+        if (!StaticClass.isSoundSetting()) {
+            soundButton.setText("Ton einschalten");
         }
     }
 
-    public void ChangeMusicSetting() throws IOException { // Called by button "Music button" to turn music on or off
-        Staticclass.setMusicsetting(!Staticclass.isMusicsetting());
-        if (Staticclass.isMusicsetting()) {
-            Musicbutton.setText("Musik ausschalten");
+    public void changeMusicSetting() throws IOException { // Called by button "Music button" to turn music on or off
+        StaticClass.setMusicSetting(!StaticClass.isMusicSetting());
+        if (StaticClass.isMusicSetting()) {
+            musicButton.setText("Musik ausschalten");
         } else {
-            Musicbutton.setText("Musik einschalten");
+            musicButton.setText("Musik einschalten");
         }
     }
 
-    public void ChangeSoundSetting() throws IOException { // Called by button "Sound button" to turn Sound on or off
-        Staticclass.setSoundsetting(!Staticclass.isSoundsetting());
-        if (Staticclass.isSoundsetting()) {
-            Soundbutton.setText("Ton ausschalten");
+    public void changeSoundSetting() throws IOException { // Called by button "Sound button" to turn Sound on or off
+        StaticClass.setSoundSetting(!StaticClass.isSoundSetting());
+        if (StaticClass.isSoundSetting()) {
+            soundButton.setText("Ton ausschalten");
         } else {
-            Soundbutton.setText("Ton einschalten");
+            soundButton.setText("Ton einschalten");
         }
     }
 
-    public void SwitchToLeveleditor() throws IOException { // called by button "Level Editor"
-        Staticclass.playsong("Leveleditor.mp3");
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("leveleditorScreen.fxml"));
+    public void switchToLevelEditor() throws IOException { // called by button "Level Editor"
+        StaticClass.playSong("Leveleditor.mp3");
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("LevelEditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
         Application.stage.setTitle("Leveleditor");
         Application.stage.setScene(scene);
@@ -306,10 +344,11 @@ public class ControllerScreens implements Initializable {
 
     private Game game;// = new Game();
 
-    public void SwitchToGame(/*ActionEvent event*/) throws IOException { // called by button "level [id]"
+    public void switchToGame(/*ActionEvent event*/) throws IOException { // called by button "level [id]"
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gameScreen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("GameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
+
         Application.stage.setTitle("Spielfenster");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
@@ -319,7 +358,7 @@ public class ControllerScreens implements Initializable {
         this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
         this.circle = (Circle) scene.lookup("#circle");            // --> the ball
         this.rectangle = (Rectangle) scene.lookup("#rectangle");   // -> the bar
-        this.highscore = (Label) scene.lookup("#highscore");       // -> score
+        this.highScore = (Label) scene.lookup("#highScore");       // -> score
 
         game.setBall(new Ball(circle,
                 0,
@@ -341,7 +380,7 @@ public class ControllerScreens implements Initializable {
                 gameStart = true;
                 gameStartLock = true;
                 // locking the ability to press B multiple times
-                game.getBall().changemomentum(2, -2);
+                game.getBall().changeMomentum(2, -2);
                 // momentum is given
                 // why x, -y? cause top left corner is 0, 0
                 createdMillis = System.currentTimeMillis();
@@ -362,8 +401,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) - BarDirectX),
-                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo((game.getBall().getPositionalInfo().get(0) - BarDirectX),
+                                game.getBall().getPositionalInfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -383,8 +422,8 @@ public class ControllerScreens implements Initializable {
                     if (!gameStart) {
                         // boolean value -> looks if game has started
                         // it is changed if the key B is pressed
-                        game.getBall().moveTo((game.getBall().getpositionalinfo().get(0) + BarDirectX),
-                                game.getBall().getpositionalinfo().get(1));
+                        game.getBall().moveTo((game.getBall().getPositionalInfo().get(0) + BarDirectX),
+                                game.getBall().getPositionalInfo().get(1));
                         // if the key B hasn't been pressed yet
                         // changes the ball's x-value corresponding to the bar's x-value
                         // --> "ball stays on top of bar"
@@ -432,7 +471,7 @@ public class ControllerScreens implements Initializable {
     private Rectangle rectangle; // rectangle == bar
 
     @FXML
-    private Label highscore = new Label();
+    private Label highScore = new Label();
 
     // 1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
@@ -445,7 +484,7 @@ public class ControllerScreens implements Initializable {
                 // checks if all blocks are gone
                 timeline.stop();
                 BarDirectX = 0;
-                Staticclass.playsound("win.wav");
+                StaticClass.playSound("win.wav");
             }
             game.moveBall();
             if (checkBall()) {
@@ -456,7 +495,7 @@ public class ControllerScreens implements Initializable {
                 timeline.stop();
                 BarDirectX = 0;
                 // if lost, timeline is stopped
-                Staticclass.playsound("lose.wav");
+                StaticClass.playSound("lose.wav");
                 // losing sound
             }
         }
@@ -498,6 +537,6 @@ public class ControllerScreens implements Initializable {
         // it looks at the current time and calculates how much time is between
         long nowMillis = System.currentTimeMillis();
         int zw = (int) ((nowMillis - this.createdMillis) / 1000);
-        highscore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
+        highScore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
     }
 }

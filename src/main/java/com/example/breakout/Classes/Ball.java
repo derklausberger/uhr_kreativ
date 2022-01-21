@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Ball {
     //momentum means how fast it moves in a certain direction and if its - or +
-    private double xmomentum;
-    private double ymomentum;
+    private double xMomentum;
+    private double yMomentum;
     private double x;
     private double y;
     private double radius;
@@ -22,8 +22,8 @@ public class Ball {
         this.x = circle.getCenterX();
         this.y = circle.getCenterY();
         this.radius = circle.getRadius();
-        xmomentum = dx;
-        ymomentum = dy;
+        xMomentum = dx;
+        yMomentum = dy;
     }
 
     public void moveTo(double x, double y) {
@@ -40,25 +40,25 @@ public class Ball {
         circle.setRadius(radius);
     }
 
-    public void changemomentum(double xmomentum, double ymomentum) {
-        this.xmomentum = xmomentum;
-        this.ymomentum = ymomentum;
+    public void changeMomentum(double xMomentum, double yMomentum) {
+        this.xMomentum = xMomentum;
+        this.yMomentum = yMomentum;
     }
 
-    public List<Double> getmomentum() {
-        List<Double> returnme = new ArrayList<>();
-        returnme.add(xmomentum);
-        returnme.add(ymomentum);
-        return returnme;
+    public List<Double> getMomentum() {
+        List<Double> returnMe = new ArrayList<>();
+        returnMe.add(xMomentum);
+        returnMe.add(yMomentum);
+        return returnMe;
     }
 
     //gets you x,y and radius in that order in a list
-    public List<Double> getpositionalinfo() {
-        List<Double> returnme = new ArrayList<>();
-        returnme.add(x);
-        returnme.add(y);
-        returnme.add(radius);
-        return returnme;
+    public List<Double> getPositionalInfo() {
+        List<Double> returnMe = new ArrayList<>();
+        returnMe.add(x);
+        returnMe.add(y);
+        returnMe.add(radius);
+        return returnMe;
 
     }
 }

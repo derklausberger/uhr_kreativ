@@ -26,9 +26,9 @@ public class AnalogClock extends Application {
     final int radius = 200;
 
     //initialize clock components
-    final Line hourline = new Line(xCENTER, yCENTER, 0, 0);
-    final Line minuteline = new Line(xCENTER, yCENTER, 0, 0);
-    final Line secondline = new Line(xCENTER, yCENTER, 0, 0);
+    final Line hourLine = new Line(xCENTER, yCENTER, 0, 0);
+    final Line minuteLine = new Line(xCENTER, yCENTER, 0, 0);
+    final Line secondLine = new Line(xCENTER, yCENTER, 0, 0);
 
     final Line mark5 = new Line(
             (int) (Math.cos(5 * 3.14f / 30 - 3.14f / 2) * 180 + xCENTER),
@@ -82,7 +82,7 @@ public class AnalogClock extends Application {
 
 
     //declare dynamic end-coordinates for hourline, minuteline
-    int xminute, yminute, xhour, yhour, xsecond, ysecond;
+    int xMinute, yMinute, xHour, yHour, xSecond, ySecond;
 
     //initialize pane and scene
     final Pane pane = new Pane();
@@ -102,7 +102,7 @@ public class AnalogClock extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Staticclass.playsong("clock.mp3");
+        StaticClass.playSong("clock.mp3");
         scene.setRoot(pane);
 
         twelve.setText("12");
@@ -130,12 +130,12 @@ public class AnalogClock extends Application {
         circle1.setRadius(radius);
         circle1.setFill(Color.FLORALWHITE);
 
-        hourline.setStroke(Color.DARKCYAN);
-        minuteline.setStroke(Color.BLACK);
-        secondline.setStroke(Color.CORAL);
+        hourLine.setStroke(Color.DARKCYAN);
+        minuteLine.setStroke(Color.BLACK);
+        secondLine.setStroke(Color.CORAL);
 
-        minuteline.setStrokeWidth(2);
-        hourline.setStrokeWidth(3);
+        minuteLine.setStrokeWidth(2);
+        hourLine.setStrokeWidth(3);
 
         button.setText("Zurück zum Hauptfenster");
 
@@ -148,7 +148,7 @@ public class AnalogClock extends Application {
         button.setOnAction(e -> {
 
             try {
-                ControllerScreens.SwitchToMain();
+                ControllerScreens.switchToMain();
             } catch (Exception a) {
                 System.out.println("Hauptfenster konnte nicht geladen werden.");
             }
@@ -159,7 +159,7 @@ public class AnalogClock extends Application {
         label.setText("Uhr-Kreativ™");
         label.setFont(Font.font("Arial"));
 
-        pane.getChildren().addAll(circle1, hourline, minuteline, secondline, twelve, three, six, nine, button,
+        pane.getChildren().addAll(circle1, hourLine, minuteLine, secondLine, twelve, three, six, nine, button,
                 mark5, mark10, mark20, mark25, mark35, mark40, mark50, mark55, label);
         primaryStage.setScene(scene);
 
@@ -204,20 +204,20 @@ public class AnalogClock extends Application {
                 currentSecond = Calendar.getInstance().get(Calendar.SECOND);
 
 
-                xsecond = (int) (Math.cos(currentSecond * 3.14f / 30 - 3.14f / 2) * 160 + xCENTER);
-                ysecond = (int) (Math.sin(currentSecond * 3.14f / 30 - 3.14f / 2) * 160 + yCENTER);
-                xminute = (int) (Math.cos(currentMinute * 3.14f / 30 - 3.14f / 2) * 140 + xCENTER);
-                yminute = (int) (Math.sin(currentMinute * 3.14f / 30 - 3.14f / 2) * 140 + yCENTER);
-                xhour = (int) (Math.cos((currentHour * 30 + currentMinute / 2) * 3.14f / 180 - 3.14f / 2) * 90 + xCENTER);
-                yhour = (int) (Math.sin((currentHour * 30 + currentMinute / 2) * 3.14f / 180 - 3.14f / 2) * 90 + yCENTER);
+                xSecond = (int) (Math.cos(currentSecond * 3.14f / 30 - 3.14f / 2) * 160 + xCENTER);
+                ySecond = (int) (Math.sin(currentSecond * 3.14f / 30 - 3.14f / 2) * 160 + yCENTER);
+                xMinute = (int) (Math.cos(currentMinute * 3.14f / 30 - 3.14f / 2) * 140 + xCENTER);
+                yMinute = (int) (Math.sin(currentMinute * 3.14f / 30 - 3.14f / 2) * 140 + yCENTER);
+                xHour = (int) (Math.cos((currentHour * 30 + currentMinute / 2) * 3.14f / 180 - 3.14f / 2) * 90 + xCENTER);
+                yHour = (int) (Math.sin((currentHour * 30 + currentMinute / 2) * 3.14f / 180 - 3.14f / 2) * 90 + yCENTER);
 
 
-                secondline.setEndX(xsecond);
-                secondline.setEndY(ysecond);
-                minuteline.setEndX(xminute);
-                minuteline.setEndY(yminute);
-                hourline.setEndX(xhour);
-                hourline.setEndY(yhour);
+                secondLine.setEndX(xSecond);
+                secondLine.setEndY(ySecond);
+                minuteLine.setEndX(xMinute);
+                minuteLine.setEndY(yMinute);
+                hourLine.setEndX(xHour);
+                hourLine.setEndY(yHour);
 
 
             }

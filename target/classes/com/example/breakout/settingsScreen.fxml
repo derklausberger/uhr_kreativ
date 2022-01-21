@@ -9,11 +9,11 @@
             <children>
                 <Button mnemonicParsing="false"  prefHeight="20.0" prefWidth="150.0"
                         text="Niklas wanted to do something with a button so I am here"/>
-                <Button fx:id="Musicbutton" layoutX="34.0" layoutY="98.0" mnemonicParsing="false" onAction="#ChangeMusicSetting"
-                         prefWidth="150.0" text="Musik ausschalten"/>
-                <Button  fx:id="Soundbutton" layoutX="34.0" layoutY="110.0" mnemonicParsing="false" onAction="#ChangeSoundSetting"
+                <Button fx:id="musicButton" layoutX="34.0" layoutY="98.0" mnemonicParsing="false" onAction="#changeMusicSetting"
+                        prefWidth="150.0" text="Musik ausschalten"/>
+                <Button fx:id="soundButton" layoutX="34.0" layoutY="110.0" mnemonicParsing="false" onAction="#changeSoundSetting"
                         prefWidth="150.0" text="Ton ausschalten"/>
-                <Button layoutX="34.0" layoutY="122.0" mnemonicParsing="false" onAction="#SwitchToMainns" prefWidth="150.0"
+                <Button layoutX="34.0" layoutY="122.0" mnemonicParsing="false" onAction="#switchToMain2" prefWidth="150.0"
                         text="Zurück zum Hauptfenster"/>
             </children>
         </VBox>

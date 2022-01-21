@@ -6,24 +6,12 @@ public class Game {
     private Ball ball;
     private Bar bar;
     private Level level;
-    //private Scene scene;
-    //private AnchorPane leftside = new AnchorPane();
 
     public Game() {
         ball = null;
         bar = null;
         level = null;
     }
-
-    /*
-    public Game(Scene scene, AnchorPane pane) {
-        ball = null;
-        bar = null;
-        //blocks = null;///////////////////////////////////////////////
-        this.scene = scene;
-        leftside = pane;
-    }
-     */
 
     public Game(Level level) {
         this();
@@ -47,37 +35,35 @@ public class Game {
     }
 
     public void moveBall() {
-        List<Double> momentum = ball.getmomentum();
-        List<Double> position = ball.getpositionalinfo();
+        List<Double> momentum = ball.getMomentum();
+        List<Double> position = ball.getPositionalInfo();
 
         ball.moveTo(position.get(0) + momentum.get(0),
                 position.get(1) + momentum.get(1));
     }
 
     public void moveBar(double xchange) {
-
         bar.move(xchange);
-        //bar.movelimit(xchange, leftside.getMaxWidth(), leftside.getMinWidth());
     }
 
     // return true: not lost
     // return false: player lost game (ball touched bottom side)
     public boolean checkBall() {
-        List<Double> position = ball.getpositionalinfo();
-        List<Double> momentum = ball.getmomentum();
+        List<Double> position = ball.getPositionalInfo();
+        List<Double> momentum = ball.getMomentum();
 
         for (Block block : level.getBlocks()) {
-            int touches = block.checkblock(position);
+            int touches = block.checkBlock(position);
             // ball touches block on left or right side
             if (touches == 1 || touches == 2) {
-                ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
+                ball.changeMomentum((momentum.get(0) * -1), momentum.get(1));
                 block.lowerHP(1);
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
                 }
                 return true;
             } else if (touches == 3 || touches == 4) { // ball touches block on top or bottom side
-                ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+                ball.changeMomentum(momentum.get(0), (momentum.get(1) * -1));
                 block.lowerHP(1);
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
@@ -88,25 +74,25 @@ public class Game {
 
         // ball touches left or right side of the window
         if (position.get(0) - position.get(2) <= 0) {
-            ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
+            ball.changeMomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
-        } else if (position.get(0) + position.get(2) >= 1000) { // leftside.getWidth()
-            ball.changemomentum((momentum.get(0) * -1), momentum.get(1));
+        } else if (position.get(0) + position.get(2) >= 1000) {
+            ball.changeMomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
         }
 
         // ball touches top or bottom side of the window
         if (position.get(1) - position.get(2) == 0) {
-            ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
-            return true; // seite
+            ball.changeMomentum(momentum.get(0), (momentum.get(1) * -1));
+            return true; // left or right
             //moveBall();
-        } else if (position.get(1) + position.get(2) >= 720) { // leftside.getHeigth()
+        } else if (position.get(1) + position.get(2) >= 720) {
             bar.stop();
-            return false; // verloren
+            return false; // lost
         }
         // ball touches bar
-        else if (bar.checkbar(position)) {
-            ball.changemomentum(momentum.get(0), (momentum.get(1) * -1));
+        else if (bar.checkBar(position)) {
+            ball.changeMomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // touch bar
         }
         return true;

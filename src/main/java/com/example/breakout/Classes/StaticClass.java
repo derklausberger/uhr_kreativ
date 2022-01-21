@@ -17,26 +17,26 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-public class Staticclass {
+public class StaticClass {
     public static File settings = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", "settings.txt")));
     public static String theme = "basic";
 
     private static MediaPlayer mediaPlayer = null;
 
-    private static boolean soundsetting = true;
-    private static boolean musicsetting = true;
-    private static double mediaplayervolume = 0.15;
-    private static String currentsong = "no song";
+    private static boolean soundSetting = true;
+    private static boolean musicSetting = true;
+    private static double mediaPlayerVolume = 0.15;
+    private static String currentSong = "no song";
 
 
-    public static void playsong(String songname) {
+    public static void playSong(String songName) {
         //these lines need to be here and not in the if due to settings being able to turn on or off music with a button there
-        if (!currentsong.equals(songname)) {
-            currentsong = songname;
-            Media hit = new Media(new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, songname
+        if (!currentSong.equals(songName)) {
+            currentSong = songName;
+            Media hit = new Media(new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, songName
             ))).toURI().toString());
             mediaPlayer = new MediaPlayer(hit);
-            mediaPlayer.setVolume(mediaplayervolume);
+            mediaPlayer.setVolume(mediaPlayerVolume);
             mediaPlayer.setOnEndOfMedia(new Runnable() {
                 @Override
                 public void run() {
@@ -44,20 +44,20 @@ public class Staticclass {
                     mediaPlayer.play();
                 }
             });
-            if (musicsetting) {
+            if (musicSetting) {
                 mediaPlayer.play();
             }
         }
     }
 
-    public static void playsound(String soundname) {
-        if (soundsetting) {
-            File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, soundname)));
+    public static void playSound(String soundName) {
+        if (soundSetting) {
+            File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, soundName)));
             System.out.println(path);
             try {
-                AudioInputStream audioinput2 = AudioSystem.getAudioInputStream(path);
+                AudioInputStream audioInput2 = AudioSystem.getAudioInputStream(path);
                 Clip clip = AudioSystem.getClip();
-                clip.open(audioinput2);
+                clip.open(audioInput2);
                 clip.start();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,13 +65,13 @@ public class Staticclass {
         }
     }
 
-    public static void readlocalsettings() throws IOException {
+    public static void readLocalSettings() throws IOException {
         if (settings.exists()) {
             Scanner myReader = new Scanner(settings);
             String data = myReader.nextLine();
-            musicsetting = Boolean.parseBoolean(data.split("=")[1]);
+            musicSetting = Boolean.parseBoolean(data.split("=")[1]);
             data = myReader.nextLine();
-            soundsetting = Boolean.parseBoolean(data.split("=")[1]);
+            soundSetting = Boolean.parseBoolean(data.split("=")[1]);
             myReader.close();
         } else {
             settings.createNewFile();
@@ -82,31 +82,31 @@ public class Staticclass {
         }
     }
 
-    public static boolean isSoundsetting() {
-        return soundsetting;
+    public static boolean isSoundSetting() {
+        return soundSetting;
     }
 
-    public static boolean isMusicsetting() {
-        return musicsetting;
+    public static boolean isMusicSetting() {
+        return musicSetting;
     }
 
-    public static void setSoundsetting(boolean soundsetting) throws IOException {
-        Staticclass.soundsetting = soundsetting;
-        changeonelineinsettings(1, "Sound=" + soundsetting);
+    public static void setSoundSetting(boolean soundSetting) throws IOException {
+        StaticClass.soundSetting = soundSetting;
+        changeOneLineInSettings(1, "Sound=" + soundSetting);
     }
 
-    public static void setMusicsetting(boolean musicsetting) throws IOException {
-        if (musicsetting) {
+    public static void setMusicSetting(boolean musicSetting) throws IOException {
+        if (musicSetting) {
             mediaPlayer.seek(Duration.ZERO);
             mediaPlayer.play();
         } else {
             mediaPlayer.stop();
         }
-        Staticclass.musicsetting = musicsetting;
-        changeonelineinsettings(0, "Music=" + musicsetting);
+        StaticClass.musicSetting = musicSetting;
+        changeOneLineInSettings(0, "Music=" + musicSetting);
     }
 
-    public static void changeonelineinsettings(int linenumber, String line) throws IOException {
+    public static void changeOneLineInSettings(int linenumber, String line) throws IOException {
         List<String> fileContent = new ArrayList<>(Files.readAllLines(settings.toPath()));
 
         for (int i = 0; i < fileContent.size(); i++) {
