@@ -34,13 +34,13 @@ import java.net.URL;
 import java.util.*;
 
 
-public class ControllerScreens implements Initializable {
+public class ControllerScreens {
 
-    protected static final int windowHeight = 720;
+    private static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
     private static double scroll;
-    private static double scrollableHeight;
+    private static double scrollAbleHeight;
 
 
     public void changePictureMainScreen(MouseEvent e) throws FileNotFoundException {
@@ -59,7 +59,7 @@ public class ControllerScreens implements Initializable {
         } else {
             pathToPicture = "Breakout.png";
         }
-
+        // because File("") ist empty .getAbsolutePath() returns current directory path
         String dirPath = new File("").getAbsolutePath();
         dirPath += "\\src\\main\\resources\\com\\example\\breakout\\";
         dirPath += pathToPicture;
@@ -68,10 +68,7 @@ public class ControllerScreens implements Initializable {
         Image image = new Image(new FileInputStream(dirPath));
         imageView.setImage(image);
 
-        //this.scene = (AnchorPane) scene.lookup("#scene");
-
     }
-
 
     @FXML
     AnchorPane mainPaneLevelScreen;
@@ -108,7 +105,6 @@ public class ControllerScreens implements Initializable {
 
         mainPaneLevelScreen = (AnchorPane) scene.lookup("#mainPaneLevelScreen");
 
-        //  set needed instance variables and on click action of back to main window-Button
         Button backToMain = new Button("Zurück zum Hauptfenster");
 
         backToMain.setLayoutX(65);
@@ -125,7 +121,6 @@ public class ControllerScreens implements Initializable {
             }
         }));
 
-        //  set needed instance variables of search-TextField
         TextField searchField = new TextField();
 
         searchField.setLayoutX(1005);
@@ -137,7 +132,7 @@ public class ControllerScreens implements Initializable {
         searchField.setMinWidth(100);
         searchField.setMaxWidth(100);
 
-        //  set needed instance variables and on click action of search-Button
+
         Button searchBtn = new Button("Suchen");
 
         searchBtn.setLayoutX(1115);
@@ -149,7 +144,6 @@ public class ControllerScreens implements Initializable {
         searchBtn.setMinWidth(100);
         searchBtn.setMaxWidth(100);
 
-        //  reload Levels and filter by content of search-TextField on search-Button-click
         searchBtn.setOnMouseClicked(e -> {
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
@@ -161,13 +155,10 @@ public class ControllerScreens implements Initializable {
             showLevels(searchField.getText());
         });
 
-        //  add defined Buttons and TextField to AnchorPane
         mainPaneLevelScreen.getChildren().addAll(backToMain, searchField, searchBtn);
 
-        //  load all Levels without filtering by search-TextField
         showLevels("");
 
-        //  set needed variable and add properties to all objects on main-AnchorPane
         scroll = 0;
 
         for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
@@ -175,18 +166,16 @@ public class ControllerScreens implements Initializable {
             n.getProperties().put("originalY", n.getLayoutY());
         }
 
-        //  add action for scrolling
         mainPaneLevelScreen.setOnScroll(e -> {
-            //  stop scrolling if on top of the page and on bottom, keep scrolling if not
             if (scroll - e.getDeltaY() <= 0) {
+                // restriction against scrolling up (more than allowed)
                 scroll = 0;
-            } else if (scroll - e.getDeltaY() >= scrollableHeight) {
-                scroll = scrollableHeight;
+            } else if (scroll - e.getDeltaY() >= scrollAbleHeight) {
+                scroll = scrollAbleHeight;
             } else {
                 scroll += e.getDeltaY() * -1;
             }
 
-            //  reset coordinates of all objects after scroll
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
                 n.setLayoutY((double) n.getProperties().get("originalY") - scroll);
@@ -194,16 +183,14 @@ public class ControllerScreens implements Initializable {
         });
     }
 
-    //  function to add all saved Levels (depending on search-TextField) as new AnchorPane to main-AnchorPane
     public void showLevels(String filterBy) {
-        //  load all saved Levels from file
         Level[] levels = Level.loadLevelList();
         if (levels != null) {
-            //  place all Levels as new AnchorPane and set coordinates for 4 Levels each row
+
             int x = 65;
             int y = 90;
 
-            scrollableHeight = y + (double)(((levels.length - 1) / 4) + 1) * 250 - 720;
+            scrollAbleHeight = y + (((levels.length - 1) / 4) + 1) * 250 - 720;
 
             for (int i = 0; i < levels.length; i++) {
                 Level level = levels[i];
@@ -238,7 +225,7 @@ public class ControllerScreens implements Initializable {
                     label.setAlignment(Pos.BOTTOM_CENTER);
                     pane.getChildren().add(label);
 
-                    //  add action to start game on selection a level
+                    // click left on mouse
                     pane.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             try {
@@ -250,7 +237,7 @@ public class ControllerScreens implements Initializable {
                         }
                     });
 
-                    //  add context-menu (opens on right-click) to allow user to play, delete and edit each level
+                    // click right on mouse
                     pane.setOnContextMenuRequested(e -> {
                         ContextMenu contextMenu = new ContextMenu();
                         MenuItem playItem = new MenuItem("Spielen");
@@ -290,7 +277,6 @@ public class ControllerScreens implements Initializable {
                         contextMenu.show(pane, e.getScreenX(), e.getScreenY());
                     });
 
-                    //  restyle border for hover-action
                     pane.setOnMouseEntered(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;"));
 
                     pane.setOnMouseExited(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;"));
@@ -317,6 +303,7 @@ public class ControllerScreens implements Initializable {
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
+
         this.musicButton = (Button) scene.lookup("#Musicbutton");   // -> the Music button
         if (!StaticClass.isMusicSetting()) {
             musicButton.setText("Musik einschalten");
@@ -349,7 +336,7 @@ public class ControllerScreens implements Initializable {
         StaticClass.playSong("Leveleditor.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("LevelEditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Level-Editor");
+        Application.stage.setTitle("Leveleditor");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
@@ -373,6 +360,7 @@ public class ControllerScreens implements Initializable {
         this.circle = (Circle) scene.lookup("#circle");            // --> the ball
         this.rectangle = (Rectangle) scene.lookup("#rectangle");   // -> the bar
         this.highScore = (Label) scene.lookup("#highScore");       // -> score
+
 
         game.setBall(new Ball(circle,
                 0,
@@ -449,8 +437,15 @@ public class ControllerScreens implements Initializable {
         timeline.setCycleCount(Animation.INDEFINITE);
     }
 
-    public boolean checkBall() {
+
+    public boolean checkBall() throws FileNotFoundException {
         boolean b = game.checkBall();
+
+        for (PowerUp powerUp : game.getPowerUp()) {
+            if(!scene.getChildren().contains(powerUp.getImage())) {
+                scene.getChildren().add(powerUp.getImage());
+            }
+        }
 
         for (int i = scene.getChildren().size() - 1; i >= 0; i--) {
             // iterates to the number of children the scene has
@@ -459,7 +454,7 @@ public class ControllerScreens implements Initializable {
                 // filtering -> we are only interested in rectangles
                 Rectangle r = (Rectangle) n;
                 if (//game.getLevel().findBlock(r.getX(), r.getY()) == null &&
-                        r != rectangle) {
+                        r != rectangle && r != powerUp) {
                     // && r != rectangle -> the bar is also a rectangle, so we need to take it out
                     scene.getChildren().remove(r);
                 }
@@ -487,6 +482,10 @@ public class ControllerScreens implements Initializable {
     @FXML
     private Label highScore = new Label();
 
+    @FXML
+    Rectangle powerUp = new Rectangle();
+
+
     // 1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
         @Override
@@ -500,17 +499,27 @@ public class ControllerScreens implements Initializable {
                 BarDirectX = 0;
                 StaticClass.playSound("win.wav");
             }
+
             game.moveBall();
-            if (checkBall()) {
-                // checkBall returns boolean -> looks if ball hit the bottom border of the scene
-                getAgeInSeconds();
-                // score/ timer counts up
-            } else {
-                timeline.stop();
-                BarDirectX = 0;
-                // if lost, timeline is stopped
-                StaticClass.playSound("lose.wav");
-                // losing sound
+            PowerUp p = game.moveDown();
+            if(p != null){
+                scene.getChildren().remove(p.getImage());
+            }
+
+            try {
+                if (checkBall()) {
+                    // checkBall returns boolean -> looks if ball hit the bottom border of the scene
+                    getAgeInSeconds();
+                    // score/ timer counts up
+                } else {
+                    timeline.stop();
+                    BarDirectX = 0;
+                    // if lost, timeline is stopped
+                    StaticClass.playSound("lose.wav");
+                    // losing sound
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }));
@@ -527,6 +536,7 @@ public class ControllerScreens implements Initializable {
 
     private void placeBlock(double x, double y, int strength, double factor, AnchorPane pane) {
         Rectangle rect = new Rectangle(x, y, 100 * factor, 30 * factor);
+        //Block block = new Block(game.getLevel().getCount(), rect, strength);
 
         if (strength == 1) {
             rect.setFill(Color.RED);
@@ -537,10 +547,6 @@ public class ControllerScreens implements Initializable {
         }
 
         pane.getChildren().add(rect);
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
     public void getAgeInSeconds() {

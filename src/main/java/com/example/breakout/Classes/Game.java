@@ -1,22 +1,32 @@
 package com.example.breakout.Classes;
 
+import com.example.breakout.ControllerScreens;
+import com.example.breakout.LevelEditorController;
+import javafx.scene.shape.Rectangle;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private Ball ball;
     private Bar bar;
     private Level level;
+    private List<PowerUp> powerUp;
 
     public Game() {
         ball = null;
         bar = null;
         level = null;
+        powerUp = new ArrayList<>();
     }
 
     public Game(Level level) {
         this();
         this.level = level;
     }
+
+    public void setPowerUp(List<PowerUp> powerUp) {this.powerUp = powerUp;}
 
     public void setBall(Ball ball) {
         this.ball = ball;
@@ -34,12 +44,51 @@ public class Game {
         return ball;
     }
 
+    public List<PowerUp> getPowerUp() { return powerUp; }
+
+    public PowerUp moveDown() {
+        for (PowerUp powerUp : getPowerUp()) {
+            powerUp.moveTo(3);
+            if(bar.checkItem(powerUp.getPositionalInfo())){
+                this.powerUp.remove(powerUp);
+                switch (powerUp.randomID()) {
+                    case (0):
+                        ball.resize(2);
+                        break;
+                    case (1):
+                        bar.resize(200, 40);
+                        break;
+                    case (2):
+                        bar.resize(200, 40);
+                        break;
+                    case (3):
+                        ball.resize(2);
+                        break;
+                }
+                return powerUp;
+            } else if(powerUp.getPositionalInfo().get(1) >= LevelEditorController.mainPaneHeight){
+                this.powerUp.remove(powerUp);
+                return powerUp;
+            }
+        }
+        return null;
+    }
+
+
+    public void movePowerUps() {
+        for (PowerUp powerUp : powerUp) {
+            List<Double> momentum = powerUp.getMomentum();
+            List<Double> position = powerUp.getPositionalInfo();
+            powerUp.moveTo(position.get(0) + momentum.get(0));
+        }
+    }
+
     public void moveBall() {
         List<Double> momentum = ball.getMomentum();
         List<Double> position = ball.getPositionalInfo();
 
         ball.moveTo(position.get(0) + momentum.get(0),
-                position.get(1) + momentum.get(1));
+                    position.get(1) + momentum.get(1));
     }
 
     public void moveBar(double xchange) {
@@ -48,7 +97,7 @@ public class Game {
 
     // return true: not lost
     // return false: player lost game (ball touched bottom side)
-    public boolean checkBall() {
+    public boolean checkBall() throws FileNotFoundException {
         List<Double> position = ball.getPositionalInfo();
         List<Double> momentum = ball.getMomentum();
 
@@ -60,6 +109,7 @@ public class Game {
                 block.lowerHP(1);
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
+                    powerUp.add(new PowerUp(block.getX(), block.getY())); // imageView abiehen bei x
                 }
                 return true;
             } else if (touches == 3 || touches == 4) { // ball touches block on top or bottom side
@@ -67,6 +117,7 @@ public class Game {
                 block.lowerHP(1);
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
+                    powerUp.add(new PowerUp(block.getX(), block.getY())); // imageView abiehen bei x
                 }
                 return true;
             }

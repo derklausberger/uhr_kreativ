@@ -46,6 +46,16 @@ public class Bar {
         return (Dx * Dx + Dy * Dy) <= ballInfo.get(2) * ballInfo.get(2);
     }
 
+    public boolean checkItem(List<Double> itemInfo) {
+        if (((x <= itemInfo.get(0) && x + width >= itemInfo.get(0)) ||
+                (x <= itemInfo.get(0) + itemInfo.get(2) && x + width >= itemInfo.get(0) + itemInfo.get(2)))
+                && (itemInfo.get(1) <= y + height && itemInfo.get(1) + itemInfo.get(2) >= y)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
 
     public double getWidth() {
         return width;
