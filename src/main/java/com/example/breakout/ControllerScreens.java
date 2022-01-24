@@ -108,6 +108,7 @@ public class ControllerScreens implements Initializable {
 
         mainPaneLevelScreen = (AnchorPane) scene.lookup("#mainPaneLevelScreen");
 
+        //  set needed instance variables and on click action of back to main window-Button
         Button backToMain = new Button("Zurück zum Hauptfenster");
 
         backToMain.setLayoutX(65);
@@ -124,6 +125,7 @@ public class ControllerScreens implements Initializable {
             }
         }));
 
+        //  set needed instance variables of search-TextField
         TextField searchField = new TextField();
 
         searchField.setLayoutX(1005);
@@ -135,7 +137,7 @@ public class ControllerScreens implements Initializable {
         searchField.setMinWidth(100);
         searchField.setMaxWidth(100);
 
-
+        //  set needed instance variables and on click action of search-Button
         Button searchBtn = new Button("Suchen");
 
         searchBtn.setLayoutX(1115);
@@ -147,6 +149,7 @@ public class ControllerScreens implements Initializable {
         searchBtn.setMinWidth(100);
         searchBtn.setMaxWidth(100);
 
+        //  reload Levels and filter by content of search-TextField on search-Button-click
         searchBtn.setOnMouseClicked(e -> {
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
@@ -158,10 +161,13 @@ public class ControllerScreens implements Initializable {
             showLevels(searchField.getText());
         });
 
+        //  add defined Buttons and TextField to AnchorPane
         mainPaneLevelScreen.getChildren().addAll(backToMain, searchField, searchBtn);
 
+        //  load all Levels without filtering by search-TextField
         showLevels("");
 
+        //  set needed variable and add properties to all objects on main-AnchorPane
         scroll = 0;
 
         for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
@@ -169,7 +175,9 @@ public class ControllerScreens implements Initializable {
             n.getProperties().put("originalY", n.getLayoutY());
         }
 
+        //  add action for scrolling
         mainPaneLevelScreen.setOnScroll(e -> {
+            //  stop scrolling if on top of the page and on bottom, keep scrolling if not
             if (scroll - e.getDeltaY() <= 0) {
                 scroll = 0;
             } else if (scroll - e.getDeltaY() >= scrollableHeight) {
@@ -178,6 +186,7 @@ public class ControllerScreens implements Initializable {
                 scroll += e.getDeltaY() * -1;
             }
 
+            //  reset coordinates of all objects after scroll
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
                 n.setLayoutY((double) n.getProperties().get("originalY") - scroll);
@@ -185,10 +194,12 @@ public class ControllerScreens implements Initializable {
         });
     }
 
+    //  function to add all saved Levels (depending on search-TextField) as new AnchorPane to main-AnchorPane
     public void showLevels(String filterBy) {
+        //  load all saved Levels from file
         Level[] levels = Level.loadLevelList();
         if (levels != null) {
-
+            //  place all Levels as new AnchorPane and set coordinates for 4 Levels each row
             int x = 65;
             int y = 90;
 
@@ -227,6 +238,7 @@ public class ControllerScreens implements Initializable {
                     label.setAlignment(Pos.BOTTOM_CENTER);
                     pane.getChildren().add(label);
 
+                    //  add action to start game on selection a level
                     pane.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             try {
@@ -238,6 +250,7 @@ public class ControllerScreens implements Initializable {
                         }
                     });
 
+                    //  add context-menu (opens on right-click) to allow user to play, delete and edit each level
                     pane.setOnContextMenuRequested(e -> {
                         ContextMenu contextMenu = new ContextMenu();
                         MenuItem playItem = new MenuItem("Spielen");
@@ -277,6 +290,7 @@ public class ControllerScreens implements Initializable {
                         contextMenu.show(pane, e.getScreenX(), e.getScreenY());
                     });
 
+                    //  restyle border for hover-action
                     pane.setOnMouseEntered(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;"));
 
                     pane.setOnMouseExited(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;"));

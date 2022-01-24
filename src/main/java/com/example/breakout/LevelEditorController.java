@@ -23,11 +23,13 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class LevelEditorController {
+    //  static variables to maintain more flexibility
     private static final int rectWidth = 100;
     private static final int rectHeight = 30;
     private static final int mainPaneWidth = 1000;
     private static final int blockX = 1090;
 
+    //  rectangles in the right AnchorPane -> needed for drag and drop-actions
     @FXML
     private Rectangle redRect;
     @FXML
@@ -35,11 +37,16 @@ public class LevelEditorController {
     @FXML
     private Rectangle greenRect;
 
+    /*
+     *  mainPane: outer AnchorPane; whole scene (1280 x 720)
+     *  placePane: left AnchorPane; allowed area for drag and drop (1000 x 720)
+     */
     @FXML
     private AnchorPane mainPane;
     @FXML
     private AnchorPane placePane;
 
+    //  Buttons and TextField in left AnchorPane (needed for file actions)
     @FXML
     private Button resetScreenBtn;
     @FXML
@@ -49,28 +56,33 @@ public class LevelEditorController {
     @FXML
     private TextField name;
 
+    //  needed variable for saving created Level
     protected static Level level = new Level();
+
+    //  needed variables for selecting multiple blocks
     private int blockSelected = 0;
     private final Point p = new Point();
     private final Region selectRect = new Region();
     private double x = 0, y = 0;
 
-    protected LevelEditorController() {
-    }
-
+    //  method initialize gets executed while opening Level-Editor
     @FXML
     private void initialize() {
+        //  color Rectangles in left AnchorPane
         redRect.setFill(Color.RED);
         blueRect.setFill(Color.BLUE);
         greenRect.setFill(Color.GREEN);
 
+        //  sett onMouseEntered-Event to create new block for drag and drop actions
         redRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 50, rectWidth, rectHeight, 1)));
         blueRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 130, rectWidth, rectHeight, 2)));
         greenRect.setOnMouseEntered(e -> placeBlock(new Block(level.getCount(), blockX, 210, rectWidth, rectHeight, 3)));
 
+        //  load blocks from file if level from file will be edited
         loadBlocks();
         name.setText(level.getName());
 
+        //  set actions for reset-Button
         resetScreenBtn.setFocusTraversable(false);
         resetScreenBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             Alert resetAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -91,6 +103,7 @@ public class LevelEditorController {
             }
         }));
 
+        //  set actions for save-level-Button
         saveLevelBtn.setDisable(true);
         saveLevelBtn.setFocusTraversable(false);
         saveLevelBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
@@ -120,7 +133,7 @@ public class LevelEditorController {
             }
         }));
 
-
+        //  set actions for exit-level-Button
         exitLevelEditorBtn.setFocusTraversable(false);
         exitLevelEditorBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, (e -> {
             Alert resetAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -142,6 +155,7 @@ public class LevelEditorController {
 
         }));
 
+        //  add actions for name-Text-Field (gets executed after key released)
         name.setFocusTraversable(false);
         name.setPromptText("Level-Name");
         name.addEventHandler(KeyEvent.KEY_RELEASED, (e -> {
@@ -152,8 +166,10 @@ public class LevelEditorController {
             }
         }));
 
+        //  set border for multiple-selection
         selectRect.setStyle("-fx-border-width: 2px; -fx-border-color: black; -fx-border-style: dashed;");
 
+        //  add event to left AnchorPane to reset multiple selection and move selected blocks
         placePane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             blockSelected = 0;
             reloadScreen();
@@ -239,10 +255,9 @@ public class LevelEditorController {
         mainPane.requestFocus();
     }
 
-
+    //  function to load blocks from Level and place on main AnchorPane as Rectangle
     private void loadBlocks() {
         try {
-            //level = Level.loadLevel("UHR");
             Block b;
             for (int i = 0; i < level.getBlocks().size(); i++) {
                 b = level.getBlocks().get(i);
@@ -253,6 +268,7 @@ public class LevelEditorController {
         }
     }
 
+    //  function to reload main AnchorPane
     private void reloadScreen() {
         Block b;
         for (Rectangle r : getRectangles()) {
@@ -278,6 +294,7 @@ public class LevelEditorController {
         }
     }
 
+    //  function to get list of placed Rectangles
     private ArrayList<Rectangle> getRectangles() {
         ArrayList<Rectangle> rectList = new ArrayList<>();
         for (int i = 0; i < mainPane.getChildren().size(); i++) {
@@ -289,9 +306,11 @@ public class LevelEditorController {
         return rectList;
     }
 
+    //  function to place new Rectangle (gets executed after MouseEntered on Rectangles in right AnchorPane)
     private void placeBlock(Block block) {
         Rectangle rect;
 
+        //  set color for new rectangle depending on "Mother"-Rectangle (detected by Y-coordinate)
         if (block.getStrength() == 1) {
             rect = new Rectangle(block.getX(), block.getY(), rectWidth, rectHeight);
             if (block.getX() == blockX) {
@@ -316,12 +335,14 @@ public class LevelEditorController {
             }
         }
 
+        //  removing earlier created Rectangles in right AnchorPane
         for (Rectangle r : getRectangles()) {
             if (r.getX() == blockX && r.getY() != rect.getY()) {
                 mainPane.getChildren().remove(r);
             }
         }
 
+        //  removing Rectangle if position is in right AnchorPane
         EventHandler<MouseEvent> handler = e -> {
             if (rect.getX() + (double) rectWidth / 2 > mainPaneWidth - rectWidth) {
                 mainPane.getChildren().remove(rect);
@@ -330,8 +351,10 @@ public class LevelEditorController {
             mainPane.setCursor(Cursor.DEFAULT);
         };
 
+        //  add handler to on mouse exited target event listener
         rect.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, handler);
 
+        //  add handler for on mouse pressed event (for coloring block)
         rect.addEventHandler(MouseEvent.MOUSE_PRESSED, (e -> {
             if (blockSelected > 1) {
                 for (Rectangle r : getRectangles()) {
@@ -369,7 +392,11 @@ public class LevelEditorController {
             mainPane.setCursor(Cursor.MOVE);
         }));
 
+        //  add event handler needed for drag-action (replacing Rectangle on drag)
         rect.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e -> {
+            //  if one block is selected
+            //  -> color gets dark if position is not a correct position for
+            //      placing a block
             if (blockSelected == 1) {
                 rect.setX(e.getSceneX() - (double) rectWidth / 2);
                 rect.setY(e.getSceneY() - (double) rectHeight / 2);
@@ -403,6 +430,9 @@ public class LevelEditorController {
             }
         }));
 
+        //  add event handler to check if position of blocks is correct on
+        //      drop action
+        //  -> recolor if position is correct, remove block if not
         rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             if (blockSelected == 1) {
                 if ((e.getSceneX() + (double) rectWidth / 2 > mainPaneWidth || e.getSceneX() - (double) rectWidth / 2 < 0) ||
