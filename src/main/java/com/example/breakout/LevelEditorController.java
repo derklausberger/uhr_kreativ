@@ -23,11 +23,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class LevelEditorController {
-    public static final int rectWidth = 100;
-    public static final int rectHeight = 30;
-    public static final int mainPaneWidth = 1000;
-    public static final int mainPaneHeight = 720;
-    public static final int blockX = 1090;
+    private static final int rectWidth = 100;
+    private static final int rectHeight = 30;
+    private static final int mainPaneWidth = 1000;
+    private static final int blockX = 1090;
 
     @FXML
     private Rectangle redRect;
@@ -35,10 +34,12 @@ public class LevelEditorController {
     private Rectangle blueRect;
     @FXML
     private Rectangle greenRect;
+
     @FXML
     private AnchorPane mainPane;
     @FXML
     private AnchorPane placePane;
+
     @FXML
     private Button resetScreenBtn;
     @FXML
@@ -48,14 +49,13 @@ public class LevelEditorController {
     @FXML
     private TextField name;
 
-    public static Level level = new Level();
-
+    protected static Level level = new Level();
     private int blockSelected = 0;
     private final Point p = new Point();
     private final Region selectRect = new Region();
     private double x = 0, y = 0;
 
-    public LevelEditorController() {
+    protected LevelEditorController() {
     }
 
     @FXML
@@ -143,7 +143,7 @@ public class LevelEditorController {
         }));
 
         name.setFocusTraversable(false);
-        name.setPromptText("Levelname");
+        name.setPromptText("Level-Name");
         name.addEventHandler(KeyEvent.KEY_RELEASED, (e -> {
             if (getRectangles().size() == 0) {
                 saveLevelBtn.setDisable(true);
@@ -196,9 +196,9 @@ public class LevelEditorController {
                 selectRect.setMinHeight(p.getY() - e.getSceneY());
                 selectRect.setMaxHeight(p.getY() - e.getSceneY());
                 selectRect.setLayoutY(e.getSceneY());
-            } else if (e.getSceneY() >= mainPaneHeight - 20) {
-                selectRect.setMinHeight(mainPaneHeight - 20 - p.getY());
-                selectRect.setMaxHeight(mainPaneHeight - 20 - p.getY());
+            } else if (e.getSceneY() >= ControllerScreens.windowHeight - 20) {
+                selectRect.setMinHeight(ControllerScreens.windowHeight - 20 - p.getY());
+                selectRect.setMaxHeight(ControllerScreens.windowHeight - 20 - p.getY());
                 selectRect.setLayoutY(p.getY());
             } else {
                 selectRect.setMinHeight(e.getSceneY() - p.getY());
@@ -406,7 +406,7 @@ public class LevelEditorController {
         rect.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             if (blockSelected == 1) {
                 if ((e.getSceneX() + (double) rectWidth / 2 > mainPaneWidth || e.getSceneX() - (double) rectWidth / 2 < 0) ||
-                        (e.getSceneY() - (double) rectHeight / 2 < 0 || e.getSceneY() + (double) rectHeight / 2 > mainPaneHeight) ||
+                        (e.getSceneY() - (double) rectHeight / 2 < 0 || e.getSceneY() + (double) rectHeight / 2 > ControllerScreens.windowHeight) ||
                         !level.replaceBlock(block)) {
                     mainPane.getChildren().remove(rect);
                     level.removeBlock(block);
@@ -420,7 +420,7 @@ public class LevelEditorController {
                             Color.DARKRED || r.getFill() == Color.DARKBLUE) {
                         b = level.findBlock(r.getX(), r.getY());
                         if (((r.getX() >= mainPaneWidth - rectWidth || r.getX() <= 0) || (r.getY()
-                                <= 0 || r.getY() >= mainPaneHeight - 20 - rectHeight)) || !level.replaceBlock(b)) {
+                                <= 0 || r.getY() >= ControllerScreens.windowHeight - 20 - rectHeight)) || !level.replaceBlock(b)) {
                             mainPane.getChildren().remove(r);
                             level.removeBlock(b);
                             blockSelected--;

@@ -8,19 +8,16 @@ public class Level implements Serializable {
     private final List<Block> blocks;
     private int count = 0;
     private String name;
+    private static String dirPath = new File("").getAbsolutePath();
 
     public Level() {
         blocks = new ArrayList<>();
-    }
 
-    public Level(Level level) {
-        blocks = level.blocks;
-        count = level.count;
-        name = level.name;
-    }
-
-    public Level(String filepath) {
-        this(loadLevel(filepath));
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            dirPath += "\\levels\\";
+        } else {
+            dirPath += "/levels/";
+        }
     }
 
     public String getName() {
@@ -39,7 +36,7 @@ public class Level implements Serializable {
         return blocks;
     }
 
-    public boolean addBlock(Block block) {
+    public void addBlock(Block block) {
         for (Block b : blocks) {
             if ((((block.getX() < (b.getX() + b.getWidth())
                     && block.getX() > b.getX())
@@ -49,12 +46,11 @@ public class Level implements Serializable {
                     && block.getY() > b.getY())
                     || (block.getY() + block.getHeight() > b.getY()
                     && block.getY() < b.getY())))) {
-                return false;
+                return;
             }
         }
         blocks.add(block);
         count++;
-        return true;
     }
 
     public Block findBlock(double x, double y) {
@@ -88,9 +84,6 @@ public class Level implements Serializable {
     }
 
     public static void deleteLevel(String filepath) {
-        String dirPath = new File("").getAbsolutePath();
-        dirPath += "\\levels\\";
-
         File file = new File(dirPath + filepath);
         if (file.exists()) {
             file.delete();
@@ -105,9 +98,6 @@ public class Level implements Serializable {
 
     public boolean saveLevel(String filepath) {
         try {
-            String dirPath = new File("").getAbsolutePath();
-            dirPath += "\\levels\\";
-
             File directory = new File(dirPath);
             if (!directory.exists()) {
                 directory.mkdir();
@@ -131,9 +121,6 @@ public class Level implements Serializable {
 
     public static Level loadLevel(String filepath) {
         try {
-            String dirPath = new File("").getAbsolutePath();
-            dirPath += "\\levels\\";
-
             FileInputStream fis = new FileInputStream(dirPath + filepath);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //System.out.println(filepath);
@@ -149,10 +136,8 @@ public class Level implements Serializable {
 
     public static Level[] loadLevelList() {
         try {
-            String dirPath = new File("").getAbsolutePath();
-            dirPath += "\\levels\\";
-
             String[] filenames = new File(dirPath).list();
+
             Level[] levelList = new Level[filenames.length];
 
             for (int i = 0; i < filenames.length; i++) {

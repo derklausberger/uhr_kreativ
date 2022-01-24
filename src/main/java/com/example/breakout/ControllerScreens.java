@@ -36,7 +36,7 @@ import java.util.*;
 
 public class ControllerScreens implements Initializable {
 
-    private static final int windowHeight = 720;
+    protected static final int windowHeight = 720;
     private static final int windowWidth = 1280;
 
     private static double scroll;
@@ -192,7 +192,7 @@ public class ControllerScreens implements Initializable {
             int x = 65;
             int y = 90;
 
-            scrollableHeight = y + (((levels.length - 1) / 4) + 1) * 250 - 720;
+            scrollableHeight = y + (double)(((levels.length - 1) / 4) + 1) * 250 - 720;
 
             for (int i = 0; i < levels.length; i++) {
                 Level level = levels[i];
@@ -335,7 +335,7 @@ public class ControllerScreens implements Initializable {
         StaticClass.playSong("Leveleditor.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("LevelEditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Leveleditor");
+        Application.stage.setTitle("Level-Editor");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
@@ -513,7 +513,6 @@ public class ControllerScreens implements Initializable {
 
     private void placeBlock(double x, double y, int strength, double factor, AnchorPane pane) {
         Rectangle rect = new Rectangle(x, y, 100 * factor, 30 * factor);
-        //Block block = new Block(game.getLevel().getCount(), rect, strength);
 
         if (strength == 1) {
             rect.setFill(Color.RED);
