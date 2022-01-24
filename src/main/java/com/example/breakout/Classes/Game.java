@@ -66,7 +66,7 @@ public class Game {
                         break;
                 }
                 return powerUp;
-            } else if(powerUp.getPositionalInfo().get(1) >= LevelEditorController.mainPaneHeight){
+            } else if(powerUp.getPositionalInfo().get(1) >= ControllerScreens.windowHeight){
                 this.powerUp.remove(powerUp);
                 return powerUp;
             }
