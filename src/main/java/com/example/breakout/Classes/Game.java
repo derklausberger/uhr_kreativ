@@ -190,7 +190,7 @@ public class Game {
                             }
                             break;
                         case (11):
-                            Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath()) + "\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                            Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath()) + "\\src\\main\\resources\\Item\\Apfel.png")))), 1280, 720));
                             new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
                             break;
                     }
