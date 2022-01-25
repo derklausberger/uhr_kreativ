@@ -523,7 +523,24 @@ public class ControllerScreens {
     public void bombExplosion() {
         game.decreaseBombCounter();
 
-        double width = 128;
+        double width = 0;
+        switch (Double.toString(game.getBall().getPositionalInfo().get(2))) {
+            case ("10"):
+                width = 128 * 1;
+                break;
+            case ("15"):
+                width = 128 * 1.2;
+                break;
+            case ("20"):
+                width = 128 * 1.4;
+                break;
+            case ("25"):
+                width = 128 * 1.6;
+                break;
+            case ("30"):
+                width = 128 * 1.8;
+                break;
+        }
 
         double ballX = game.getBall().getPositionalInfo().get(0) - (width / 2);
         double ballY = game.getBall().getPositionalInfo().get(1) - (width / 2);
@@ -551,13 +568,6 @@ public class ControllerScreens {
                 imageView.setFitHeight(width);
                 imageView.setFitWidth(width);
 
-                /*
-                imageView.minWidth(width);
-                imageView.minHeight(width);
-                imageView.maxWidth(width);
-                imageView.maxHeight(width);
-
-                 */
 
                 if (timeline2 != null) {
                     timeline1 = (new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().add(imageView))));
@@ -591,13 +601,13 @@ public class ControllerScreens {
                 System.out.println("bla");
                 if (
                         (
-                         (b.getX() >= ballX && b.getX() + b.getWidth() <= ballX + width) ||
-                         (b.getX() <= ballX && b.getX() + b.getWidth() >= ballX) ||
-                         (b.getX() <= ballX + width && b.getX() + b.getWidth() >= ballX + width)
+                                (b.getX() >= ballX && b.getX() + b.getWidth() <= ballX + width) ||
+                                        (b.getX() <= ballX && b.getX() + b.getWidth() >= ballX) ||
+                                        (b.getX() <= ballX + width && b.getX() + b.getWidth() >= ballX + width)
                         ) && (
                                 (b.getY() >= ballY && b.getY() + b.getHeight() <= ballY + width) ||
-                                (b.getY() <= ballY && b.getY() + b.getWidth() >= ballY) ||
-                                (b.getY() <= ballY + width && b.getY() + b.getWidth() >= ballY + width))
+                                        (b.getY() <= ballY && b.getY() + b.getWidth() >= ballY) ||
+                                        (b.getY() <= ballY + width && b.getY() + b.getWidth() >= ballY + width))
                 ) {
                     scene.getChildren().remove(n);
                     game.getLevel().removeBlock(b);
@@ -645,13 +655,10 @@ public class ControllerScreens {
 
     @FXML
     private AnchorPane scene; // scene in which the gameplay is done
-
     @FXML
     private Circle circle; // circle == ball
-
     @FXML
     private Rectangle rectangle; // rectangle == bar
-
     @FXML
     private Label highScore = new Label();
 
@@ -663,7 +670,7 @@ public class ControllerScreens {
             // methods used while timeline is ongoing
             // is started by start button "B" after
             // moving the Bar to the spot the user would like to begin
-            bombCounter = game.getBombCounter();
+            bombCounter = 1;
             int counter = 0;
             for (Node n : scene.getChildren()) {
                 if (n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle) {

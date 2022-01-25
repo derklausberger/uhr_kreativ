@@ -23,7 +23,6 @@ public class Game {
     private List<PowerUp> powerUp;
     private double bombCounter;
 
-
     public Game() {
         ball = null;
         bar = null;
@@ -191,7 +190,7 @@ public class Game {
                             break;
                         case (11):
                             Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath()) + "\\src\\main\\resources\\Item\\Apfel.png")))), 1280, 720));
-                            new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
+                            new Timeline(new KeyFrame(Duration.seconds(0.5), e -> Application.stage.setScene(scene))).play();
                             break;
                     }
                 }
@@ -204,21 +203,22 @@ public class Game {
         return null;
     }
 
-
-    public void movePowerUps() {
-        for (PowerUp powerUp : powerUp) {
-            List<Double> momentum = powerUp.getMomentum();
-            List<Double> position = powerUp.getPositionalInfo();
-            powerUp.moveTo(position.get(0) + momentum.get(0));
-        }
-    }
-
     public void moveBall() {
         List<Double> momentum = ball.getMomentum();
         List<Double> position = ball.getPositionalInfo();
 
         ball.moveTo(position.get(0) + momentum.get(0),
-                position.get(1) + momentum.get(1));
+                    position.get(1) + momentum.get(1));
+
+        if (ball.getPositionalInfo().get(0) <= 0) {
+            ball.moveTo(ball.getPositionalInfo().get(2), ball.getPositionalInfo().get(1));
+        }
+        if (ball.getPositionalInfo().get(0) >= 1000) {
+            ball.moveTo(1000 - ball.getPositionalInfo().get(2), ball.getPositionalInfo().get(1));
+        }
+        if (ball.getPositionalInfo().get(1) <= 0) {
+            ball.moveTo(ball.getPositionalInfo().get(0), ball.getPositionalInfo().get(2));
+        }
     }
 
     public void moveBar(double xchange) {
@@ -278,96 +278,4 @@ public class Game {
         }
         return true;
     }
-
-    /*
-    public void playGame(Scene scene) throws InterruptedException {
-        this.scene = scene;
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.RIGHT) {
-                moveBar(bar.getX() + 1); //  1 is dummy value
-                // moveBall() ???
-            } // else if?? if right and left arrow get pressed
-            // simultaneously
-            if (event.getCode() == KeyCode.LEFT) {
-                moveBar(bar.getX() - 1); //  1 is dummy value
-            }
-        });
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Circle circle = (Circle) scene.lookup("#circle");
-                while (checkBall()) {
-                    moveBall();
-                    circle.setCenterX(ball.getpositionalinfo().get(0));
-                    circle.setCenterY(ball.getpositionalinfo().get(1));
-                    //((Circle) scene.lookup("#circle")).setCenterY(game.getBall().getpositionalinfo().get(1));
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                youLost();
-            }
-        });
-
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
-                t.start();
-            }
-        });
-        t.join();
-
-        /*Thread barFred = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                scene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.RIGHT) {
-                        moveBar(bar.getX() + 1); //  1 is dummy value
-                        // moveBall() ???
-                    } // else if?? if right and left arrow get pressed
-                    // simultaneously
-                    if (event.getCode() == KeyCode.LEFT) {
-                        moveBar(bar.getX() - 1); //  1 is dummy value
-                    }
-                });
-
-                while (stillPlaying) {
-
-                }
-            }
-        });
-
-        Thread ballFred = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                scene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.RIGHT) {
-                        moveBar(bar.getX() + 1); //  1 is dummy value
-                        // moveBall() ???
-                    } // else if?? if right and left arrow get pressed
-                    // simultaneously
-                    if (event.getCode() == KeyCode.LEFT) {
-                        moveBar(bar.getX() - 1); //  1 is dummy value
-                    }
-                });
-
-                scene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.SPACE) {
-                        start();
-                    }
-                });
-            }
-
-            public void start() {
-                while (checkBall()) {
-                    moveBall();
-                }
-                youLost();
-            }
-        });
-
-        //barFred.start();
-        ballFred.start();*/
 }
