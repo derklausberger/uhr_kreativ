@@ -26,15 +26,45 @@ public class PowerUp {
         dirPath += "\\src\\main\\resources\\Item\\";
         this.id = randomID();
         switch (this.id) {
-            case(0): dirPath += "ItemBerry.png";
-            break;
-            case(1): dirPath += "ItemBomb.png";
-            break;
-            case(2): dirPath += "ItemMelon.png";
-            break;
-            case(3): dirPath += "ItemPumpkin.png";
-            break;
-            case(4): dirPath += "ItemRadish.png";
+            case (0):
+                dirPath += "ItemBerry.png";
+                break;
+            case (1):
+                dirPath += "ItemBerry.png";
+                break;
+            case (2):
+                dirPath += "ItemBerry.png";
+                break;
+            case (3):
+                dirPath += "ItemBomb.png";
+                break;
+            case (4):
+                dirPath += "ItemBomb.png";
+                break;
+            case (5):
+                dirPath += "ItemMelon.png";
+                break;
+            case (6):
+                dirPath += "ItemMelon.png";
+                break;
+            case (7):
+                dirPath += "ItemMelon.png";
+                break;
+            case (8):
+                dirPath += "ItemPumpkin.png";
+                break;
+            case (9):
+                dirPath += "ItemPumpkin.png";
+                break;
+            case (10):
+                dirPath += "ItemPumpkin.png";
+                break;
+            case (11):
+                dirPath += "ItemRadish.png";
+                break;
+            case (12):
+                dirPath += "ItemRadish.png";
+                break;
         }
 
         Image image = new Image(new FileInputStream(dirPath));
@@ -55,10 +85,12 @@ public class PowerUp {
 
     public int randomID() {
         Random random = new Random();
-        return random.nextInt(5);
+        return random.nextInt(12);
     }
 
-    public int getId() {return this.id;}
+    public int getId() {
+        return this.id;
+    }
 
     public void moveTo(double y) {
         this.image.setLayoutY(image.getLayoutY() + y);
