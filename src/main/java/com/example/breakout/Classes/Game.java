@@ -25,6 +25,7 @@ public class Game {
     private Level level;
     private List<PowerUp> powerUp;
 
+
     public Game() {
         ball = null;
         bar = null;
@@ -65,16 +66,13 @@ public class Game {
                 Scene scene = Application.stage.getScene();
                 switch (powerUp.randomID()) {
                     case (0):
-                        ball.resize(5);
+                        ball.resize(10);
                         /*
                         Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
-
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
-
                          */
                         break;
                     case (1):
-                        bar.resize(200);
                         /*
                         Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();

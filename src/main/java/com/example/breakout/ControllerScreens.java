@@ -23,6 +23,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -352,6 +355,65 @@ public class ControllerScreens {
 
     private Game game;// = new Game();
 
+
+    @FXML
+    Button againButton;
+
+    @FXML
+    Button backButton;
+
+
+    public void openEnd() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("EndScreen.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 500, 300);
+        Stage stageEnd = new Stage();
+
+        stageEnd.setTitle("Ende");
+        stageEnd.setScene(scene);
+        stageEnd.setResizable(false);
+
+        stageEnd.initOwner(Application.stage);
+        stageEnd.initModality(Modality.APPLICATION_MODAL);
+
+        stageEnd.show();
+
+        Button againButton = (Button) scene.lookup("#againButton");
+        Button backButton = (Button) scene.lookup("#backButton");
+
+        stageEnd.setOnCloseRequest(ev -> {
+            try {
+                openEnd();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        backButton.setOnAction(e -> {
+            try {
+                switchToMain2();
+                stageEnd.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        });
+
+        againButton.setOnAction(e -> {
+            try {
+                stageEnd.close();
+                gameStart = false;
+                gameStartLock = false;
+                game = new Game(Level.loadLevel(game.getLevel().getName()));
+                switchToGame();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+
+
+
     public void switchToGame() throws IOException { // called by button "level [id]"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("GameScreen.fxml"));
@@ -387,6 +449,9 @@ public class ControllerScreens {
         loadBlocks(1, this.scene);
 
 
+
+
+        System.out.println("Hallo");
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
             //BarDirectX can be moved or changed depending on how it feels
@@ -478,6 +543,7 @@ public class ControllerScreens {
         return b;
     }
 
+
     private Boolean gameStart = false;
     private Boolean gameStartLock = false;
     private long createdMillis;
@@ -506,11 +572,21 @@ public class ControllerScreens {
             // methods used while timeline is ongoing
             // is started by start button "B" after
             // moving the Bar to the spot the user would like to begin
-            if (scene.getChildren().size() == 2) {
+            int counter = 0;
+            for (Node n : scene.getChildren()) {
+                if(n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle){
+                    counter++;
+                }
+            }
+            if (counter == 0) {
                 // checks if all blocks are gone
                 timeline.stop();
-                BarDirectX = 0;
                 StaticClass.playSound("win.wav");
+                try {
+                    openEnd();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             game.moveBall();
@@ -531,12 +607,12 @@ public class ControllerScreens {
                     // score/ timer counts up
                 } else {
                     timeline.stop();
-                    BarDirectX = 0;
                     // if lost, timeline is stopped
                     StaticClass.playSound("lose.wav");
+                    openEnd();
                     // losing sound
                 }
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
