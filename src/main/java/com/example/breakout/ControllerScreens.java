@@ -60,7 +60,11 @@ public class ControllerScreens {
         }
         // because File("") ist empty .getAbsolutePath() returns current directory path
         String dirPath = new File("").getAbsolutePath();
-        dirPath += "\\src\\main\\resources\\Background\\";
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            dirPath += "\\src\\main\\resources\\Background\\";
+        } else {
+            dirPath += "/src/main/resources/Background/";
+        }
         dirPath += pathToPicture;
 
         ImageView imageView = (ImageView) scene.lookup("#imageMain");
