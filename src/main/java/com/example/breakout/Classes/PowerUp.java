@@ -23,7 +23,7 @@ public class PowerUp {
         this.image = new ImageView();
 
         String dirPath = new File("").getAbsolutePath();
-        dirPath += "\\src\\main\\resources\\Items\\";
+        dirPath += "\\src\\main\\resources\\Item\\";
         switch (randomID()) {
             case(0): dirPath += "ItemBerry.png";
             break;
