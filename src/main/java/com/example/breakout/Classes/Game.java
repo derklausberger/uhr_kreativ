@@ -2,8 +2,16 @@ package com.example.breakout.Classes;
 
 import com.example.breakout.Application;
 import com.example.breakout.ControllerScreens;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +36,21 @@ public class Game {
         this.level = level;
     }
 
-    public double getBombCounter() {return bombCounter;}
+    public double getBombCounter() {
+        return bombCounter;
+    }
 
-    public void increaseBombCounter() {bombCounter++;}
+    public void increaseBombCounter() {
+        bombCounter++;
+    }
 
-    public void decreaseBombCounter() {bombCounter--;}
+    public void decreaseBombCounter() {
+        bombCounter--;
+    }
 
-    public void setPowerUp(List<PowerUp> powerUp) {this.powerUp = powerUp;}
+    public void setPowerUp(List<PowerUp> powerUp) {
+        this.powerUp = powerUp;
+    }
 
     public void setBall(Ball ball) {
         this.ball = ball;
@@ -52,56 +68,135 @@ public class Game {
         return ball;
     }
 
-    public List<PowerUp> getPowerUp() { return powerUp; }
+    public List<PowerUp> getPowerUp() {
+        return powerUp;
+    }
 
     public PowerUp moveDown() throws FileNotFoundException {
         for (PowerUp powerUp : getPowerUp()) {
             powerUp.moveTo(3);
-            if(bar.checkItem(powerUp.getPositionalInfo())){
+            if (bar.checkItem(powerUp.getPositionalInfo())) {
                 this.powerUp.remove(powerUp);
                 Scene scene = Application.stage.getScene();
 
-                if(powerUp.getId() == 1){
+                if (powerUp.getId() == 1) {
                     increaseBombCounter();
 
                 } else {
                     switch (powerUp.randomID()) {
                         case (0):
-                            ball.resize(10);
-                        /*
-                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
-                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
-                         */
+                            if (ball.getPositionalInfo().get(2) != 10) {
+                                ball.resize(10);
+                            } else {
+                                ball.resize(20);
+                            }
                             break;
                         case (1):
-
-                        /*
-                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
-                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
-
-                         */
+                            if (ball.getPositionalInfo().get(2) != 10) {
+                                ball.resize(10);
+                            } else {
+                                ball.resize(25);
+                            }
                             break;
                         case (2):
-                            bar.resize(50);
-                        /*
-                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
-                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
-
-                         */
+                            if (ball.getPositionalInfo().get(2) != 10) {
+                                ball.resize(10);
+                            } else {
+                                ball.resize(15);
+                            }
                             break;
                         case (3):
-                            ball.resize(20);
-                        /*
-                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
-                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
-
-                         */
+                            if (ball.getPositionalInfo().get(2) != 10) {
+                                ball.resize(10);
+                            } else {
+                                ball.resize(35);
+                            }
                             break;
+                        case (4):
+                            if (ball.getPositionalInfo().get(2) != 10) {
+                                ball.resize(10);
+                            } else {
+                                ball.resize(30);
+                            }
+                            break;
+                        case (5):
+                            if (bar.getWidth() != 100) {
+                                bar.resize(100);
+                            } else {
+                                bar.resize(150);
+                            }
+                            break;
+                        case (6):
+                            if (bar.getWidth() != 100) {
+                                bar.resize(100);
+                            } else {
+                                bar.resize(50);
+                            }
+                            break;
+                        case (7):
+                            if (bar.getWidth() != 100) {
+                                bar.resize(100);
+                            } else {
+                                bar.resize(200);
+                            }
+                            break;
+                        case (8):
+                            if (bar.getWidth() != 100) {
+                                bar.resize(100);
+                            } else {
+                                bar.resize(170);
+                            }
+                            break;
+                        case (9):
+                            if ((ball.getMomentum().get(0) != 1 || ball.getMomentum().get(0) != -1) &&
+                                    (ball.getMomentum().get(0) != 1 || ball.getMomentum().get(1) != -1)) {
 
+                                if (ball.getMomentum().get(0) < 0) {
+                                    if (ball.getMomentum().get(1) < 0) {
+                                        ball.changeMomentum(-1, -1);
+                                    } else {
+                                        ball.changeMomentum(-1, 1);
+                                    }
+                                } else {
+                                    if (ball.getMomentum().get(1) < 0) {
+                                        ball.changeMomentum(1, -1);
+                                    } else {
+                                        ball.changeMomentum(1, 1);
+                                    }
+                                }
+                            } else {
+                                ball.changeMomentum(ball.getMomentum().get(0) * 3, ball.getMomentum().get(1) * 3);
+                            }
+                            break;
+                        case (10):
+                            if ((ball.getMomentum().get(0) != 1 || ball.getMomentum().get(0) != -1) &&
+                                    (ball.getMomentum().get(0) != 1 || ball.getMomentum().get(1) != -1)) {
+
+                                if (ball.getMomentum().get(0) < 0) {
+                                    if (ball.getMomentum().get(1) < 0) {
+                                        ball.changeMomentum(-1, -1);
+                                    } else {
+                                        ball.changeMomentum(-1, 1);
+                                    }
+                                } else {
+                                    if (ball.getMomentum().get(1) < 0) {
+                                        ball.changeMomentum(1, -1);
+                                    } else {
+                                        ball.changeMomentum(1, 1);
+                                    }
+                                }
+                            } else {
+                                ball.changeMomentum(ball.getMomentum().get(0) * 2, ball.getMomentum().get(1) * 2);
+                            }
+                            break;
+                        case (11):
+                            Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath()) + "\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                            new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
+                            break;
                     }
                 }
                 return powerUp;
-            } else if(powerUp.getPositionalInfo().get(1) >= ControllerScreens.windowHeight){
+            } else if (powerUp.getPositionalInfo().get(1) >= ControllerScreens.windowHeight) {
                 this.powerUp.remove(powerUp);
                 return powerUp;
             }
@@ -123,7 +218,7 @@ public class Game {
         List<Double> position = ball.getPositionalInfo();
 
         ball.moveTo(position.get(0) + momentum.get(0),
-                    position.get(1) + momentum.get(1));
+                position.get(1) + momentum.get(1));
     }
 
     public void moveBar(double xchange) {
