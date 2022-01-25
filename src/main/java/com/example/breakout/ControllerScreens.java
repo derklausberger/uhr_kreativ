@@ -25,13 +25,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ControllerScreens {
@@ -199,7 +199,7 @@ public class ControllerScreens {
             int x = 65;
             int y = 90;
 
-            scrollableHeight = y + (double)(((levels.length - 1) / 4) + 1) * 250 - 720;
+            scrollableHeight = y + (double) (((levels.length - 1) / 4) + 1) * 250 - 720;
 
             for (int i = 0; i < levels.length; i++) {
                 Level level = levels[i];
@@ -412,8 +412,6 @@ public class ControllerScreens {
     }
 
 
-
-
     public void switchToGame() throws IOException { // called by button "level [id]"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("GameScreen.fxml"));
@@ -449,9 +447,6 @@ public class ControllerScreens {
         loadBlocks(1, this.scene);
 
 
-
-
-        System.out.println("Hallo");
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
             //BarDirectX can be moved or changed depending on how it feels
@@ -510,9 +505,108 @@ public class ControllerScreens {
                     }
                 }
             }
+
+            if (key.getCode() == KeyCode.H) {
+                if (bombCounter > 0) {
+                    bombExplosion();
+                }
+            }
+
         };
         scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);
         timeline.setCycleCount(Animation.INDEFINITE);
+    }
+
+    public void bombExplosion() {
+        game.decreaseBombCounter();
+
+
+        double width = 128;
+
+        double ballX = game.getBall().getPositionalInfo().get(0) - (width / 2);
+        double ballY = game.getBall().getPositionalInfo().get(1) - (width / 2);
+
+        String dirPath = new File("").getAbsolutePath();
+        dirPath += "\\src\\main\\resources\\Explosion\\Explosion";
+
+
+        Timeline timeline1 = null;
+        Timeline timeline2 = null;
+
+
+        String imagePath = "";
+        for (int i = 1; i <= 8; i++) {
+            imagePath = Integer.toString(i) + ".png";
+            ImageView imageView = new ImageView();
+
+            try {
+                Image image = new Image(new FileInputStream(dirPath + imagePath));
+
+
+                imageView.setImage(image);
+                imageView.setLayoutX(ballX);
+                imageView.setLayoutY(ballY);
+
+                imageView.setFitHeight(width);
+                imageView.setFitWidth(width);
+
+                /*
+                imageView.minWidth(width);
+                imageView.minHeight(width);
+                imageView.maxWidth(width);
+                imageView.maxHeight(width);
+
+                 */
+
+                if (timeline2 != null) {
+                    timeline1 = (new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().add(imageView))));
+                    Timeline finalTimeline1 = timeline1;
+                    timeline2.setOnFinished(e ->
+                            finalTimeline1.play()
+                    );
+                } else {
+                    timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().add(imageView)));
+                    timeline1.play();
+                }
+                timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().remove(imageView)));
+                Timeline finalTimeline = timeline2;
+                timeline1.setOnFinished(e ->
+                        finalTimeline.play()
+                );
+
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (int i = scene.getChildren().size() - 1; i >= 0; i--) {
+            // iterates to the number of children the scene has
+            Node n = scene.getChildren().get(i);
+            if (n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle) {
+                Block b = game.getLevel().findBlock(((Rectangle) n).getX(), ((Rectangle) n).getY());
+                if (b == null) {
+                    System.out.println("null");
+                }
+                System.out.println("bla");
+                if (
+                        (
+                         (b.getX() >= ballX && b.getX() + b.getWidth() <= ballX + width) ||
+                         (b.getX() <= ballX && b.getX() + b.getWidth() >= ballX) ||
+                         (b.getX() <= ballX + width && b.getX() + b.getWidth() >= ballX + width)
+                        ) && (
+                                (b.getY() >= ballY && b.getY() + b.getHeight() <= ballY + width) ||
+                                (b.getY() <= ballY && b.getY() + b.getWidth() >= ballY) ||
+                                (b.getY() <= ballY + width && b.getY() + b.getWidth() >= ballY + width))
+                ) {
+                    scene.getChildren().remove(n);
+                    game.getLevel().removeBlock(b);
+                    System.out.println("hallo");
+                }
+            }
+        }
+
+
     }
 
 
@@ -520,8 +614,8 @@ public class ControllerScreens {
         boolean b = game.checkBall();
 
         for (PowerUp powerUp : game.getPowerUp()) {
-            if(!scene.getChildren().contains(powerUp.getImage())) {
-                scene.getChildren().add(powerUp.getImage());
+            if (!scene.getChildren().contains(powerUp.getImageView())) {
+                scene.getChildren().add(powerUp.getImageView());
             }
         }
 
@@ -543,7 +637,7 @@ public class ControllerScreens {
         return b;
     }
 
-
+    private double bombCounter;
     private Boolean gameStart = false;
     private Boolean gameStartLock = false;
     private long createdMillis;
@@ -572,9 +666,10 @@ public class ControllerScreens {
             // methods used while timeline is ongoing
             // is started by start button "B" after
             // moving the Bar to the spot the user would like to begin
+            bombCounter = game.getBombCounter();
             int counter = 0;
             for (Node n : scene.getChildren()) {
-                if(n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle){
+                if (n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle) {
                     counter++;
                 }
             }
@@ -596,8 +691,8 @@ public class ControllerScreens {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            if(p != null){
-                scene.getChildren().remove(p.getImage());
+            if (p != null) {
+                scene.getChildren().remove(p.getImageView());
             }
 
             try {

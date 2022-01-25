@@ -2,28 +2,18 @@ package com.example.breakout.Classes;
 
 import com.example.breakout.Application;
 import com.example.breakout.ControllerScreens;
-import com.example.breakout.LevelEditorController;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Game {
     private Ball ball;
     private Bar bar;
     private Level level;
     private List<PowerUp> powerUp;
+    private double bombCounter;
 
 
     public Game() {
@@ -37,6 +27,12 @@ public class Game {
         this();
         this.level = level;
     }
+
+    public double getBombCounter() {return bombCounter;}
+
+    public void increaseBombCounter() {bombCounter++;}
+
+    public void decreaseBombCounter() {bombCounter--;}
 
     public void setPowerUp(List<PowerUp> powerUp) {this.powerUp = powerUp;}
 
@@ -64,38 +60,45 @@ public class Game {
             if(bar.checkItem(powerUp.getPositionalInfo())){
                 this.powerUp.remove(powerUp);
                 Scene scene = Application.stage.getScene();
-                switch (powerUp.randomID()) {
-                    case (0):
-                        ball.resize(10);
-                        /*
-                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
-                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
-                         */
-                        break;
-                    case (1):
-                        /*
-                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
-                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
 
-                         */
-                        break;
-                    case (2):
-                        bar.resize(50);
+                if(powerUp.getId() == 1){
+                    increaseBombCounter();
+
+                } else {
+                    switch (powerUp.randomID()) {
+                        case (0):
+                            ball.resize(10);
                         /*
                         Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
-
                          */
-                        break;
-                    case (3):
-                        ball.resize(20);
+                            break;
+                        case (1):
+
                         /*
                         Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
 
                          */
-                        break;
+                            break;
+                        case (2):
+                            bar.resize(50);
+                        /*
+                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
 
+                         */
+                            break;
+                        case (3):
+                            ball.resize(20);
+                        /*
+                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
+
+                         */
+                            break;
+
+                    }
                 }
                 return powerUp;
             } else if(powerUp.getPositionalInfo().get(1) >= ControllerScreens.windowHeight){

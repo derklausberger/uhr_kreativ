@@ -24,7 +24,8 @@ public class PowerUp {
 
         String dirPath = new File("").getAbsolutePath();
         dirPath += "\\src\\main\\resources\\Item\\";
-        switch (randomID()) {
+        this.id = randomID();
+        switch (this.id) {
             case(0): dirPath += "ItemBerry.png";
             break;
             case(1): dirPath += "ItemBomb.png";
@@ -46,11 +47,9 @@ public class PowerUp {
         this.image.minHeight(width);
         this.image.maxWidth(width);
         this.image.maxHeight(width);
-
-        this.id = randomID();
     }
 
-    public ImageView getImage() {
+    public ImageView getImageView() {
         return image;
     }
 
@@ -58,6 +57,8 @@ public class PowerUp {
         Random random = new Random();
         return random.nextInt(5);
     }
+
+    public int getId() {return this.id;}
 
     public void moveTo(double y) {
         this.image.setLayoutY(image.getLayoutY() + y);
