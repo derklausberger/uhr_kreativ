@@ -362,7 +362,6 @@ public class ControllerScreens {
 
     @FXML
     Button againButton;
-
     @FXML
     Button backButton;
 
@@ -524,7 +523,6 @@ public class ControllerScreens {
     public void bombExplosion() {
         game.decreaseBombCounter();
 
-
         double width = 128;
 
         double ballX = game.getBall().getPositionalInfo().get(0) - (width / 2);
@@ -545,7 +543,6 @@ public class ControllerScreens {
 
             try {
                 Image image = new Image(new FileInputStream(dirPath + imagePath));
-
 
                 imageView.setImage(image);
                 imageView.setLayoutX(ballX);
@@ -577,7 +574,6 @@ public class ControllerScreens {
                 timeline1.setOnFinished(e ->
                         finalTimeline.play()
                 );
-
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -630,7 +626,7 @@ public class ControllerScreens {
                 // filtering -> we are only interested in rectangles
                 Rectangle r = (Rectangle) n;
                 if (//game.getLevel().findBlock(r.getX(), r.getY()) == null &&
-                        r != rectangle && r != powerUp) {
+                        r != rectangle) {
                     // && r != rectangle -> the bar is also a rectangle, so we need to take it out
                     scene.getChildren().remove(r);
                 }
@@ -658,9 +654,6 @@ public class ControllerScreens {
 
     @FXML
     private Label highScore = new Label();
-
-    @FXML
-    Rectangle powerUp = new Rectangle();
 
 
     // 1 Frame evey 10 millis, which means 100 FPS
