@@ -25,14 +25,15 @@ public class PowerUp {
         String dirPath = new File("").getAbsolutePath();
         dirPath += "\\src\\main\\resources\\Items\\";
         switch (randomID()) {
-            case(0): dirPath += "ItemRadish.png";
+            case(0): dirPath += "ItemBerry.png";
             break;
-            case(1): dirPath += "ItemMelon.png";
+            case(1): dirPath += "ItemBomb.png";
             break;
-            case(2): dirPath += "ItemRadish.png";
+            case(2): dirPath += "ItemMelon.png";
             break;
-            case(3): dirPath += "ItemMelon.png";
+            case(3): dirPath += "ItemPumpkin.png";
             break;
+            case(4): dirPath += "ItemRadish.png";
         }
 
         Image image = new Image(new FileInputStream(dirPath));
@@ -55,7 +56,7 @@ public class PowerUp {
 
     public int randomID() {
         Random random = new Random();
-        return random.nextInt(4);
+        return random.nextInt(5);
     }
 
     public void moveTo(double y) {

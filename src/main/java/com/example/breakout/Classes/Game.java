@@ -65,24 +65,37 @@ public class Game {
                 Scene scene = Application.stage.getScene();
                 switch (powerUp.randomID()) {
                     case (0):
-                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
                         ball.resize(5);
+                        /*
+                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
+
+                         */
                         break;
                     case (1):
                         bar.resize(200);
+                        /*
                         Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
+
+                         */
                         break;
                     case (2):
                         bar.resize(50);
+                        /*
                         Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
+
+                         */
                         break;
                     case (3):
                         ball.resize(20);
+                        /*
                         Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
                         new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
+
+                         */
                         break;
 
                 }
