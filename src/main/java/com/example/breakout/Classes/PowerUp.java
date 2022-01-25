@@ -65,6 +65,9 @@ public class PowerUp {
             case (12):
                 dirPath += "ItemRadish.png";
                 break;
+            case (13):
+                dirPath += "ItemRadish.png";
+                break;
         }
 
         Image image = new Image(new FileInputStream(dirPath));
@@ -85,7 +88,7 @@ public class PowerUp {
 
     public int randomID() {
         Random random = new Random();
-        return random.nextInt(12);
+        return random.nextInt(14);
     }
 
     public int getId() {

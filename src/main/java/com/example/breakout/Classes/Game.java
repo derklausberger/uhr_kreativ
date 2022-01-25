@@ -189,6 +189,13 @@ public class Game {
                             }
                             break;
                         case (11):
+                            if (ball.getDamage() != 1) {
+                                ball.setDamage(1);
+                            } else {
+                                ball.setDamage(2);
+                            }
+                            break;
+                        case (12):
                             Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath()) + "\\src\\main\\resources\\Item\\Apfel.png")))), 1280, 720));
                             new Timeline(new KeyFrame(Duration.seconds(0.5), e -> Application.stage.setScene(scene))).play();
                             break;
@@ -208,7 +215,7 @@ public class Game {
         List<Double> position = ball.getPositionalInfo();
 
         ball.moveTo(position.get(0) + momentum.get(0),
-                    position.get(1) + momentum.get(1));
+                position.get(1) + momentum.get(1));
 
         if (ball.getPositionalInfo().get(0) <= 0) {
             ball.moveTo(ball.getPositionalInfo().get(2), ball.getPositionalInfo().get(1));
@@ -236,18 +243,18 @@ public class Game {
             // ball touches block on left or right side
             if (touches == 1 || touches == 2) {
                 ball.changeMomentum((momentum.get(0) * -1), momentum.get(1));
-                block.lowerHP(1);
+                block.lowerHP(ball.getDamage());
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
-                    powerUp.add(new PowerUp(block.getX(), block.getY())); // imageView abiehen bei x
+                    powerUp.add(new PowerUp(block.getX()+block.getWidth()/2-32, block.getY()+block.getHeight()/2 - 32));
                 }
                 return true;
             } else if (touches == 3 || touches == 4) { // ball touches block on top or bottom side
                 ball.changeMomentum(momentum.get(0), (momentum.get(1) * -1));
-                block.lowerHP(1);
+                block.lowerHP(ball.getDamage());
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
-                    powerUp.add(new PowerUp(block.getX(), block.getY())); // imageView abiehen bei x
+                    powerUp.add(new PowerUp(block.getX()+block.getWidth()/2 -32, block.getY()+block.getHeight()/2 -32));
                 }
                 return true;
             }

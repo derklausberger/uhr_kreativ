@@ -13,6 +13,7 @@ public class Ball {
     private double y;
     private double radius;
     private final Circle circle;
+    private int damage = 1;
 
 
     public Ball(Circle circle, double dx, double dy, double centerX, double centerY) {
@@ -25,6 +26,10 @@ public class Ball {
         xMomentum = dx;
         yMomentum = dy;
     }
+
+    public int getDamage() {return damage;}
+
+    public void setDamage(int damage) {this.damage = damage;}
 
     public void moveTo(double x, double y) {
         this.x = x;

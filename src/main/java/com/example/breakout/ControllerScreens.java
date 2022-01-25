@@ -523,24 +523,7 @@ public class ControllerScreens {
     public void bombExplosion() {
         game.decreaseBombCounter();
 
-        double width = 0;
-        switch (Double.toString(game.getBall().getPositionalInfo().get(2))) {
-            case ("10"):
-                width = 128 * 1;
-                break;
-            case ("15"):
-                width = 128 * 1.2;
-                break;
-            case ("20"):
-                width = 128 * 1.4;
-                break;
-            case ("25"):
-                width = 128 * 1.6;
-                break;
-            case ("30"):
-                width = 128 * 1.8;
-                break;
-        }
+        double width = 128;
 
         double ballX = game.getBall().getPositionalInfo().get(0) - (width / 2);
         double ballY = game.getBall().getPositionalInfo().get(1) - (width / 2);
