@@ -653,7 +653,7 @@ public class ControllerScreens {
             // methods used while timeline is ongoing
             // is started by start button "B" after
             // moving the Bar to the spot the user would like to begin
-            bombCounter = 1;
+            bombCounter = game.getBombCounter();
             int counter = 0;
             for (Node n : scene.getChildren()) {
                 if (n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle) {
