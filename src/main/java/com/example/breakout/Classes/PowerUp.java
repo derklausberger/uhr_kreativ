@@ -24,7 +24,7 @@ public class PowerUp {
 
         String dirPath = new File("").getAbsolutePath();
         dirPath += "\\src\\main\\resources\\com\\example\\breakout\\";
-        dirPath += "hotmelon.jpg";
+        dirPath += "ItemRadish.png";
 
         Image image = new Image(new FileInputStream(dirPath));
 

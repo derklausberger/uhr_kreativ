@@ -10,14 +10,16 @@ public class Level implements Serializable {
     private String name;
     private static String dirPath = new File("").getAbsolutePath();
 
-    public Level() {
-        blocks = new ArrayList<>();
-
+    static {
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             dirPath += "\\levels\\";
         } else {
             dirPath += "/levels/";
         }
+    }
+
+    public Level() {
+        blocks = new ArrayList<>();
     }
 
     public String getName() {
