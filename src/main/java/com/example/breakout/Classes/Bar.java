@@ -33,9 +33,9 @@ public class Bar {
     }
 
 
-    public void resize(double width, double length) {
+    public void resize(double width) {
         this.width = width;
-        this.height = length;
+        rectangle.setWidth(width);
     }
 
     public boolean checkBar(List<Double> ballInfo) {

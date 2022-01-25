@@ -1,12 +1,23 @@
 package com.example.breakout.Classes;
 
+import com.example.breakout.Application;
 import com.example.breakout.ControllerScreens;
 import com.example.breakout.LevelEditorController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Game {
     private Ball ball;
@@ -46,24 +57,34 @@ public class Game {
 
     public List<PowerUp> getPowerUp() { return powerUp; }
 
-    public PowerUp moveDown() {
+    public PowerUp moveDown() throws FileNotFoundException {
         for (PowerUp powerUp : getPowerUp()) {
             powerUp.moveTo(3);
             if(bar.checkItem(powerUp.getPositionalInfo())){
                 this.powerUp.remove(powerUp);
+                Scene scene = Application.stage.getScene();
                 switch (powerUp.randomID()) {
                     case (0):
-                        ball.resize(2);
+                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                        ball.resize(5);
+                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
                         break;
                     case (1):
-                        bar.resize(200, 40);
+                        bar.resize(200);
+                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
                         break;
                     case (2):
-                        bar.resize(200, 40);
+                        bar.resize(50);
+                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
                         break;
                     case (3):
-                        ball.resize(2);
+                        ball.resize(20);
+                        Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath())+"\\src\\main\\resources\\Items\\Apfel.png")))), 1280, 720));
+                        new Timeline(new KeyFrame(Duration.seconds(0.3), e -> Application.stage.setScene(scene))).play();
                         break;
+
                 }
                 return powerUp;
             } else if(powerUp.getPositionalInfo().get(1) >= ControllerScreens.windowHeight){
@@ -137,7 +158,7 @@ public class Game {
             ball.changeMomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // left or right
             //moveBall();
-        } else if (position.get(1) + position.get(2) >= 720) {
+        } else if (position.get(1) - position.get(2) >= 720) {
             bar.stop();
             return false; // lost
         }

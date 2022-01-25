@@ -81,7 +81,7 @@ public class AnalogClock extends Application {
     final Label label = new Label();
 
 
-    //declare dynamic end-coordinates for hourline, minuteline
+    //declare dynamic end-coordinates for hourLine, minuteLine
     int xMinute, yMinute, xHour, yHour, xSecond, ySecond;
 
     //initialize pane and scene
@@ -142,7 +142,7 @@ public class AnalogClock extends Application {
         button.setMinWidth(200);
         button.setMaxWidth(200);
 
-        button.setLayoutX(scene.getWidth()/2-100);
+        button.setLayoutX(scene.getWidth() / 2 - 100);
         button.setLayoutY(680);
 
         button.setOnAction(e -> {
@@ -171,10 +171,6 @@ public class AnalogClock extends Application {
         timer.start();
     }
 
-    //public static void main(String[] args) {
-    //launch(args);
-    //}
-
     private class MyTimer extends AnimationTimer {
 
         private long prevTime = 0;
@@ -191,14 +187,6 @@ public class AnalogClock extends Application {
 
                 prevTime = now;
 
-                /*
-                Date currentDate = new Date();
-
-                currentMinute = currentDate.getMinutes();
-                currentHour = currentDate.getHours();
-                currentSecond = currentDate.getSeconds();
-                */
-
                 currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
                 currentHour = Calendar.getInstance().get(Calendar.HOUR);
                 currentSecond = Calendar.getInstance().get(Calendar.SECOND);
@@ -208,9 +196,8 @@ public class AnalogClock extends Application {
                 ySecond = (int) (Math.sin(currentSecond * 3.14f / 30 - 3.14f / 2) * 160 + yCENTER);
                 xMinute = (int) (Math.cos(currentMinute * 3.14f / 30 - 3.14f / 2) * 140 + xCENTER);
                 yMinute = (int) (Math.sin(currentMinute * 3.14f / 30 - 3.14f / 2) * 140 + yCENTER);
-                xHour = (int) (Math.cos((currentHour * 30 + currentMinute / 2) * 3.14f / 180 - 3.14f / 2) * 90 + xCENTER);
-                yHour = (int) (Math.sin((currentHour * 30 + currentMinute / 2) * 3.14f / 180 - 3.14f / 2) * 90 + yCENTER);
-
+                xHour = (int) (Math.cos((currentHour * 30 + (double) (currentMinute / 2)) * 3.14f / 180 - 3.14f / 2) * 90 + xCENTER);
+                yHour = (int) (Math.sin((currentHour * 30 + (double) (currentMinute / 2)) * 3.14f / 180 - 3.14f / 2) * 90 + yCENTER);
 
                 secondLine.setEndX(xSecond);
                 secondLine.setEndY(ySecond);
@@ -218,11 +205,7 @@ public class AnalogClock extends Application {
                 minuteLine.setEndY(yMinute);
                 hourLine.setEndX(xHour);
                 hourLine.setEndY(yHour);
-
-
             }
-
         }
-
     }
 }

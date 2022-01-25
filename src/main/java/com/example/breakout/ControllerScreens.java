@@ -352,7 +352,7 @@ public class ControllerScreens {
 
     private Game game;// = new Game();
 
-    public void switchToGame(/*ActionEvent event*/) throws IOException { // called by button "level [id]"
+    public void switchToGame() throws IOException { // called by button "level [id]"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("GameScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
@@ -361,6 +361,11 @@ public class ControllerScreens {
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
+
+        Button button = (Button) scene.lookup("#back");
+        button.setOnMousePressed(e -> {
+            timeline.stop();
+        });
 
         // with scene.lookup linking to fx:id
         this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
@@ -380,6 +385,7 @@ public class ControllerScreens {
 
         game.setBar(new Bar(rectangle));
         loadBlocks(1, this.scene);
+
 
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
@@ -508,7 +514,12 @@ public class ControllerScreens {
             }
 
             game.moveBall();
-            PowerUp p = game.moveDown();
+            PowerUp p = null;
+            try {
+                p = game.moveDown();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
             if(p != null){
                 scene.getChildren().remove(p.getImage());
             }

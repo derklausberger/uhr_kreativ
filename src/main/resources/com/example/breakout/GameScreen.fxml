@@ -96,7 +96,7 @@
                                        -->
 
                                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                        <Button mnemonicParsing="false" onAction="#switchToLevels" text="Zurück zur Levelauswahl" />
+                                        <Button fx:id="back" mnemonicParsing="false" onAction="#switchToLevels" text="Zurück zur Levelauswahl" />
 
                                         <!--
                                         fx:id are used to give them a value

@@ -8,17 +8,21 @@
 
 .button{ -fx-fill: #EEEEEE; }
 
-.sceneLEFT{ -fx-background-color: #111111; }
+.sceneLEFT{
+    -fx-background-color: #111111;
+
+}
 
 .sceneRIGHT { -fx-background-color: #111111; }
 
 .label{ -fx-text-fill: #EEEEEE; }
 
+/*
+* {
+-fx-margin: 10px !important;
+    -fx-padding: 10px !important;
 
-/* start is vor everything */
-/*   * {
-    -fx-margin: 1px;
-    -fx-padding: 1px;
+    }
+    */
 
-}
-*/
+
