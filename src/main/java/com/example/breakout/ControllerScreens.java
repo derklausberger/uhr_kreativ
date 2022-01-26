@@ -188,7 +188,9 @@ public class ControllerScreens {
             //  reset coordinates of all objects after scroll
             for (int i = mainPaneLevelScreen.getChildren().size() - 1; i >= 0; i--) {
                 Node n = mainPaneLevelScreen.getChildren().get(i);
-                n.setLayoutY((double) n.getProperties().get("originalY") - scroll);
+                if (!n.getClass().getSimpleName().equals("ImageView")) {
+                    n.setLayoutY((double) n.getProperties().get("originalY") - scroll);
+                }
             }
         });
     }
@@ -291,12 +293,20 @@ public class ControllerScreens {
                         contextMenu.show(pane, e.getScreenX(), e.getScreenY());
                     });
 
+                    String backGroundPath = new File("").getAbsolutePath();
+                    backGroundPath = backGroundPath.replace('\\', '/');
+                    backGroundPath += "/src/main/resources/Background/LeftSide.png";
+
+                    String basicStyle = "-fx-border-color: black;" +
+                            "-fx-background-image: url('file:" + backGroundPath + "');" +
+                            "-fx-background-size: 250 200;";
+
                     //  restyle border for hover-action
-                    pane.setOnMouseEntered(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 5px;"));
+                    pane.setOnMouseEntered(e -> pane.setStyle(basicStyle + "-fx-border-width: 5px;"));
 
-                    pane.setOnMouseExited(e -> pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;"));
+                    pane.setOnMouseExited(e -> pane.setStyle(basicStyle + "-fx-border-width: 2px;"));
 
-                    pane.setStyle("-fx-border-color: black; -fx-border-width: 2px;");
+                    pane.setStyle(basicStyle + "-fx-border-width: 2px;");
 
                     mainPaneLevelScreen.getChildren().add(pane);
                 }
