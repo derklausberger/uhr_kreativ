@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="720" minHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.breakout.LevelEditorController">
+<AnchorPane fx:id="mainPane" maxHeight="720" minHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.breakout.LevelEditorController">
     <SplitPane dividerPositions="0.7" prefHeight="160" prefWidth="200" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <AnchorPane fx:id="placePane" maxWidth="1000" minWidth="1000">
          <children>
