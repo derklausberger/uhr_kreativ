@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ControllerScreens {
@@ -203,12 +202,14 @@ public class ControllerScreens {
             int x = 65;
             int y = 90;
 
-            scrollableHeight = y + (double) (((levels.length - 1) / 4) + 1) * 250 - 720;
+            int levelCount = 0;
 
             for (int i = 0; i < levels.length; i++) {
                 Level level = levels[i];
 
                 if (level != null && level.getName().toLowerCase().contains(filterBy.toLowerCase())) {
+                    levelCount++;
+
                     AnchorPane pane = new AnchorPane();
 
                     pane.setMinWidth(250);
@@ -300,6 +301,12 @@ public class ControllerScreens {
                     mainPaneLevelScreen.getChildren().add(pane);
                 }
             }
+
+            scrollableHeight = y + (double) (((levelCount - 1) / 4) + 1) * 250 - 720;
+
+            if (scrollableHeight < 0) {
+                scrollableHeight = 0;
+            }
         }
     }
 
@@ -350,21 +357,18 @@ public class ControllerScreens {
         StaticClass.playSong("Leveleditor.mp3");
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("LevelEditorScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), windowWidth, windowHeight);
-        Application.stage.setTitle("Leveleditor");
+        Application.stage.setTitle("Level-Editor");
         Application.stage.setScene(scene);
         Application.stage.setResizable(false);
         Application.stage.show();
     }
 
-
     private Game game;// = new Game();
-
 
     @FXML
     Button againButton;
     @FXML
     Button backButton;
-
 
     public void openEnd() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("EndScreen.fxml"));
@@ -420,7 +424,6 @@ public class ControllerScreens {
         });
     }
 
-
     public void switchToGame() throws IOException { // called by button "level [id]"
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("GameScreen.fxml"));
@@ -431,11 +434,8 @@ public class ControllerScreens {
         Application.stage.setResizable(false);
         Application.stage.show();
 
-
         Button button = (Button) scene.lookup("#back");
-        button.setOnMousePressed(e -> {
-            timeline.stop();
-        });
+        button.setOnMousePressed(e -> timeline.stop());
 
         // with scene.lookup linking to fx:id
         this.scene = (AnchorPane) scene.lookup("#scene");          // -> scene in which the gameplay is done
@@ -460,34 +460,6 @@ public class ControllerScreens {
         this.imageViewRightBar = (ImageView) scene.lookup("#imageViewRightBar");
         this.imageViewRightBall = (ImageView) scene.lookup("#imageViewRightBall");
         this.imageViewRightBombs = (ImageView) scene.lookup("#imageViewRightBombs");
-
-        /*
-        double fitHeight = 25.0;
-        double fitWidth = 50.0;
-
-        imageViewRightStrength.setFitWidth(fitWidth);
-        imageViewRightStrength.setFitHeight(fitHeight);
-        imageViewRightSpeed.setFitWidth(fitWidth);
-        imageViewRightSpeed.setFitHeight(fitHeight);
-        imageViewRightBar.setFitWidth(fitWidth);
-        imageViewRightBar.setFitHeight(fitHeight);
-        imageViewRightBall.setFitWidth(fitWidth);
-        imageViewRightBall.setFitHeight(fitHeight);
-        imageViewRightBombs.setFitWidth(fitWidth);
-        imageViewRightBombs.setFitHeight(fitHeight);
-
-        imageViewRightStrength.setLayoutX(90);
-        imageViewRightStrength.setLayoutY(90);
-        imageViewRightSpeed.setLayoutX(90);
-        imageViewRightSpeed.setLayoutY(117);
-        imageViewRightBar.setLayoutX(90);
-        imageViewRightBar.setLayoutY(148);
-        imageViewRightBall.setLayoutX(90);
-        imageViewRightBall.setLayoutY(180);
-        imageViewRightBombs.setLayoutX(110);
-        imageViewRightBombs.setLayoutY(230);
-
-         */
 
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
@@ -553,7 +525,6 @@ public class ControllerScreens {
                     bombExplosion();
                 }
             }
-
         };
         scene.addEventHandler(KeyEvent.KEY_PRESSED, handler);
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -570,14 +541,12 @@ public class ControllerScreens {
         String dirPath = new File("").getAbsolutePath();
         dirPath += "\\src\\main\\resources\\Explosion\\Explosion";
 
-
-        Timeline timeline1 = null;
+        Timeline timeline1;
         Timeline timeline2 = null;
 
-
-        String imagePath = "";
+        String imagePath;
         for (int i = 1; i <= 8; i++) {
-            imagePath = Integer.toString(i) + ".png";
+            imagePath = i + ".png";
             ImageView imageView = new ImageView();
 
             try {
@@ -590,15 +559,13 @@ public class ControllerScreens {
                 imageView.setFitHeight(width);
                 imageView.setFitWidth(width);
 
-
+                timeline1 = (new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().add(imageView))));
                 if (timeline2 != null) {
-                    timeline1 = (new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().add(imageView))));
                     Timeline finalTimeline1 = timeline1;
                     timeline2.setOnFinished(e ->
                             finalTimeline1.play()
                     );
                 } else {
-                    timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().add(imageView)));
                     timeline1.play();
                 }
                 timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> scene.getChildren().remove(imageView)));
@@ -615,25 +582,17 @@ public class ControllerScreens {
         for (int i = scene.getChildren().size() - 1; i >= 0; i--) {
             // iterates to the number of children the scene has
             Node n = scene.getChildren().get(i);
-            if (n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle) {
+            if (n.getClass().getSimpleName().equals("Rectangle") && n != rectangle) {
                 Block b = game.getLevel().findBlock(((Rectangle) n).getX(), ((Rectangle) n).getY());
-                if (b == null) {
-                    System.out.println("null");
-                }
-                System.out.println("bla");
-                if (
-                        (
-                                (b.getX() >= ballX && b.getX() + b.getWidth() <= ballX + width) ||
-                                        (b.getX() <= ballX && b.getX() + b.getWidth() >= ballX) ||
-                                        (b.getX() <= ballX + width && b.getX() + b.getWidth() >= ballX + width)
-                        ) && (
-                                (b.getY() >= ballY && b.getY() + b.getHeight() <= ballY + width) ||
-                                        (b.getY() <= ballY && b.getY() + b.getWidth() >= ballY) ||
-                                        (b.getY() <= ballY + width && b.getY() + b.getWidth() >= ballY + width))
-                ) {
+
+                if (((b.getX() >= ballX && b.getX() + b.getWidth() <= ballX + width) ||
+                        (b.getX() <= ballX && b.getX() + b.getWidth() >= ballX) ||
+                        (b.getX() <= ballX + width && b.getX() + b.getWidth() >= ballX + width))
+                        && ((b.getY() >= ballY && b.getY() + b.getHeight() <= ballY + width) ||
+                        (b.getY() <= ballY && b.getY() + b.getWidth() >= ballY) ||
+                        (b.getY() <= ballY + width && b.getY() + b.getWidth() >= ballY + width))) {
                     scene.getChildren().remove(n);
                     game.getLevel().removeBlock(b);
-                    System.out.println("hallo");
                 }
             }
         }
@@ -754,7 +713,7 @@ public class ControllerScreens {
     private Boolean gameStart = false;
     private Boolean gameStartLock = false;
     private long createdMillis;
-    private double BarDirectX = 15;
+    private final double BarDirectX = 15;
 
     @FXML
     private AnchorPane scene; // scene in which the gameplay is done
@@ -764,7 +723,6 @@ public class ControllerScreens {
     private Rectangle rectangle; // rectangle == bar
     @FXML
     private Label highScore = new Label();
-
 
     // 1 Frame evey 10 millis, which means 100 FPS
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<>() {
@@ -782,7 +740,7 @@ public class ControllerScreens {
             bombCounter = game.getBombCounter();
             int counter = 0;
             for (Node n : scene.getChildren()) {
-                if (n.getClass().getSimpleName().equals("Rectangle") && (Rectangle) n != rectangle) {
+                if (n.getClass().getSimpleName().equals("Rectangle") && n != rectangle) {
                     counter++;
                 }
             }
@@ -838,7 +796,6 @@ public class ControllerScreens {
 
     private void placeBlock(double x, double y, int strength, double factor, AnchorPane pane) {
         Rectangle rect = new Rectangle(x, y, 100 * factor, 30 * factor);
-        //Block block = new Block(game.getLevel().getCount(), rect, strength);
 
         if (strength == 1) {
             rect.setFill(Color.RED);
@@ -860,6 +817,4 @@ public class ControllerScreens {
         int zw = (int) ((nowMillis - this.createdMillis) / 1000);
         highScore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
     }
-
-
 }
