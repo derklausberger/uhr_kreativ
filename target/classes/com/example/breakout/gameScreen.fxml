@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -25,13 +27,18 @@
                 In this Pane the game itself is shown e.g.: ball, bar, blocks
                 -->
 
-                <AnchorPane fx:id="scene" maxWidth="1000" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #f0f0f0;" styleClass="sceneLEFT" stylesheets="@../../../Theme/Theme1.css">
+                <AnchorPane fx:id="scene" maxWidth="1000" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" styleClass="sceneLEFT" stylesheets="@../../../Theme/Theme1.css">
 
                     <!--
                     children are owned by the mother -> AnchorPane
                     -->
 
                     <children>
+                  <ImageView fitHeight="722.0" fitWidth="1014.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Background/LeftSide.png" />
+                     </image>
+                  </ImageView>
                         <Circle fx:id="circle" layoutX="0" layoutY="0" radius="10.0" stroke="BLACK" strokeType="INSIDE" styleClass="movBall">
 
                             <!--
@@ -53,9 +60,39 @@
                     -->
 
                     <children>
+                  <ImageView fitHeight="722.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Background/RightSide.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageViewRightStrength" fitHeight="25.0" fitWidth="50.0" layoutX="90.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Number/Times1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageViewRightSpeed" fitHeight="25.0" fitWidth="50.0" layoutX="90.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Number/Times2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageViewRightBar" fitHeight="25.0" fitWidth="50.0" layoutX="90.0" layoutY="148.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Number/Number100.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageViewRightBall" fitHeight="25.0" fitWidth="50.0" layoutX="90.0" layoutY="180.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Number/Number10.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageViewRightBombs" fitHeight="25.0" fitWidth="50.0" layoutX="110.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Number/Times0.png" />
+                     </image>
+                  </ImageView>
                         <HBox prefHeight="720.0" prefWidth="280.0">
                             <children>
-                                <VBox prefWidth="280.0">
+                                <VBox fx:id="imageViewRight1" prefWidth="280.0">
 
                                     <!--
                                     VBox splits vertically
@@ -73,9 +110,8 @@
                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                     </padding>
                                     <children>
-                                        <HBox prefHeight="20.0">
+                                        <HBox prefHeight="40.0">
                                             <children>
-                                                <Label text="Benötigte Zeit:" />
                                                 <Region HBox.hgrow="ALWAYS" />
 
                                                 <!--
@@ -85,8 +121,8 @@
                                                 and fixed values would do no good)
                                                 -->
 
-                                                <Label fx:id="highScore" />
-                                                <Label text="sec" />
+                                                <Label fx:id="highScore" prefHeight="40.0" />
+                                                <Label minHeight="40.0" minWidth="17.0" prefHeight="40.0" prefWidth="17.0" text="sec" />
                                             </children>
                                         </HBox>
 
@@ -96,7 +132,7 @@
                                        -->
 
                                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                        <Button fx:id="back" mnemonicParsing="false" onAction="#switchToLevels" text="Zurück zur Levelauswahl" />
+                                        <Button fx:id="back" mnemonicParsing="false" onAction="#switchToLevels" prefWidth="300.0" style="-fx-background-color: #f0f0f0f0;" text="Zurück zur Levelauswahl" />
 
                                         <!--
                                         fx:id are used to give them a value

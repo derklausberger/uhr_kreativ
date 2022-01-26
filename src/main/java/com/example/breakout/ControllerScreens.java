@@ -375,6 +375,12 @@ public class ControllerScreens {
         stageEnd.setScene(scene);
         stageEnd.setResizable(false);
 
+        double x = Application.stage.getX();
+        double y = Application.stage.getY();
+
+        stageEnd.setX(x + 250);
+        stageEnd.setY(y + 180);
+
         stageEnd.initOwner(Application.stage);
         stageEnd.initModality(Modality.APPLICATION_MODAL);
 
@@ -425,6 +431,7 @@ public class ControllerScreens {
         Application.stage.setResizable(false);
         Application.stage.show();
 
+
         Button button = (Button) scene.lookup("#back");
         button.setOnMousePressed(e -> {
             timeline.stop();
@@ -435,7 +442,6 @@ public class ControllerScreens {
         this.circle = (Circle) scene.lookup("#circle");            // --> the ball
         this.rectangle = (Rectangle) scene.lookup("#rectangle");   // -> the bar
         this.highScore = (Label) scene.lookup("#highScore");       // -> score
-
 
         game.setBall(new Ball(circle,
                 0,
@@ -449,6 +455,39 @@ public class ControllerScreens {
         game.setBar(new Bar(rectangle));
         loadBlocks(1, this.scene);
 
+        this.imageViewRightStrength = (ImageView) scene.lookup("#imageViewRightStrength");
+        this.imageViewRightSpeed = (ImageView) scene.lookup("#imageViewRightSpeed");
+        this.imageViewRightBar = (ImageView) scene.lookup("#imageViewRightBar");
+        this.imageViewRightBall = (ImageView) scene.lookup("#imageViewRightBall");
+        this.imageViewRightBombs = (ImageView) scene.lookup("#imageViewRightBombs");
+
+        /*
+        double fitHeight = 25.0;
+        double fitWidth = 50.0;
+
+        imageViewRightStrength.setFitWidth(fitWidth);
+        imageViewRightStrength.setFitHeight(fitHeight);
+        imageViewRightSpeed.setFitWidth(fitWidth);
+        imageViewRightSpeed.setFitHeight(fitHeight);
+        imageViewRightBar.setFitWidth(fitWidth);
+        imageViewRightBar.setFitHeight(fitHeight);
+        imageViewRightBall.setFitWidth(fitWidth);
+        imageViewRightBall.setFitHeight(fitHeight);
+        imageViewRightBombs.setFitWidth(fitWidth);
+        imageViewRightBombs.setFitHeight(fitHeight);
+
+        imageViewRightStrength.setLayoutX(90);
+        imageViewRightStrength.setLayoutY(90);
+        imageViewRightSpeed.setLayoutX(90);
+        imageViewRightSpeed.setLayoutY(117);
+        imageViewRightBar.setLayoutX(90);
+        imageViewRightBar.setLayoutY(148);
+        imageViewRightBall.setLayoutX(90);
+        imageViewRightBall.setLayoutY(180);
+        imageViewRightBombs.setLayoutX(110);
+        imageViewRightBombs.setLayoutY(230);
+
+         */
 
         EventHandler<KeyEvent> handler = (key) -> {
             // listening to KeyEvent's
@@ -510,7 +549,7 @@ public class ControllerScreens {
             }
 
             if (key.getCode() == KeyCode.H) {
-                if (bombCounter > 0) {
+                if (bombCounter > 0 && gameStart) {
                     bombExplosion();
                 }
             }
@@ -602,6 +641,87 @@ public class ControllerScreens {
 
     }
 
+    @FXML
+    ImageView imageViewRightStrength;
+    @FXML
+    ImageView imageViewRightSpeed;
+    @FXML
+    ImageView imageViewRightBar;
+    @FXML
+    ImageView imageViewRightBall;
+    @FXML
+    ImageView imageViewRightBombs;
+
+    public void changePictureNumbers() throws FileNotFoundException {
+        String dirPath0 = new File("").getAbsolutePath();
+        String dirPath1 = "", dirPath2 = "", dirPath3 = "", dirPath4 = "", dirPath5 = "";
+
+        dirPath1 += dirPath0 + "\\src\\main\\resources\\Number\\";
+        dirPath2 += dirPath0 + "\\src\\main\\resources\\Number\\";
+        dirPath3 += dirPath0 + "\\src\\main\\resources\\Number\\";
+        dirPath4 += dirPath0 + "\\src\\main\\resources\\Number\\";
+        dirPath5 += dirPath0 + "\\src\\main\\resources\\Number\\";
+
+        switch (game.getBall().getDamage()) {
+            case (1) -> dirPath1 += "Times1.png";
+            case (2) -> dirPath1 += "Times2.png";
+        }
+
+        Double aDouble = game.getBall().getMomentum().get(0);
+        if (Math.abs(aDouble) == 1) {
+            dirPath2 += "Times1.png";
+        } else if (Math.abs(aDouble) == 2) {
+            dirPath2 += "Times2.png";
+        } else if (Math.abs(aDouble) == 3) {
+            dirPath2 += "Times3.png";
+        }
+
+        switch ((int) rectangle.getWidth()) {
+            case (50) -> dirPath3 += "Number50.png";
+            case (100) -> dirPath3 += "Number100.png";
+            case (150) -> dirPath3 += "Number150.png";
+            case (170) -> dirPath3 += "Number170.png";
+            case (200) -> dirPath3 += "Number200.png";
+        }
+
+        Double i = game.getBall().getPositionalInfo().get(2);
+        if (i == 10) {
+            dirPath4 += "Number10.png";
+        } else if (i == 15) {
+            dirPath4 += "Number15.png";
+        } else if (i == 20) {
+            dirPath4 += "Number20.png";
+        } else if (i == 25) {
+            dirPath4 += "Number25.png";
+        } else if (i == 30) {
+            dirPath4 += "Number30.png";
+        } else if (i == 35) {
+            dirPath4 += "Number35.png";
+        }
+
+        switch ((int) game.getBombCounter()) {
+            case (0) -> dirPath5 += "Times0.png";
+            case (1) -> dirPath5 += "Times1.png";
+            case (2) -> dirPath5 += "Times2.png";
+            case (3), (4), (5), (6) -> dirPath5 += "Times3.png";
+        }
+
+        Image imageStrength = new Image(new FileInputStream(dirPath1));
+        imageViewRightStrength.setImage(imageStrength);
+
+        Image imageSpeed = new Image(new FileInputStream(dirPath2));
+        imageViewRightSpeed.setImage(imageSpeed);
+
+        Image imageBar = new Image(new FileInputStream(dirPath3));
+        imageViewRightBar.setImage(imageBar);
+
+        Image imageBall = new Image(new FileInputStream(dirPath4));
+        imageViewRightBall.setImage(imageBall);
+
+        Image imageBombs = new Image(new FileInputStream(dirPath5));
+        imageViewRightBombs.setImage(imageBombs);
+    }
+
 
     public boolean checkBall() throws FileNotFoundException {
         boolean b = game.checkBall();
@@ -653,6 +773,12 @@ public class ControllerScreens {
             // methods used while timeline is ongoing
             // is started by start button "B" after
             // moving the Bar to the spot the user would like to begin
+            try {
+                changePictureNumbers();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
             bombCounter = game.getBombCounter();
             int counter = 0;
             for (Node n : scene.getChildren()) {
@@ -734,4 +860,6 @@ public class ControllerScreens {
         int zw = (int) ((nowMillis - this.createdMillis) / 1000);
         highScore.textProperty().bind(new SimpleIntegerProperty(zw).asString());
     }
+
+
 }

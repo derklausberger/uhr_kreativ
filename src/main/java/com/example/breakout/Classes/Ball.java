@@ -27,9 +27,13 @@ public class Ball {
         yMomentum = dy;
     }
 
-    public int getDamage() {return damage;}
+    public int getDamage() {
+        return damage;
+    }
 
-    public void setDamage(int damage) {this.damage = damage;}
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
 
     public void moveTo(double x, double y) {
         this.x = x;

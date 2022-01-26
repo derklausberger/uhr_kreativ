@@ -78,7 +78,7 @@ public class Game {
                 this.powerUp.remove(powerUp);
                 Scene scene = Application.stage.getScene();
 
-                if (powerUp.getId() == 1) {
+                if (powerUp.getId() == 3 || powerUp.getId() == 4) {
                     increaseBombCounter();
 
                 } else {
@@ -246,7 +246,7 @@ public class Game {
                 block.lowerHP(ball.getDamage());
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
-                    powerUp.add(new PowerUp(block.getX()+block.getWidth()/2-32, block.getY()+block.getHeight()/2 - 32));
+                    powerUp.add(new PowerUp(block.getX() + block.getWidth() / 2 - 32, block.getY() + block.getHeight() / 2 - 32));
                 }
                 return true;
             } else if (touches == 3 || touches == 4) { // ball touches block on top or bottom side
@@ -254,7 +254,7 @@ public class Game {
                 block.lowerHP(ball.getDamage());
                 if (block.getStrength() <= 0) {
                     level.removeBlock(block);
-                    powerUp.add(new PowerUp(block.getX()+block.getWidth()/2 -32, block.getY()+block.getHeight()/2 -32));
+                    powerUp.add(new PowerUp(block.getX() + block.getWidth() / 2 - 32, block.getY() + block.getHeight() / 2 - 32));
                 }
                 return true;
             }
