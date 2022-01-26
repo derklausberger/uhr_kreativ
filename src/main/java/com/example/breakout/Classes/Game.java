@@ -40,7 +40,9 @@ public class Game {
     }
 
     public void increaseBombCounter() {
-        bombCounter++;
+        if(bombCounter < 3) {
+            bombCounter++;
+        }
     }
 
     public void decreaseBombCounter() {
@@ -196,8 +198,7 @@ public class Game {
                             }
                             break;
                         case (12):
-                            StaticClass.playSound("HappyYeah.mp3");
-
+                            StaticClass.playSound("HappyYeah.wav");
                             Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath()) + "\\src\\main\\resources\\Item\\Apfel.png")))), 1280, 720));
                             new Timeline(new KeyFrame(Duration.seconds(0.5), e -> Application.stage.setScene(scene))).play();
                             break;

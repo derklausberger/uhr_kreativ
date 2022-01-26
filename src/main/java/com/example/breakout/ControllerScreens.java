@@ -674,7 +674,7 @@ public class ControllerScreens {
             case (0) -> dirPath5 += "Times0.png";
             case (1) -> dirPath5 += "Times1.png";
             case (2) -> dirPath5 += "Times2.png";
-            case (3), (4), (5), (6) -> dirPath5 += "Times3.png";
+            case (3) ->  dirPath5 += "Times3.png";
         }
 
         Image imageStrength = new Image(new FileInputStream(dirPath1));
