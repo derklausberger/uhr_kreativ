@@ -318,11 +318,11 @@ public class ControllerScreens {
         Application.stage.setResizable(false);
         Application.stage.show();
 
-        this.musicButton = (Button) scene.lookup("#Musicbutton");   // -> the Music button
+        this.musicButton = (Button) scene.lookup("#musicButton");   // -> the Music button
         if (!StaticClass.isMusicSetting()) {
             musicButton.setText("Musik einschalten");
         }
-        this.soundButton = (Button) scene.lookup("#Soundbutton");   // -> the Sound button
+        this.soundButton = (Button) scene.lookup("#soundButton");   // -> the Sound button
         if (!StaticClass.isSoundSetting()) {
             soundButton.setText("Ton einschalten");
         }

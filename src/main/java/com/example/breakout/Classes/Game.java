@@ -147,20 +147,20 @@ public class Game {
                             }
                             break;
                         case (9):
-                            if ((ball.getMomentum().get(0) != 1 || ball.getMomentum().get(0) != -1) &&
-                                    (ball.getMomentum().get(0) != 1 || ball.getMomentum().get(1) != -1)) {
+                            if ((ball.getMomentum().get(0) != 2 || ball.getMomentum().get(0) != -2) &&
+                                    (ball.getMomentum().get(1) != 2 || ball.getMomentum().get(1) != -2)) {
 
                                 if (ball.getMomentum().get(0) < 0) {
                                     if (ball.getMomentum().get(1) < 0) {
-                                        ball.changeMomentum(-1, -1);
+                                        ball.changeMomentum(-2, -2);
                                     } else {
-                                        ball.changeMomentum(-1, 1);
+                                        ball.changeMomentum(-2, 2);
                                     }
                                 } else {
                                     if (ball.getMomentum().get(1) < 0) {
-                                        ball.changeMomentum(1, -1);
+                                        ball.changeMomentum(2, -2);
                                     } else {
-                                        ball.changeMomentum(1, 1);
+                                        ball.changeMomentum(2, 2);
                                     }
                                 }
                             } else {
@@ -168,20 +168,20 @@ public class Game {
                             }
                             break;
                         case (10):
-                            if ((ball.getMomentum().get(0) != 1 || ball.getMomentum().get(0) != -1) &&
-                                    (ball.getMomentum().get(0) != 1 || ball.getMomentum().get(1) != -1)) {
+                            if ((ball.getMomentum().get(0) != 2 || ball.getMomentum().get(0) != -2) &&
+                                    (ball.getMomentum().get(1) != 2 || ball.getMomentum().get(1) != -2)) {
 
                                 if (ball.getMomentum().get(0) < 0) {
                                     if (ball.getMomentum().get(1) < 0) {
-                                        ball.changeMomentum(-1, -1);
+                                        ball.changeMomentum(-2, -2);
                                     } else {
-                                        ball.changeMomentum(-1, 1);
+                                        ball.changeMomentum(-2, 2);
                                     }
                                 } else {
                                     if (ball.getMomentum().get(1) < 0) {
-                                        ball.changeMomentum(1, -1);
+                                        ball.changeMomentum(2, -2);
                                     } else {
-                                        ball.changeMomentum(1, 1);
+                                        ball.changeMomentum(2, 2);
                                     }
                                 }
                             } else {
@@ -214,8 +214,8 @@ public class Game {
         List<Double> momentum = ball.getMomentum();
         List<Double> position = ball.getPositionalInfo();
 
-        ball.moveTo(position.get(0) + momentum.get(0),
-                position.get(1) + momentum.get(1));
+        ball.moveTo( position.get(0) + momentum.get(0),
+                     position.get(1) + momentum.get(1));
 
         if (ball.getPositionalInfo().get(0) <= 0) {
             ball.moveTo(ball.getPositionalInfo().get(2), ball.getPositionalInfo().get(1));
@@ -261,16 +261,16 @@ public class Game {
         }
 
         // ball touches left or right side of the window
-        if (position.get(0) - position.get(2) <= 0) {
+        if (position.get(0) - position.get(2) <= 0 && momentum.get(0) < 0) {
             ball.changeMomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
-        } else if (position.get(0) + position.get(2) >= 1000) {
+        } else if (position.get(0) + position.get(2) >= 1000 && momentum.get(0) > 0) {
             ball.changeMomentum((momentum.get(0) * -1), momentum.get(1));
             return true;
         }
 
         // ball touches top or bottom side of the window
-        if (position.get(1) - position.get(2) == 0) {
+        if (position.get(1) - position.get(2) == 0 && momentum.get(1) < 0) {
             ball.changeMomentum(momentum.get(0), (momentum.get(1) * -1));
             return true; // left or right
             //moveBall();
