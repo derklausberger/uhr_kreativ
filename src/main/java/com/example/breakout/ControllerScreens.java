@@ -543,7 +543,9 @@ public class ControllerScreens {
     public void bombExplosion() {
         game.decreaseBombCounter();
 
-        double width = 128;
+        double width;
+
+        width = 128 * (1 + 0.2 * ((game.getBall().getPositionalInfo().get(2) - 10)/ 5));
 
         double ballX = game.getBall().getPositionalInfo().get(0) - (width / 2);
         double ballY = game.getBall().getPositionalInfo().get(1) - (width / 2);

@@ -196,6 +196,8 @@ public class Game {
                             }
                             break;
                         case (12):
+                            StaticClass.playSong("HappyYeah.mp3");
+
                             Application.stage.setScene(new Scene(new Group(new ImageView(new Image(new FileInputStream((new File("").getAbsolutePath()) + "\\src\\main\\resources\\Item\\Apfel.png")))), 1280, 720));
                             new Timeline(new KeyFrame(Duration.seconds(0.5), e -> Application.stage.setScene(scene))).play();
                             break;
