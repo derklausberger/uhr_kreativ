@@ -18,8 +18,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class StaticClass {
-    public static File settings = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", "settings.txt")));
-    public static String theme = "basic";
+    public static File settings = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "settings.txt")));
+    public static String theme = "Music";
 
     private static MediaPlayer mediaPlayer = null;
 
@@ -33,7 +33,7 @@ public class StaticClass {
         //these lines need to be here and not in the if due to settings being able to turn on or off music with a button there
         if (!currentSong.equals(songName)) {
             currentSong = songName;
-            Media hit = new Media(new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, songName
+            Media hit = new Media(new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "main", "resources", theme, songName
             ))).toURI().toString());
             mediaPlayer = new MediaPlayer(hit);
             mediaPlayer.setVolume(mediaPlayerVolume);
@@ -52,7 +52,7 @@ public class StaticClass {
 
     public static void playSound(String soundName) {
         if (soundSetting) {
-            File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "resources", theme, soundName)));
+            File path = new File(String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "main", "resources", theme, soundName)));
             System.out.println(path);
             try {
                 AudioInputStream audioInput2 = AudioSystem.getAudioInputStream(path);
@@ -74,6 +74,7 @@ public class StaticClass {
             soundSetting = Boolean.parseBoolean(data.split("=")[1]);
             myReader.close();
         } else {
+            System.out.println(settings.getAbsolutePath());
             settings.createNewFile();
             FileWriter myWriter = new FileWriter(settings);
             myWriter.write("Music=true\n");
